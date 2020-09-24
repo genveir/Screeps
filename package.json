@@ -2,7 +2,7 @@
   "name": "screeps",
   "private": true,
   "scripts": {
-    "build": "cd src; tsc; cd.."
+    
   },
   "devDependencies": {
     "@types/screeps": "^3.2.0"
