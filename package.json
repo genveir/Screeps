@@ -2,10 +2,12 @@
   "name": "screeps",
   "private": true,
   "scripts": {
-    "build": "tsc"
+    "clean": "del-cli --force ./out && del-cli --force ./dist",
+    "build": "npm run clean && tsc && webpack"
   },
   "devDependencies": {
     "@types/screeps": "^3.2.0",
+    "del-cli": "^3.0.1",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12"
   },
