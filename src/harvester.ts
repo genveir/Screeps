@@ -6,7 +6,7 @@ export interface HarvesterMemory extends CreepMemory {
 }
 
 export interface HarvesterMemoryTargets {
-    energySources : Source[];
+    energySources : Id<Source>[];
     index: number;
     current: Id<Source>;
 }
@@ -23,8 +23,12 @@ export class Harvester implements Role {
         if (this.creep.store.getFreeCapacity() != 0) {
             var target = Game.getObjectById(this.memory.targets.current)
 
-            if (this.creep.harvest(target) == ERR_NOT_IN_RANGE) {
-                this.creep.moveTo(target);
+            if (!target) console.log("creep " + this.creep.name + " tried to go to id " + this.memory.targets.current + " which does not exist");
+            else
+            {
+                if (this.creep.harvest(target) == ERR_NOT_IN_RANGE) {
+                    this.creep.moveTo(target);
+                }
             }
         }
         else
@@ -54,10 +58,10 @@ export class Harvester implements Role {
         if (newTarget >= numTargets) newTarget = 0;
 
         (<HarvesterMemory>this.creep.memory).targets.index = newTarget;
-        (<HarvesterMemory>this.creep.memory).targets.current = this.memory.targets.energySources[newTarget].id;
+        (<HarvesterMemory>this.creep.memory).targets.current = this.memory.targets.energySources[newTarget];
     }
 
-    public static initialMemory(energySources) : HarvesterMemory
+    public static initialMemory(energySources : Id<Source>[]) : HarvesterMemory
     {
         var mem : HarvesterMemory;
         mem = {

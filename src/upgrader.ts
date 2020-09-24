@@ -9,14 +9,20 @@ export class Upgrader implements Role {
     public run() {
         var controller = this.creep.room.controller;
 
-        var result = this.creep.upgradeController(controller);
-        if (result === ERR_NOT_IN_RANGE)
+        if (!controller)
         {
-            this.creep.moveTo(controller);
+            console.log("somehow there is no controller for the room of creep " + this.creep.name);
         }
-        else if (result === ERR_NOT_ENOUGH_RESOURCES)
-        {
-            (<any>this.creep.memory).role = 'harvester';
+        else {
+            var result = this.creep.upgradeController(controller);
+            if (result === ERR_NOT_IN_RANGE)
+            {
+                this.creep.moveTo(controller);
+            }
+            else if (result === ERR_NOT_ENOUGH_RESOURCES)
+            {
+                (<any>this.creep.memory).role = 'harvester';
+            }
         }
     }
 }

@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "alwaysStrict": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "rootDir": "./src",
+        "outDir": "./out"
+    },
+    "include": [
+        "src/*.ts"
+    ]
+}
