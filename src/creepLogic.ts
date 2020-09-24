@@ -1,6 +1,6 @@
-import { Harvester } from "./harvester";
-import { Upgrader } from "./upgrader";
-import { Role } from "./types";
+import { Harvester } from "./roles/harvester";
+import { Upgrader } from "./roles/upgrader";
+import { Role } from "./roles/roles";
 
 export class CreepLogic {
     constructor(private creep : Creep)

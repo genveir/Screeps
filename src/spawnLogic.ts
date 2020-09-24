@@ -1,4 +1,4 @@
-import { Harvester } from './harvester';
+import { Harvester } from './roles/harvester';
 
 export class SpawnLogic
 {

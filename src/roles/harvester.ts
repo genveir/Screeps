@@ -1,4 +1,4 @@
-import { Role } from "./types";
+import { Role } from "./roles";
 
 export interface HarvesterMemory extends CreepMemory {
     role: string;

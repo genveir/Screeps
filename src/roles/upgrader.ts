@@ -1,4 +1,4 @@
-import { Role } from "./types";
+import { Role } from "./roles";
 
 export class Upgrader implements Role {
     constructor(private creep : Creep)
