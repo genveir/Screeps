@@ -1,0 +1,8 @@
+{
+  "name": "screeps",
+  "private": true,
+  "devDependencies": {},
+  "dependencies": {
+    "@types/screeps": "^3.2.0"
+  }
+}
