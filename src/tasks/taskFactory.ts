@@ -20,7 +20,7 @@ export class TaskFactory {
         switch(deserialized.type)
         {
             case Harvest.type: return new Harvest(deserialized.id, deserialized.claimedBy, deserialized.source, deserialized.pos);
-            case Upgrade.type: return new Upgrade(deserialized.id, deserialized.claimedBy);
+            case Upgrade.type: return new Upgrade(deserialized.id, deserialized.claimedBy, deserialized.controller);
             case FillSpawn.type: return new FillSpawn(deserialized.id, deserialized.claimedBy, deserialized.spawn);
             default: return new ErrorTask(deserialized.id, deserialized.claimedBy, deserialized);
         }

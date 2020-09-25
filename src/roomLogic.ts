@@ -1,3 +1,4 @@
+import { Idle } from './tasks/idle';
 import { Upgrade } from './tasks/upgrade';
 import { FillSpawn } from './tasks/fillSpawn';
 import { TaskFactory } from './tasks/taskFactory';
@@ -58,8 +59,12 @@ export class RoomLogic {
             taskList.addTask(new Harvest(TaskList.getNewId(), null, hs.id, roomPos));
         });
 
-        for (var i = 0; i < 10; i++) {
-            taskList.addTask(new Upgrade(TaskList.getNewId(), null));
+        var controller = this.room.controller;
+        if (controller)
+        {
+            for (var i = 0; i < 10; i++) {
+                taskList.addTask(new Upgrade(TaskList.getNewId(), null, controller.id));
+            }
         }
 
         this.room.find(FIND_MY_SPAWNS).forEach(spawn => 
