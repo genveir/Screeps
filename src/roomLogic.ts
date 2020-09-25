@@ -17,14 +17,19 @@ export class RoomLogic {
         var taskList = TaskList.getInstance(this.room);
         if (taskList.get().length === 0) this.initializeTasks(taskList);
 
+        // this.printTaskInfo(taskList);
+
+        this.room.memory.taskList = taskList.serialize();
+    }
+
+    private printTaskInfo(taskList : TaskList)
+    {
         var tasks = taskList.get();
         var totalTasks = tasks.length;
         var claimedTasks = tasks.filter(t => t.claimedBy).length;
         var unclaimedTasks = tasks.filter(t => !t.claimedBy).length;
 
         console.log("there are " + totalTasks + " tasks in room " + this.room.name + ", " + claimedTasks + " are claimed, " + unclaimedTasks + " are not");
-
-        this.room.memory.taskList = taskList.serialize();
     }
 
     private initializeEnergySlots() : void {

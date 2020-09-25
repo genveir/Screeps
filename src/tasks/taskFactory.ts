@@ -39,25 +39,13 @@ export class TaskFactory {
         if (task.claimedBy)
         {
             var matchingCreep = Game.getObjectById(task.claimedBy);
-            if (!matchingCreep) console.log("creep matched to task was dead but task was not unclaimed");
-            else {
-                if (!matchingCreep.memory.savedTask)
-                {
-                    console.log("creep matched to task " + task.type + " " + task.id + " did not have a claim");
-                    task.unclaim();
-                }
-                else
-                {
-                    var savedTask = this.deserialize(matchingCreep.memory.savedTask);
-                    if (!task.isEqualTo(savedTask))
-                    {
-                        console.log("creep matched to task is linked to other task");
-                        console.log("task: " + task.serialize());
-                        console.log("claim: " + savedTask.serialize());
-                        task.unclaim();
-                    }
-                }
-            }
+            if (!matchingCreep) {console.log("creep does not exist");}
+            else if (!matchingCreep.memory.savedTask)
+            {
+                console.log("creep matched to task " + task.type + " " + task.id + " did not have a claim");
+                console.log("creep: " + JSON.stringify(matchingCreep));
+                task.unclaim();
+            }   
         }
     }
 }
