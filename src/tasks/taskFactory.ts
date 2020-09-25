@@ -43,7 +43,7 @@ export class TaskFactory {
             else {
                 if (!matchingCreep.memory.savedTask)
                 {
-                    console.log("creep matched to task did not have a claim");
+                    console.log("creep matched to task " + task.type + " " + task.id + " did not have a claim");
                     task.unclaim();
                 }
                 else
@@ -51,6 +51,7 @@ export class TaskFactory {
                     var savedTask = this.deserialize(matchingCreep.memory.savedTask);
                     if (!task.isEqualTo(savedTask))
                     {
+                        console.log("creep matched to task is linked to other task");
                         console.log("task: " + task.serialize());
                         console.log("claim: " + savedTask.serialize());
                         task.unclaim();

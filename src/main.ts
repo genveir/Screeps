@@ -3,6 +3,13 @@ import { GameLogic } from "./gameLogic";
 import { SpawnLogic }  from "./spawnLogic";
 import { CreepLogic } from "./creepLogic";
 
+// clean up dead creep memory
+for (var creepName in Memory.creeps) {
+    if (!Game.creeps[creepName]) {
+        delete Memory.creeps[creepName];
+    }
+}
+
 // run logic that determines overall goals and strategies
 new GameLogic().run();
 
@@ -23,10 +30,3 @@ for (var creepName in Game.creeps) {
 }
 
 TaskList.saveAll();
-
-// clean up dead creep memory
-for (var creepName in Memory.creeps) {
-    if (!Game.creeps[creepName]) {
-        delete Memory.creeps[creepName];
-    }
-}
