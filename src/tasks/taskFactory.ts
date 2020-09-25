@@ -1,3 +1,4 @@
+import { Build } from './build';
 import { FillSpawn } from './fillSpawn';
 import { Upgrade } from './upgrade';
 import { Harvest } from './harvest';
@@ -23,6 +24,7 @@ export class TaskFactory {
             case Harvest.type: return new Harvest(deserialized.id, deserialized.claimedBy, deserialized.source, deserialized.pos);
             case Upgrade.type: return new Upgrade(deserialized.id, deserialized.claimedBy, deserialized.controller);
             case FillSpawn.type: return new FillSpawn(deserialized.id, deserialized.claimedBy, deserialized.spawn);
+            case Build.type: return new Build(deserialized.id, deserialized.claimedBy, deserialized.constructionSite);
             case Idle.type: return new Idle(deserialized.id, deserialized.claimedBy);
             default: return new ErrorTask(deserialized.id, deserialized.claimedBy, deserialized);
         }

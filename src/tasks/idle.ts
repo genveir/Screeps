@@ -6,6 +6,8 @@ export class Idle extends BaseTask implements Task {
 
     public constructor(id : string, claimedBy : Id<Creep> | null) {
         super(id, Idle.type, claimedBy);
+
+        this.clearOnNextTick = true;
     }
 
     public getPriority() {

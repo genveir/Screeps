@@ -51,13 +51,19 @@ export class TaskList {
         this.tasks.push(task);
     }
 
+    public removeTask(task : Task)
+    {
+        var index = this.tasks.indexOf(task);
+        this.tasks.splice(index, 1);
+    }
+
     public clear()
     {
         this.tasks = [];
     }
 
     public serialize() : string[] {
-        return this.tasks.map(t => t.serialize());
+        return this.tasks.filter(t => !t.clearOnNextTick).map(t => t.serialize());
     }
 
     public static getNewId() : string {

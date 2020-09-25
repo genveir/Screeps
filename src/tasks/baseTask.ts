@@ -2,8 +2,10 @@ import { Task } from "./task";
 import { TaskList } from "./tasklist";
 
 export abstract class BaseTask implements Task {
-    constructor(public id: string, public type : string, public claimedBy : Id<Creep> | null) {
+    public clearOnNextTick : boolean;
 
+    constructor(public id: string, public type : string, public claimedBy : Id<Creep> | null) {
+        this.clearOnNextTick = false;
     }
 
     public abstract getPriority() : number;

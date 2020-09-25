@@ -3,6 +3,8 @@ export interface Task {
     type : string;
     claimedBy : Id<Creep> | null;
 
+    clearOnNextTick : boolean;
+
     getPriority() : number;
 
     claim(creep : Creep) : void;
