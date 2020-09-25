@@ -1,4 +1,5 @@
 import { Task } from "./task";
+import { TaskList } from "./tasklist";
 
 export abstract class BaseTask implements Task {
     constructor(public id: string, public type : string, public claimedBy : Id<Creep> | null) {
@@ -11,15 +12,18 @@ export abstract class BaseTask implements Task {
         this.claimedBy = creep.id;
 
         creep.say(this.type);
-        creep.memory.savedTask = this.serialize();
+        creep.memory.savedTask = { active: true, roomName: creep.room.name, taskId: this.id };
     }
 
-    public unclaim() {        
+    public unclaim() {     
         if (this.claimedBy)
         {
             var creep = Game.getObjectById(this.claimedBy);
 
-            if (creep) creep.memory.savedTask = null;
+            if (creep) {
+                if (!creep.memory.savedTask) creep.memory.savedTask = {active: false, roomName: "", taskId: ""};
+                creep.memory.savedTask.active = false;
+            } 
             this.claimedBy = null;
         }
     }

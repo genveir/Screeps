@@ -11,6 +11,12 @@ export class TaskList {
     }
 
     private static _instances : Map<string, TaskList>;
+    public static getInstanceByName(roomName : string) : TaskList | null
+    {
+        var room = Game.rooms[roomName];
+        if (room) return this.getInstance(room);
+        else return null;
+    }
     public static getInstance(room : Room) : TaskList
     {
         if (!this._instances) this._instances = new Map<string, TaskList>();
@@ -30,8 +36,14 @@ export class TaskList {
         }
     }
 
-    public get() : Task[] {
+    public getAll() : Task[] {
         return this.tasks;
+    }
+
+    public getById(id : string) : Task | null {
+        var byId = this.tasks.filter(t => t.id === id);
+        if (byId.length > 0) return byId[0];
+        else return null;
     }
 
     public addTask(task : Task)

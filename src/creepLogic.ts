@@ -1,3 +1,4 @@
+import { RoomLogic } from './roomLogic';
 import { Idle } from './tasks/idle';
 import { TaskList } from './tasks/tasklist';
 import { TaskFactory } from "./tasks/taskFactory";
@@ -13,20 +14,32 @@ export class CreepLogic {
     {
         if(this.creep.spawning) return;
 
+        if (!this.creep.memory.savedTask) {this.creep.memory.savedTask = {active: false, roomName: "", taskId: ""}};
+
         var task : Task;
-        if (!this.creep.memory.savedTask)
+        
+        var savedTask : Task | null;
+        if (this.creep.memory.savedTask.active)
+        {
+            savedTask = TaskList
+                .getInstanceByName(this.creep.memory.savedTask.roomName)!
+                .getById(this.creep.memory.savedTask.taskId);
+        }
+        else { savedTask = null; }
+
+        if (!savedTask)
         {
             task = this.getTask();
             task.claim(this.creep);
         }
-        task = new TaskFactory().CreateTask(this.creep.memory.savedTask!); // claim sets the savedTask
+        else task = savedTask;
         
         task.execute(this.creep);
     }
 
     private getTask() : Task
     {
-        var tasks = TaskList.getInstance(this.creep.room).get();
+        var tasks = TaskList.getInstance(this.creep.room).getAll();
 
         tasks.sort((a, b) => a.getPriority() - b.getPriority());
 

@@ -9,9 +9,22 @@ export class SpawnLogic
 
         var creepcount = spawnRoom.find(FIND_CREEPS).length;
         
+        var energySlots = spawnRoom.memory.energySlots.length;
+
         if (!this.spawn.spawning) {
-            if (creepcount < 10) {
-                this.spawn.spawnCreep([WORK,CARRY,CARRY,MOVE,MOVE], 'Creep' + Game.time);
+            if (creepcount < energySlots * 2) {
+                this.spawn.spawnCreep(
+                    [WORK,CARRY,CARRY,MOVE,MOVE], 
+                    'Creep' + Game.time, 
+                    { 
+                        memory: { 
+                            savedTask: { 
+                                active: false, 
+                                roomName: this.spawn.room.name, 
+                                taskId: ""
+                            }
+                        }
+                    });
             }
         }
     }

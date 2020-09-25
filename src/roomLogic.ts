@@ -15,7 +15,7 @@ export class RoomLogic {
     run() {
         // persistent task list
         var taskList = TaskList.getInstance(this.room);
-        if (taskList.get().length === 0) this.initializeTasks(taskList);
+        if (taskList.getAll().length === 0) this.initializeTasks(taskList);
 
         // this.printTaskInfo(taskList);
 
@@ -24,7 +24,7 @@ export class RoomLogic {
 
     private printTaskInfo(taskList : TaskList)
     {
-        var tasks = taskList.get();
+        var tasks = taskList.getAll();
         var totalTasks = tasks.length;
         var claimedTasks = tasks.filter(t => t.claimedBy).length;
         var unclaimedTasks = tasks.filter(t => !t.claimedBy).length;
@@ -65,14 +65,14 @@ export class RoomLogic {
         var controller = this.room.controller;
         if (controller)
         {
-            for (var i = 0; i < 10; i++) {
+            for (var i = 0; i < harvestTasks.length; i++) {
                 taskList.addTask(new Upgrade(TaskList.getNewId(), null, controller.id));
             }
         }
 
         this.room.find(FIND_MY_SPAWNS).forEach(spawn => 
         {
-            for (var i = 0; i < 10; i++) {
+            for (var i = 0; i < harvestTasks.length; i++) {
                 taskList.addTask(new FillSpawn(TaskList.getNewId(), null, spawn.id))
             }
         });

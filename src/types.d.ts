@@ -1,5 +1,3 @@
-
-
 interface FlagMemory { [name: string]: any }
 interface SpawnMemory { [name: string]: any }
 
@@ -22,6 +20,11 @@ interface RoomMemory {
  }
 
 interface CreepMemory {
-    role: string;
-    savedTask : string | null;
+    savedTask : SavedTask;
+}
+
+interface SavedTask {
+    active : boolean;
+    roomName : string;
+    taskId : string;
 }
