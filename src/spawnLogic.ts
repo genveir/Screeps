@@ -11,7 +11,7 @@ export class SpawnLogic
         
         if (!this.spawn.spawning) {
             if (creepcount < 10) {
-                this.spawn.spawnCreep([WORK,CARRY,CARRY,MOVE,MOVE], 'Harvester' + Game.time);
+                this.spawn.spawnCreep([WORK,CARRY,CARRY,MOVE,MOVE], 'Creep' + Game.time);
             }
         }
     }
