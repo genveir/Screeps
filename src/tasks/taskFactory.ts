@@ -5,6 +5,7 @@ import { Upgrade } from './upgrade';
 import { Harvest } from './harvest';
 import { Task } from './task';import { ErrorTask } from './error';
 import { Idle } from './idle';
+import { Refuel } from './refuel';
 
 export class TaskFactory {
     public CreateTask(serialized : string) : Task {
@@ -27,6 +28,7 @@ export class TaskFactory {
             case FillSpawn.type: return new FillSpawn(deserialized.id, deserialized.claimedBy, deserialized.spawn);
             case Build.type: return new Build(deserialized.id, deserialized.claimedBy, deserialized.constructionSite);
             case Repair.type: return new Repair(deserialized.id, deserialized.claimedBy, deserialized.structure);
+            case Refuel.type : return new Refuel(deserialized.id, deserialized.claimedBy, deserialized.tower);
             case Idle.type: return new Idle(deserialized.id, deserialized.claimedBy);
             default: return new ErrorTask(deserialized.id, deserialized.claimedBy, deserialized);
         }

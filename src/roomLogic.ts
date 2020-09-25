@@ -144,7 +144,9 @@ export class RoomLogic {
         towers.forEach(t => {
             var refuelCount = refuelTasks.filter(rt => rt.tower == t.id).length;
 
-            if (refuelCount > 3) taskList.addTask(new Refuel(TaskList.getNewId(), null, t.id));
+            for (var i = refuelCount; i < 5; i++) {
+                taskList.addTask(new Refuel(TaskList.getNewId(), null, t.id));
+            } 
         })
     }
 
@@ -176,6 +178,7 @@ export class RoomLogic {
                 }
             }
         }
+        else return;
 
         console.log("unable to build spawn tower");
     }
