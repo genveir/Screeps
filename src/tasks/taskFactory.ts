@@ -9,6 +9,8 @@ export class TaskFactory {
 
         this.unclaimTaskIfClaimedByDeadCreep(task);
 
+        this.checkClaimIntegrity(task);
+
         return task;
     }
 
@@ -24,11 +26,37 @@ export class TaskFactory {
         }
     }
 
-    private unclaimTaskIfClaimedByDeadCreep(task : Task)
-    {
+    private unclaimTaskIfClaimedByDeadCreep(task : Task) : void {
         var claimedBy = task.claimedBy;
         if (claimedBy) {
             if (!Game.getObjectById(claimedBy)) task.unclaim();
+        }
+    }
+
+    private checkClaimIntegrity(task : Task) : void {
+        var claimedBy = task.claimedBy;
+
+        if (task.claimedBy)
+        {
+            var matchingCreep = Game.getObjectById(task.claimedBy);
+            if (!matchingCreep) console.log("creep matched to task was dead but task was not unclaimed");
+            else {
+                if (!matchingCreep.memory.savedTask)
+                {
+                    console.log("creep matched to task did not have a claim");
+                    task.unclaim();
+                }
+                else
+                {
+                    var savedTask = this.deserialize(matchingCreep.memory.savedTask);
+                    if (!task.isEqualTo(savedTask))
+                    {
+                        console.log("task: " + task.serialize());
+                        console.log("claim: " + savedTask.serialize());
+                        task.unclaim();
+                    }
+                }
+            }
         }
     }
 }

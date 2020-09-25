@@ -22,6 +22,14 @@ export class TaskList {
         return TaskList._instances.get(room.name)!;
     }
 
+    public static saveAll() {
+        for (var roomName in Game.rooms)
+        {
+            var room = Game.rooms[roomName];
+            room.memory.taskList = this.getInstance(room).serialize();
+        }
+    }
+
     public get() : Task[] {
         return this.tasks;
     }

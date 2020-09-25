@@ -31,4 +31,8 @@ export abstract class BaseTask implements Task {
     public abstract serialize() : string;
 
     public abstract report() : string;
+
+    public isEqualTo(task : Task) : boolean {
+        return this.serialize() === task.serialize();
+    }
 }

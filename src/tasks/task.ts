@@ -14,4 +14,6 @@ export interface Task {
 
     // give me debug info
     report() : string;
+
+    isEqualTo(task : Task) : boolean;
 }

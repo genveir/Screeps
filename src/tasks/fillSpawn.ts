@@ -8,13 +8,19 @@ export class FillSpawn extends BaseTask implements Task {
         super(FillSpawn.type, claimedBy);
     }
 
-    public getPriority() {
+    private getSpawn() : StructureSpawn | null {
         var spawn = Game.getObjectById(this.spawn);
         if (!spawn)
         {
             console.log("spawn " + this.spawn + " does not exist");
             this.unclaim();
+        }
+        return spawn;
+    }
 
+    public getPriority() {
+        var spawn = this.getSpawn();
+        if (!spawn) {
             return 0;
         }
         else
@@ -24,7 +30,13 @@ export class FillSpawn extends BaseTask implements Task {
     }
 
     public canPerform(creep: Creep) {
-        return creep.store.energy > 0;
+        var spawn = this.getSpawn();
+
+        if (!spawn) { return false; }
+        else {
+        return creep.store.energy > 0 &&
+            spawn.energy < spawn.energyCapacity;
+        }
     }
 
     public execute(creep: Creep) {

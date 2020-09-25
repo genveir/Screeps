@@ -1,3 +1,4 @@
+import { TaskList } from './tasks/tasklist';
 import { GameLogic } from "./gameLogic";
 import { SpawnLogic }  from "./spawnLogic";
 import { CreepLogic } from "./creepLogic";
@@ -20,6 +21,8 @@ for (var creepName in Game.creeps) {
     var creepLogic = new CreepLogic(creep);
     creepLogic.run();
 }
+
+TaskList.saveAll();
 
 // clean up dead creep memory
 for (var creepName in Memory.creeps) {
