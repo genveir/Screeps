@@ -1,6 +1,11 @@
+
+
 interface FlagMemory { [name: string]: any }
 interface SpawnMemory { [name: string]: any }
-interface RoomMemory { [name: string]: any }
+
+interface RoomMemory { 
+    taskList : string[];
+ }
 
 interface CreepMemory {
     role: string;
