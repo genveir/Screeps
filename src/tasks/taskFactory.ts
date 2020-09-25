@@ -4,11 +4,29 @@ import { Task } from './task';import { ErrorTask } from './error';
 
 export class TaskFactory {
     public CreateTask(serialized : string) : Task {
-        switch(serialized)
+        var task  = this.deserialize(serialized);
+
+        this.unclaimTaskIfClaimedByDeadCreep(task);
+
+        return task;
+    }
+
+    private deserialize(serialized: string) : Task {
+        var deserialized : any = JSON.parse(serialized);
+
+        switch(deserialized.type)
         {
-            case Harvest.SERIALIZED: return new Harvest();
-            case Upgrade.SERIALIZED: return new Upgrade();
-            default: return new ErrorTask();
+            case Harvest.type: return new Harvest(deserialized.source, deserialized.pos, deserialized.claimedBy);
+            case Upgrade.type: return new Upgrade();
+            default: return new ErrorTask(deserialized);
+        }
+    }
+
+    private unclaimTaskIfClaimedByDeadCreep(task : Task)
+    {
+        var claimedBy = task.claimedBy;
+        if (claimedBy) {
+            if (!Game.creeps[claimedBy]) task.unclaim();
         }
     }
 }

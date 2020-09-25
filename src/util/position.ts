@@ -24,4 +24,11 @@ export class PositionUtil {
 
         return toReturn;
     }
+
+    public static compare(a : {x : number, y: number}, b : {x : number, y: number}) : number {
+        var aVal = a.x * 100 + a.y;
+        var bVal = b.x * 100 + b.y;
+
+        return aVal - bVal;
+    }
 }
