@@ -5,6 +5,7 @@ interface SpawnMemory { [name: string]: any }
 
 interface RoomMemory { 
     taskList : string[];
+    energySlots : RoomPosition[];
  }
 
 interface CreepMemory {
