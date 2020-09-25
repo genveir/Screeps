@@ -1,10 +1,11 @@
 var path = require('path');
+var localConfig = require('./localconfig.json')
 
 module.exports = {
     mode: 'production',
     entry: './out/main.js',
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: localConfig.dist,
         filename: 'main.js'
     }
 };
