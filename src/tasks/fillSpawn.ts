@@ -18,7 +18,7 @@ export class FillSpawn extends BaseTask implements Task {
         return spawn;
     }
 
-    public getPriority(creep : Creep) {
+    public getPriority() {
         var spawn = this.getSpawn();
         if (!spawn) {
             return 0;
@@ -59,9 +59,5 @@ export class FillSpawn extends BaseTask implements Task {
 
     public serialize() {
         return JSON.stringify(this);
-    }
-
-    public report() {
-        return "This is a FillSpawn task";
     }
 }

@@ -1,3 +1,4 @@
+import { Refuel } from './tasks/refuel';
 import { Build } from './tasks/build';
 import { Upgrade } from './tasks/upgrade';
 import { FillSpawn } from './tasks/fillSpawn';
@@ -20,14 +21,35 @@ export class RoomLogic {
         if (this.room.controller)
         {
             if (this.room.controller.level > 1) this.buildControllerRoad();
+            if (this.room.controller.level > 2) this.buildSpawnTower();
         }
 
         this.manageBuildTasks(taskList);
         this.manageRepairTasks(taskList);
+        this.manageRefuelTasks(taskList);
 
+        this.fireTowers();
         // this.printTaskInfo(taskList);
 
         this.room.memory.taskList = taskList.serialize();
+    }
+
+    private fireTowers() {
+        var towers = this.room.find(FIND_MY_STRUCTURES).filter(s => s.structureType === STRUCTURE_TOWER).map(s => <StructureTower>s);
+        if (towers.length === 0) return;
+
+        var enemies = this.room.find(FIND_HOSTILE_CREEPS);
+        if (enemies.length === 0) return;
+
+        towers.forEach(t => {
+            var closest : number = 1000;
+            var target : Creep;
+            enemies.forEach(e => {
+                if (PositionUtil.getManhattanDistance(t.pos, e.pos) < closest) target = e;
+            })
+
+            t.attack(target!);
+        });
     }
 
     private printTaskInfo(taskList : TaskList)
@@ -111,6 +133,51 @@ export class RoomLogic {
 
             if (repairCount < 1) taskList.addTask(new Repair(TaskList.getNewId(), null, s.id));
         })
+    }
+
+    private manageRefuelTasks(taskList : TaskList) : void {
+        var towers = this.room.find(FIND_MY_STRUCTURES).filter(s => s.structureType === STRUCTURE_TOWER).map(s => <StructureTower>s);
+        if (towers.length === 0) return;
+
+        var refuelTasks = taskList.getAll().filter(t => t.type === Refuel.type).map(t => <Refuel>t);
+
+        towers.forEach(t => {
+            var refuelCount = refuelTasks.filter(rt => rt.tower == t.id).length;
+
+            if (refuelCount > 3) taskList.addTask(new Refuel(TaskList.getNewId(), null, t.id));
+        })
+    }
+
+    private buildSpawnTower() : void {
+        var towers = this.room.find(FIND_MY_STRUCTURES).filter(s => s.structureType === STRUCTURE_TOWER);
+
+        if (!this.room.controller) return;
+
+        var spawns = this.room.find(FIND_MY_SPAWNS);
+        if (spawns.length === 0) return;
+
+        var spawnPos = spawns[0].pos;
+
+        if (towers.length === 0)
+        {
+            for (var xOffset = -2; xOffset <= 2; xOffset++) {
+                for (var yOffset = -2; yOffset <= 2; yOffset++) {
+                    if (xOffset === -2 || xOffset === 2 || yOffset === -2 || yOffset === 2)
+                    {
+                        var buildSite = new RoomPosition(spawnPos.x + xOffset, spawnPos.y + yOffset, spawnPos.roomName);
+
+                        var sites = buildSite.lookFor(LOOK_CONSTRUCTION_SITES).filter(cs => cs.structureType === STRUCTURE_TOWER);
+                        if (sites.length > 0) return;
+
+                        var result = buildSite.createConstructionSite(STRUCTURE_TOWER);
+
+                        if (result === 0) return;
+                    }
+                }
+            }
+        }
+
+        console.log("unable to build spawn tower");
     }
 
     private buildControllerRoad() : void {
