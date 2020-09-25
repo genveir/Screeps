@@ -4,8 +4,8 @@ import { BaseTask } from './baseTask';
 export class Upgrade extends BaseTask implements Task {
     public static readonly type : string = "UPGRADE";
 
-    constructor(claimedBy : Id<Creep> | null) {
-        super(Upgrade.type, claimedBy);
+    constructor(id : string, claimedBy : Id<Creep> | null) {
+        super(id, Upgrade.type, claimedBy);
     }
 
     public getPriority() {

@@ -4,8 +4,8 @@ import { BaseTask } from './baseTask';
 export class ErrorTask extends BaseTask implements Task {
     public static type : string = "ERROR";
 
-    public constructor(claimedBy : Id<Creep> | null, private message : string) {
-        super(ErrorTask.type, claimedBy);
+    public constructor(id : string, claimedBy : Id<Creep> | null, private message : string) {
+        super(id, ErrorTask.type, claimedBy);
 
         //console.log("invalid task: " + message)
     }

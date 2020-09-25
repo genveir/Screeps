@@ -1,4 +1,4 @@
-import { ErrorTask } from './tasks/error';
+import { Idle } from './tasks/idle';
 import { TaskList } from './tasks/tasklist';
 import { TaskFactory } from "./tasks/taskFactory";
 import { Task } from "./tasks/task";
@@ -29,7 +29,7 @@ export class CreepLogic {
         tasks.sort((a, b) => a.getPriority() - b.getPriority());
 
         var toReturn : Task;
-        toReturn = new ErrorTask(this.creep.id, "no task available for creep " + this.creep.id);
+        toReturn = new Idle(TaskList.getNewId(), this.creep.id);
 
         tasks.forEach(task => 
         {

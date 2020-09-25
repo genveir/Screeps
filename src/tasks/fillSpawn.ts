@@ -4,8 +4,8 @@ import { BaseTask } from './baseTask';
 export class FillSpawn extends BaseTask implements Task {
     public static readonly type : string = "FILLSPAWN";
     
-    constructor(claimedBy : Id<Creep> | null, private spawn : Id<StructureSpawn>) {
-        super(FillSpawn.type, claimedBy);
+    constructor(id: string, claimedBy : Id<Creep> | null, private spawn : Id<StructureSpawn>) {
+        super(id, FillSpawn.type, claimedBy);
     }
 
     private getSpawn() : StructureSpawn | null {

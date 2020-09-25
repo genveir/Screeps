@@ -4,8 +4,8 @@ import { Task } from './task';
 export class Harvest extends BaseTask implements Task {
     public static type : string = "HARVEST";
 
-    constructor(claimedBy: Id<Creep> | null, private source : Id<Source>, private pos : RoomPosition) {
-        super(Harvest.type, claimedBy);
+    constructor(id : string, claimedBy: Id<Creep> | null, private source : Id<Source>, private pos : RoomPosition) {
+        super(id, Harvest.type, claimedBy);
     }
 
     public getPriority() {
@@ -39,7 +39,7 @@ export class Harvest extends BaseTask implements Task {
 
     public serialize() : string {
         return JSON.stringify(
-            {type: this.type, source: this.source, pos: {x: this.pos.x, y: this.pos.y, roomName: this.pos.roomName}, claimedBy: this.claimedBy }
+            {id: this.id, type: this.type, source: this.source, pos: {x: this.pos.x, y: this.pos.y, roomName: this.pos.roomName}, claimedBy: this.claimedBy }
             );
     }
 

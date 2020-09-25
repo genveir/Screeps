@@ -55,17 +55,17 @@ export class RoomLogic {
 
         var harvestTasks = harvestSlots.map(hs => {
             var roomPos = new RoomPosition(hs.pos.x, hs.pos.y, hs.pos.roomName);
-            taskList.addTask(new Harvest(null, hs.id, roomPos));
+            taskList.addTask(new Harvest(TaskList.getNewId(), null, hs.id, roomPos));
         });
 
         for (var i = 0; i < 10; i++) {
-            taskList.addTask(new Upgrade(null));
+            taskList.addTask(new Upgrade(TaskList.getNewId(), null));
         }
 
         this.room.find(FIND_MY_SPAWNS).forEach(spawn => 
         {
             for (var i = 0; i < 10; i++) {
-                taskList.addTask(new FillSpawn(null, spawn.id))
+                taskList.addTask(new FillSpawn(TaskList.getNewId(), null, spawn.id))
             }
         });
     }

@@ -1,4 +1,5 @@
 export interface Task {
+    id : string;
     type : string;
     claimedBy : Id<Creep> | null;
 

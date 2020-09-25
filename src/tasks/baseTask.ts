@@ -1,7 +1,7 @@
 import { Task } from "./task";
 
 export abstract class BaseTask implements Task {
-    constructor(public type : string, public claimedBy : Id<Creep> | null) {
+    constructor(public id: string, public type : string, public claimedBy : Id<Creep> | null) {
 
     }
 

@@ -47,4 +47,15 @@ export class TaskList {
     public serialize() : string[] {
         return this.tasks.map(t => t.serialize());
     }
+
+    public static getNewId() : string {
+        if (!Memory.taskId) {
+            Memory.taskid = 0;
+        }
+
+        var currentId = Memory.taskId;
+        Memory.taskId = currentId + 1;
+
+        return currentId;
+    }
 }
