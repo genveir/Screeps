@@ -46,8 +46,4 @@ export class Upgrade extends BaseTask implements Task {
     public serialize() : string {
         return JSON.stringify(this);
     }
-
-    public report() : string {
-        return "This is a working Upgrade task";
-    }
 }

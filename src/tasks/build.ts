@@ -19,8 +19,13 @@ export class Build extends BaseTask implements Task {
         return constructionSite;
     }
 
-    public getPriority() {
-        return 100;
+    public getPriority(creep : Creep) {
+        var site = this.getSite();
+        if (!site) return 0;
+        else {
+            
+            return 100;
+        }
     }
 
     public canPerform(creep : Creep)

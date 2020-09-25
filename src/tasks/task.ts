@@ -5,7 +5,7 @@ export interface Task {
 
     clearOnNextTick : boolean;
 
-    getPriority() : number;
+    getPriority(creep : Creep) : number;
 
     claim(creep : Creep) : void;
     unclaim() : void;
@@ -14,9 +14,6 @@ export interface Task {
     execute(creep: Creep) : void;
 
     serialize() : string;
-
-    // give me debug info
-    report() : string;
 
     isEqualTo(task : Task) : boolean;
 }

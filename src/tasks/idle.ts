@@ -10,8 +10,8 @@ export class Idle extends BaseTask implements Task {
         this.clearOnNextTick = true;
     }
 
-    public getPriority() {
-        return 1000000;
+    public getPriority(creep : Creep) {
+        return -1000000;
     }
 
     public canPerform(creep : Creep) {
@@ -24,9 +24,5 @@ export class Idle extends BaseTask implements Task {
 
     public serialize() : string {
         return JSON.stringify(this);
-    }
-
-    public report() : string {
-        return "creep is just chilling";
     }
 }

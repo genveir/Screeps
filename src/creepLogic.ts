@@ -41,7 +41,7 @@ export class CreepLogic {
     {
         var tasks = TaskList.getInstance(this.creep.room).getAll();
 
-        tasks.sort((a, b) => a.getPriority() - b.getPriority());
+        tasks.sort((a, b) => a.getPriority(this.creep) - b.getPriority(this.creep));
 
         var toReturn : Task;
         toReturn = new Idle(TaskList.getNewId(), this.creep.id);

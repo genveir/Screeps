@@ -8,7 +8,7 @@ export abstract class BaseTask implements Task {
         this.clearOnNextTick = false;
     }
 
-    public abstract getPriority() : number;
+    public abstract getPriority(creep : Creep) : number;
     
     public claim(creep : Creep) {
         this.claimedBy = creep.id;
@@ -35,8 +35,6 @@ export abstract class BaseTask implements Task {
     public abstract execute(creep: Creep) : void;
 
     public abstract serialize() : string;
-
-    public abstract report() : string;
 
     public isEqualTo(task : Task) : boolean {
         return this.serialize() === task.serialize();

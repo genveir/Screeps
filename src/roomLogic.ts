@@ -4,6 +4,7 @@ import { FillSpawn } from './tasks/fillSpawn';
 import { Harvest } from './tasks/harvest';
 import { PositionUtil } from './util/position';
 import { TaskList } from './tasks/tasklist';
+import { Repair } from './tasks/repair';
 
 export class RoomLogic {
     constructor(private room: Room) {
@@ -22,6 +23,7 @@ export class RoomLogic {
         }
 
         this.manageBuildTasks(taskList);
+        this.manageRepairTasks(taskList);
 
         // this.printTaskInfo(taskList);
 
@@ -92,10 +94,23 @@ export class RoomLogic {
             var buildCount = buildTasks.filter(bt => bt.constructionSite === cs.id).length;
             
             for (var i = buildCount; i < 2; i++) {
-                console.log("adding build task for site at " + cs.pos.x + "," + cs.pos.y);
                 taskList.addTask(new Build(TaskList.getNewId(), null, cs.id));
             }
         });
+    }
+
+    private manageRepairTasks(taskList : TaskList) : void {
+        var structures : Structure[] = this.room.find(FIND_MY_STRUCTURES).filter(s => s.hits < s.hitsMax);
+        var roads : Structure[] = this.room.find(FIND_STRUCTURES).filter(s => s.structureType === STRUCTURE_ROAD).filter(s => s.hits < s.hitsMax / 2);
+        var toRepair : Structure[] = structures.concat(roads);
+
+        var repairTasks = taskList.getAll().filter(t => t.type === Repair.type).map(t => <Repair>t);
+
+        toRepair.forEach(s => {
+            var repairCount = repairTasks.filter(rt => rt.structure === s.id).length;
+
+            if (repairCount < 1) taskList.addTask(new Repair(TaskList.getNewId(), null, s.id));
+        })
     }
 
     private buildControllerRoad() : void {
@@ -108,16 +123,7 @@ export class RoomLogic {
             var controllerPos = this.room.controller.pos;
             var spawnPos = spawns[0].pos;
 
-            var startX : number;
-            var startY : number;
-            if (controllerPos.x > spawnPos.x) startX = spawnPos.x + 1;
-            else startX = spawnPos.x - 1;
-            if (controllerPos.y > spawnPos.y) startY = spawnPos.y + 1;
-            else startY = spawnPos.y - 1;
-
-            var startPos = new RoomPosition(startX, startY, this.room.name);
-
-            var found = PathFinder.search(startPos, {pos: controllerPos, range: 1}, {swampCost: 1, maxRooms: 1});
+            var found = PathFinder.search(spawnPos, {pos: controllerPos, range: 1}, {swampCost: 1, maxRooms: 1});
             if (!found.incomplete)
             {
                 this.room.memory.controllerRoadPath = found.path;
@@ -141,10 +147,7 @@ export class RoomLogic {
         var potentialsToConvert = 5 - numSites;
         if (potentialsToConvert > potentials.length) potentialsToConvert = potentials.length;
 
-        console.log("building " + potentialsToConvert + " new road sites");
-
         for (var i = 0; i < potentialsToConvert; i++) {
-            console.log("building site at " + potentials[i].x + "," + potentials[i].y);
             var result = potentials[i].createConstructionSite(STRUCTURE_ROAD);
 
             if (result !== 0) 

@@ -11,8 +11,8 @@ export class ErrorTask extends BaseTask implements Task {
         //console.log("invalid task: " + message)
     }
 
-    public getPriority() {
-        return 1000000;
+    public getPriority(creep : Creep) {
+        return -1000000;
     }
 
     public canPerform(creep : Creep) {
@@ -29,9 +29,5 @@ export class ErrorTask extends BaseTask implements Task {
 
     public serialize() : string {
         return JSON.stringify(this);
-    }
-
-    public report() : string {
-        return "invalid task: " + this.message;
     }
 }

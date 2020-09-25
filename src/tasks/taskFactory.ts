@@ -1,3 +1,4 @@
+import { Repair } from './repair';
 import { Build } from './build';
 import { FillSpawn } from './fillSpawn';
 import { Upgrade } from './upgrade';
@@ -25,6 +26,7 @@ export class TaskFactory {
             case Upgrade.type: return new Upgrade(deserialized.id, deserialized.claimedBy, deserialized.controller);
             case FillSpawn.type: return new FillSpawn(deserialized.id, deserialized.claimedBy, deserialized.spawn);
             case Build.type: return new Build(deserialized.id, deserialized.claimedBy, deserialized.constructionSite);
+            case Repair.type: return new Repair(deserialized.id, deserialized.claimedBy, deserialized.structure);
             case Idle.type: return new Idle(deserialized.id, deserialized.claimedBy);
             default: return new ErrorTask(deserialized.id, deserialized.claimedBy, deserialized);
         }

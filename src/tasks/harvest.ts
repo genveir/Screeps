@@ -8,7 +8,7 @@ export class Harvest extends BaseTask implements Task {
         super(id, Harvest.type, claimedBy);
     }
 
-    public getPriority() {
+    public getPriority(creep : Creep) {
         return 100;
     }
 
