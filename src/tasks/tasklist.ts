@@ -50,7 +50,7 @@ export class TaskList {
 
     public static getNewId() : string {
         if (!Memory.taskId) {
-            Memory.taskid = 0;
+            Memory.taskId = 0;
         }
 
         var currentId = Memory.taskId;
