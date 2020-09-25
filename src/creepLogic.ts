@@ -12,7 +12,7 @@ export class CreepLogic {
     public run()
     {
         var task : Task;
-        if (this.creep.memory.savedTask === null)
+        if (!this.creep.memory.savedTask)
         {
             task = this.getTask();
             task.claim(this.creep);
@@ -24,18 +24,25 @@ export class CreepLogic {
 
     private getTask() : Task
     {
-        var tasks = new TaskList(this.creep.room).get();
+        var tasks = TaskList.getInstance(this.creep.room).get();
 
         tasks.sort((a, b) => a.getPriority() - b.getPriority());
+
+        var toReturn : Task;
+        toReturn = new ErrorTask(this.creep.id, "no task available for creep " + this.creep.id);
 
         tasks.forEach(task => 
         {
             if(task.canPerform(this.creep)) 
             {
-                return task;
+                if (!task.claimedBy) 
+                {
+                    toReturn = task;
+                    return;
+                }
             }
         });
 
-        return new ErrorTask("no task available for creep " + this.creep.id);
+        return toReturn;
     }
 }

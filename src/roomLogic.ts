@@ -13,7 +13,7 @@ export class RoomLogic {
 
     run() {
         // persistent task list
-        var taskList = new TaskList(this.room);
+        var taskList = TaskList.getInstance(this.room);
         if (taskList.get().length === 0) this.initializeTasks(taskList);
 
         console.log("running logic for room " + this.room.name + " which has " + this.room.memory.energySlots.length + " energy slots");

@@ -20,7 +20,7 @@ export class TaskFactory {
             case Harvest.type: return new Harvest(deserialized.claimedBy, deserialized.source, deserialized.pos);
             case Upgrade.type: return new Upgrade(deserialized.claimedBy);
             case FillSpawn.type: return new FillSpawn(deserialized.claimedBy, deserialized.spawn);
-            default: return new ErrorTask(deserialized);
+            default: return new ErrorTask(deserialized.claimedBy, deserialized);
         }
     }
 
@@ -28,7 +28,7 @@ export class TaskFactory {
     {
         var claimedBy = task.claimedBy;
         if (claimedBy) {
-            if (!Game.creeps[claimedBy]) task.unclaim();
+            if (!Game.getObjectById(claimedBy)) task.unclaim();
         }
     }
 }

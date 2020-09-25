@@ -20,14 +20,16 @@ export class Harvest extends BaseTask implements Task {
         if (creep.pos.isEqualTo(this.pos.x, this.pos.y)) {
             var source = Game.getObjectById(this.source);
             if (!source) {
-                console.log("somehow source " + this.source + " is gone");
                 this.unclaim();
             }
             else
             {
                 creep.harvest(source);
             
-                if (!this.canPerform(creep)) this.unclaim();
+                if (!this.canPerform(creep))
+                {
+                    this.unclaim();
+                } 
             }
         }
         else {

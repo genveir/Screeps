@@ -10,13 +10,15 @@ export abstract class BaseTask implements Task {
     public claim(creep : Creep) {
         this.claimedBy = creep.id;
 
+        creep.say(this.type);
         creep.memory.savedTask = this.serialize();
     }
 
-    public unclaim() {
+    public unclaim() {        
         if (this.claimedBy)
         {
-            var creep = Game.creeps[this.claimedBy];
+            var creep = Game.getObjectById(this.claimedBy);
+
             if (creep) creep.memory.savedTask = null;
             this.claimedBy = null;
         }

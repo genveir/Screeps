@@ -4,10 +4,10 @@ import { BaseTask } from './baseTask';
 export class ErrorTask extends BaseTask implements Task {
     public static type : string = "ERROR";
 
-    public constructor(private message : string) {
-        super(ErrorTask.type, null);
+    public constructor(claimedBy : Id<Creep> | null, private message : string) {
+        super(ErrorTask.type, claimedBy);
 
-        console.log("invalid task: " + message)
+        //console.log("invalid task: " + message)
     }
 
     public getPriority() {
@@ -19,8 +19,10 @@ export class ErrorTask extends BaseTask implements Task {
     }
 
     public execute(creep : Creep) {
-        console.log("invalid task: " + this.message)
+        //console.log("invalid task: " + this.message)
 
+        console.log("executing error task, unclaiming");
+        delete creep.memory.savedTask;
         this.unclaim();
     }
 

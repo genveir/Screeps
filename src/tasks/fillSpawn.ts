@@ -24,7 +24,7 @@ export class FillSpawn extends BaseTask implements Task {
     }
 
     public canPerform(creep: Creep) {
-        return creep.store.getFreeCapacity() === 0;
+        return creep.store.energy > 0;
     }
 
     public execute(creep: Creep) {
