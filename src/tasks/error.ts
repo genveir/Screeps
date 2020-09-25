@@ -19,10 +19,9 @@ export class ErrorTask extends BaseTask implements Task {
     }
 
     public execute(creep : Creep) {
-        //console.log("invalid task: " + this.message)
+        console.log("executing invalid task: " + this.message)
+        console.log("creep: " + JSON.stringify(creep));
 
-        console.log("executing error task, unclaiming");
-        console.log(JSON.stringify(creep));
         delete creep.memory.savedTask;
         this.unclaim();
     }

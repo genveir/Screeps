@@ -11,6 +11,8 @@ export class CreepLogic {
 
     public run()
     {
+        if(this.creep.spawning) return;
+
         var task : Task;
         if (!this.creep.memory.savedTask)
         {
