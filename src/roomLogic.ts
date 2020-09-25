@@ -1,16 +1,18 @@
 import { TaskList } from './tasks/tasklist';
 
 export class RoomLogic {
-    taskList : TaskList;
-
     constructor(private room: Room) {
-        this.taskList = new TaskList(room.memory.taskList);
+        
     }
 
     run() {
-        
+        if (!this.room.memory.taskList) this.room.memory.taskList = [];
+
+        var taskList = new TaskList(this.room);
 
         console.log("running logic for room " + this.room.name);
+
+        this.room.memory.taskList = taskList.serialize();
 
         console.log("tasks: " + this.room.memory.taskList);
     }
