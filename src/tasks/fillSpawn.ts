@@ -1,0 +1,55 @@
+import { Task } from './task';
+import { BaseTask } from './baseTask';
+
+export class FillSpawn extends BaseTask implements Task {
+    public static readonly type : string = "FILLSPAWN";
+    
+    constructor(claimedBy : Id<Creep> | null, private spawn : Id<StructureSpawn>) {
+        super(FillSpawn.type, claimedBy);
+    }
+
+    public getPriority() {
+        var spawn = Game.getObjectById(this.spawn);
+        if (!spawn)
+        {
+            console.log("spawn " + this.spawn + " does not exist");
+            this.unclaim();
+
+            return 0;
+        }
+        else
+        {
+            return spawn.energyCapacity - spawn.energy; // 0 if the spawn is full
+        }
+    }
+
+    public canPerform(creep: Creep) {
+        return creep.store.getFreeCapacity() === 0;
+    }
+
+    public execute(creep: Creep) {
+        var spawn = Game.getObjectById(this.spawn);
+        if (!spawn)
+        {
+            console.log("spawn " + this.spawn + " does not exist");
+            this.unclaim();
+        }
+        else
+        {
+            var result = creep.transfer(spawn, RESOURCE_ENERGY);
+            if (result === ERR_NOT_IN_RANGE) {
+                creep.moveTo(spawn);
+            }
+        }
+
+        if (!this.canPerform(creep)) this.unclaim();
+    }
+
+    public serialize() {
+        return JSON.stringify(this);
+    }
+
+    public report() {
+        return "This is a FillSpawn task";
+    }
+}

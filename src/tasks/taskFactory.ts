@@ -1,3 +1,4 @@
+import { FillSpawn } from './fillSpawn';
 import { Upgrade } from './upgrade';
 import { Harvest } from './harvest';
 import { Task } from './task';import { ErrorTask } from './error';
@@ -16,8 +17,9 @@ export class TaskFactory {
 
         switch(deserialized.type)
         {
-            case Harvest.type: return new Harvest(deserialized.source, deserialized.pos, deserialized.claimedBy);
-            case Upgrade.type: return new Upgrade();
+            case Harvest.type: return new Harvest(deserialized.claimedBy, deserialized.source, deserialized.pos);
+            case Upgrade.type: return new Upgrade(deserialized.claimedBy);
+            case FillSpawn.type: return new FillSpawn(deserialized.claimedBy, deserialized.spawn);
             default: return new ErrorTask(deserialized);
         }
     }

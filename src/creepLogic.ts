@@ -1,6 +1,7 @@
-import { Harvester } from "./roles/harvester";
-import { Upgrader } from "./roles/upgrader";
-import { Role } from "./roles/roles";
+import { ErrorTask } from './tasks/error';
+import { TaskList } from './tasks/tasklist';
+import { TaskFactory } from "./tasks/taskFactory";
+import { Task } from "./tasks/task";
 
 export class CreepLogic {
     constructor(private creep : Creep)
@@ -10,26 +11,31 @@ export class CreepLogic {
 
     public run()
     {
-        var role : string = (<any>this.creep.memory).role;
-
-        var roles : Role[] = [];
-
-        switch(role) {
-            case 'harvester': 
-        }
-
-        if (role === 'harvester')
+        var task : Task;
+        if (this.creep.memory.savedTask === null)
         {
-            roles.push(new Harvester(this.creep));
+            task = this.getTask();
+            task.claim(this.creep);
         }
-        else if (role === 'upgrader')
-        {
-            roles.push(new Upgrader(this.creep));
-        }
+        task = new TaskFactory().CreateTask(this.creep.memory.savedTask!); // claim sets the savedTask
+        
+        task.execute(this.creep);
+    }
 
-        for (var r in roles)
+    private getTask() : Task
+    {
+        var tasks = new TaskList(this.creep.room).get();
+
+        tasks.sort((a, b) => a.getPriority() - b.getPriority());
+
+        tasks.forEach(task => 
         {
-            roles[r].run();
-        }
+            if(task.canPerform(this.creep)) 
+            {
+                return task;
+            }
+        });
+
+        return new ErrorTask("no task available for creep " + this.creep.id);
     }
 }

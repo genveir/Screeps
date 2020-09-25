@@ -1,31 +1,40 @@
 import { Task } from './task';
+import { BaseTask } from './baseTask';
 
-export class Upgrade implements Task {
+export class Upgrade extends BaseTask implements Task {
     public static readonly type : string = "UPGRADE";
 
-    public type : string;
-    public claimedBy : Id<Creep> | null;
+    constructor(claimedBy : Id<Creep> | null) {
+        super(Upgrade.type, claimedBy);
+    }
 
-    constructor() {
-        this.type = Upgrade.type;
+    public getPriority() {
+        return 1; // minimal, this is the job to do if there's no other job.
     }
 
     public canPerform(creep : Creep)
     {
-        return true;
+        return creep.store.getFreeCapacity() === 0;
     }
 
-    public claim(creep : Creep)
-    {
-        this.claimedBy = creep.id;
-    }
-
-    public unclaim() {
-        this.claimedBy = null;
+    public execute(creep : Creep) {
+        var controller = creep.room.controller;
+        if (!controller) {
+            console.log("somehow this creep is not in a room with a controller");
+            this.unclaim();
+        }
+        else
+        {
+            var result = creep.upgradeController(controller);
+            if (result === ERR_NOT_IN_RANGE) {
+                creep.moveTo(controller);
+            }
+        }   
+        if (!this.canPerform(creep)) this.unclaim();
     }
 
     public serialize() : string {
-        return Upgrade.type;
+        return JSON.stringify(this);
     }
 
     public report() : string {

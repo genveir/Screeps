@@ -1,27 +1,27 @@
 import { Task } from './task';
+import { BaseTask } from './baseTask';
 
-export class ErrorTask implements Task {
+export class ErrorTask extends BaseTask implements Task {
     public static type : string = "ERROR";
 
-    public type: string;
-    public claimedBy : Id<Creep> | null;
-
     public constructor(private message : string) {
-        this.type = ErrorTask.type;
+        super(ErrorTask.type, null);
 
         console.log("invalid task: " + message)
+    }
+
+    public getPriority() {
+        return 1000000;
     }
 
     public canPerform(creep : Creep) {
         return false;
     }
 
-    public claim(creep : Creep) {
-        this.claimedBy = creep.id;
-    }
+    public execute(creep : Creep) {
+        console.log("invalid task: " + this.message)
 
-    public unclaim() {
-        this.claimedBy = null;
+        this.unclaim();
     }
 
     public serialize() : string {
@@ -29,6 +29,6 @@ export class ErrorTask implements Task {
     }
 
     public report() : string {
-        return "Error: " + this.message;
+        return "invalid task: " + this.message;
     }
 }

@@ -1,5 +1,3 @@
-import { Harvester } from './roles/harvester';
-
 export class SpawnLogic
 {
     constructor(private spawn : StructureSpawn) {
@@ -13,9 +11,7 @@ export class SpawnLogic
         
         if (!this.spawn.spawning) {
             if (creepcount < 10) {
-                var energySources = this.spawn.room.find(FIND_SOURCES).map(s => s.id);
-                var initmemory = Harvester.initialMemory(energySources);
-                this.spawn.spawnCreep([WORK,CARRY,CARRY,MOVE,MOVE], 'Harvester' + Game.time, { memory: initmemory });
+                this.spawn.spawnCreep([WORK,CARRY,CARRY,MOVE,MOVE], 'Harvester' + Game.time);
             }
         }
     }

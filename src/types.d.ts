@@ -23,11 +23,5 @@ interface RoomMemory {
 
 interface CreepMemory {
     role: string;
-    targets : CreepMemoryTargets;
-}
-
-interface CreepMemoryTargets {
-    energySources : Id<Source>[];
-    index: number;
-    current: Id<Source>;
+    savedTask : string | null;
 }

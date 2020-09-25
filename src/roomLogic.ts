@@ -1,3 +1,5 @@
+import { Upgrade } from './tasks/upgrade';
+import { FillSpawn } from './tasks/fillSpawn';
 import { TaskFactory } from './tasks/taskFactory';
 import { Harvest } from './tasks/harvest';
 import { PositionUtil } from './util/position';
@@ -12,8 +14,16 @@ export class RoomLogic {
     run() {
         // persistent task list
         var taskList = new TaskList(this.room);
+        if (taskList.get().length === 0) this.initializeTasks(taskList);
 
         console.log("running logic for room " + this.room.name + " which has " + this.room.memory.energySlots.length + " energy slots");
+
+        var tasks = taskList.get();
+        var totalTasks = tasks.length;
+        var claimedTasks = tasks.filter(t => t.claimedBy).length;
+        var unclaimedTasks = tasks.filter(t => !t.claimedBy).length;
+
+        console.log("there are " + totalTasks + " tasks in this room, " + claimedTasks + " are claimed, " + unclaimedTasks + " are not");
 
         this.room.memory.taskList = taskList.serialize();
     }
@@ -36,5 +46,27 @@ export class RoomLogic {
         });
 
         this.room.memory.energySlots = energySlots;
+    }
+
+    private initializeTasks(taskList : TaskList) : void {
+        console.log("initializing tasks");
+
+        var harvestSlots = this.room.memory.energySlots;
+
+        var harvestTasks = harvestSlots.map(hs => {
+            var roomPos = new RoomPosition(hs.pos.x, hs.pos.y, hs.pos.roomName);
+            taskList.addTask(new Harvest(null, hs.id, roomPos));
+        });
+
+        for (var i = 0; i < 10; i++) {
+            taskList.addTask(new Upgrade(null));
+        }
+
+        this.room.find(FIND_MY_SPAWNS).forEach(spawn => 
+        {
+            for (var i = 0; i < 10; i++) {
+                taskList.addTask(new FillSpawn(null, spawn.id))
+            }
+        });
     }
 }

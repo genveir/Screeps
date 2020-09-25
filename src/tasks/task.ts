@@ -1,13 +1,16 @@
 export interface Task {
     type : string;
+    claimedBy : Id<Creep> | null;
 
-    serialize() : string;
+    getPriority() : number;
 
-    canPerform(creep : Creep) : boolean;
     claim(creep : Creep) : void;
     unclaim() : void;
 
-    claimedBy : Id<Creep> | null;
+    canPerform(creep : Creep) : boolean;
+    execute(creep: Creep) : void;
+
+    serialize() : string;
 
     // give me debug info
     report() : string;
