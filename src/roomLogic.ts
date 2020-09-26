@@ -31,6 +31,7 @@ export class RoomLogic {
             }
             if (this.room.controller.level > 2)
             {
+                this.buildControllerRingRoad();
                 this.buildSpawnTower();
             } 
         }
@@ -227,6 +228,14 @@ export class RoomLogic {
 
             this.buildRoad(definition);
         }
+    }
+
+    private buildControllerRingRoad() : void {
+        var controller = this.room.controller;
+        if (!controller) return;
+
+        var definition = RoadUtil.getControllerRingRoad(controller);
+        this.buildRoad(definition);
     }
 
     buildRoad(definition : RoadDefinition) {
