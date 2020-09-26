@@ -74,6 +74,8 @@ export class Fill extends BaseTask implements Task {
     }
 
     public serialize() {
-        return JSON.stringify(this);
+        var copy : any = JSON.parse(JSON.stringify(this));
+        copy._structure = null;
+        return JSON.stringify(copy);
     }
 }

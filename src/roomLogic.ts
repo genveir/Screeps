@@ -105,14 +105,14 @@ export class RoomLogic {
         var controller = this.room.controller;
         if (controller)
         {
-            for (var i = 0; i < harvestTasks.length; i++) {
+            for (var i = 0; i < harvestTasks.length * 2; i++) {
                 taskList.addTask(new Upgrade(TaskList.getNewId(), null, controller.id));
             }
         }
 
         this.room.find(FIND_MY_SPAWNS).forEach(spawn => 
         {
-            for (var i = 0; i < harvestTasks.length; i++) {
+            for (var i = 0; i < harvestTasks.length * 2; i++) {
                 taskList.addTask(new FillSpawn(TaskList.getNewId(), null, spawn.id))
             }
         });
