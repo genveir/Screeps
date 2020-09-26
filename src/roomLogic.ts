@@ -1,4 +1,4 @@
-import { Refuel } from './tasks/refuel';
+import { Fill } from './tasks/fill';
 import { Build } from './tasks/build';
 import { Upgrade } from './tasks/upgrade';
 import { FillSpawn } from './tasks/fillSpawn';
@@ -139,13 +139,14 @@ export class RoomLogic {
         var towers = this.room.find(FIND_MY_STRUCTURES).filter(s => s.structureType === STRUCTURE_TOWER).map(s => <StructureTower>s);
         if (towers.length === 0) return;
 
-        var refuelTasks = taskList.getAll().filter(t => t.type === Refuel.type).map(t => <Refuel>t);
+        var refuelTasks = taskList.getAll().filter(t => t.type === Fill.type).map(t => <Fill>t);
 
         towers.forEach(t => {
-            var refuelCount = refuelTasks.filter(rt => rt.tower == t.id).length;
+            var refuelCount = refuelTasks.filter(rt => rt.structure == t.id).length;
 
             for (var i = refuelCount; i < 5; i++) {
-                taskList.addTask(new Refuel(TaskList.getNewId(), null, t.id));
+                console.log("adding fill task for tower " + t.id);
+                taskList.addTask(new Fill(TaskList.getNewId(), null, t.id));
             } 
         })
     }

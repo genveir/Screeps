@@ -23,7 +23,7 @@ export class ErrorTask extends BaseTask implements Task {
         console.log("executing invalid task: " + JSON.stringify(this.message))
         console.log("creep: " + JSON.stringify(creep));
 
-        delete creep.memory.savedTask;
+        creep.memory.savedTask.active = false;
         this.unclaim();
     }
 

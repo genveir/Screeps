@@ -18,14 +18,14 @@ export class FillSpawn extends BaseTask implements Task {
         return spawn;
     }
 
-    public getPriority() {
+    public getPriority(creep : Creep) {
         var spawn = this.getSpawn();
         if (!spawn) {
             return 0;
         }
         else
         {
-            return spawn.energyCapacity - spawn.energy; // 0 if the spawn is full
+            return spawn.store.getFreeCapacity(RESOURCE_ENERGY); // 0 if the spawn is full
         }
     }
 
@@ -35,7 +35,7 @@ export class FillSpawn extends BaseTask implements Task {
         if (!spawn) { return false; }
         else {
         return creep.store.energy > 0 &&
-            spawn.energy < spawn.energyCapacity;
+            spawn.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
         }
     }
 

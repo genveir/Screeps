@@ -29,3 +29,7 @@ interface SavedTask {
     roomName : string;
     taskId : string;
 }
+
+interface StructureWithEnergyStore extends Structure {
+    store: Store<RESOURCE_ENERGY, false>;
+}
