@@ -1,3 +1,4 @@
+import { RoadUtil } from './util/road';
 import { Fill } from './tasks/fill';
 import { Build } from './tasks/build';
 import { Upgrade } from './tasks/upgrade';
@@ -14,21 +15,30 @@ export class RoomLogic {
     }
 
     run() {
+        this.fireTowers();
+
         // persistent task list
         var taskList = TaskList.getInstance(this.room);
         if (taskList.getAll().length === 0) this.initializeTasks(taskList);
 
         if (this.room.controller)
         {
-            if (this.room.controller.level > 1) this.buildControllerRoad();
-            if (this.room.controller.level > 2) this.buildSpawnTower();
+            if (this.room.controller.level > 1) 
+            {
+                this.buildSourceRoads();
+                this.buildControllerRoad();
+                this.buildSpawnRingRoads();
+            }
+            if (this.room.controller.level > 2)
+            {
+                this.buildSpawnTower();
+            } 
         }
 
         this.manageBuildTasks(taskList);
         this.manageRepairTasks(taskList);
         this.manageRefuelTasks(taskList);
 
-        this.fireTowers();
         // this.printTaskInfo(taskList);
 
         this.room.memory.taskList = taskList.serialize();
@@ -190,22 +200,39 @@ export class RoomLogic {
         var spawns = this.room.find(FIND_MY_SPAWNS);
         if (spawns.length === 0) return;
 
-        if (!this.room.memory.controllerRoadPath) {
-            var controllerPos = this.room.controller.pos;
-            var spawnPos = spawns[0].pos;
+        var definition = RoadUtil.getRoadDefinition(this.room, "controllerRoad", spawns[0].pos, this.room.controller.pos, 1);
 
-            var found = PathFinder.search(spawnPos, {pos: controllerPos, range: 1}, {swampCost: 1, maxRooms: 1});
-            if (!found.incomplete)
-            {
-                this.room.memory.controllerRoadPath = found.path;
-            }
+        if (definition) this.buildRoad(definition)
+    }
+
+    private buildSourceRoads() : void {
+        var spawns = this.room.find(FIND_MY_SPAWNS);
+        if (spawns.length === 0) return;
+
+        var sources = this.room.find(FIND_SOURCES);
+        for (var i = 0; i < sources.length; i++) {
+            var definition = RoadUtil.getRoadDefinition(this.room, "spawnToSource" + sources[i].id, spawns[0].pos, sources[i].pos, 1);
+
+            if (definition) this.buildRoad(definition);
         }
+    }
 
-        var route = this.room.memory.controllerRoadPath;
+    private buildSpawnRingRoads() : void {
+        var spawns = this.room.find(FIND_MY_SPAWNS);
+        if (spawns.length === 0) return;
 
+        for (var i = 0; i < spawns.length; i++)
+        {
+            var definition = RoadUtil.getSpawnRingRoad(spawns[i]);
+
+            this.buildRoad(definition);
+        }
+    }
+
+    buildRoad(definition : RoadDefinition) {
         var numSites : number = 0;
         var potentials : RoomPosition[] = [];
-        route.forEach(step => {
+        definition.route.forEach(step => {
             var stepPos = new RoomPosition(step.x, step.y, step.roomName);
 
             if(stepPos.lookFor(LOOK_CONSTRUCTION_SITES).length > 0) 

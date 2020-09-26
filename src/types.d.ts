@@ -6,7 +6,14 @@ interface Memory { [name: string]: any }
 interface RoomMemory { 
     taskList : string[];
     energySlots : SavedHarvestPosition[];
+    roads : { [name: string] : RoadDefinition}
     controllerRoadPath : SavedPosition[];
+ }
+
+ interface RoadDefinition {
+     start : SavedPosition,
+     end : SavedPosition,
+     route : SavedPosition[]
  }
 
  interface SavedHarvestPosition {

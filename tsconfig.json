@@ -8,7 +8,8 @@
         "outDir": "./out"
     },
     "include": [
-        "src/*.ts", 
-        "src/roles/*.ts"
+        "src/*.ts",
+        "src/util/*.ts",
+        "src/tasks/*.ts"
     ]
 }
