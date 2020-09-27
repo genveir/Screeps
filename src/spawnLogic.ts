@@ -25,6 +25,7 @@ export class SpawnLogic
         this.pushBasicBody(body);
 
         var bodyDoubles = Math.floor((availableEnergy - 300) / 300);
+        if (bodyDoubles > 2) bodyDoubles = 2;
         for (var i = 0; i < bodyDoubles; i++) {
             this.pushBasicBody(body);
         }
