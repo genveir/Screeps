@@ -7,14 +7,32 @@ export class SpawnLogic
     public run() {
         var spawnRoom = this.spawn.room;
 
-        var creepcount = spawnRoom.find(FIND_CREEPS).length;
-        
+        var creeps = spawnRoom.find(FIND_CREEPS);
+        var creepcount = creeps.length;
+        var idlingCreeps = creeps.filter(c => !c.memory.savedTask.active).length;
+
         var energySlots = spawnRoom.memory.energySlots.length;
 
+        var energyInExtensions = spawnRoom.find(FIND_MY_STRUCTURES)
+            .filter(s => s.structureType === STRUCTURE_EXTENSION)
+            .map(s => <StructureExtension>s)
+            .map(s => s.store.energy)
+            .reduce((a, b) => a + b);
+
+        var availableEnergy = this.spawn.store.energy + energyInExtensions;
+
+        var body : BodyPartConstant[] = []
+        this.pushBasicBody(body);
+
+        var bodyDoubles = Math.floor((availableEnergy - 300) / 300);
+        for (var i = 0; i < bodyDoubles; i++) {
+            this.pushBasicBody(body);
+        }
+
         if (!this.spawn.spawning) {
-            if (creepcount < energySlots * 2) {
+            if (creepcount < energySlots || idlingCreeps < 3) {
                 this.spawn.spawnCreep(
-                    [WORK,CARRY,CARRY,MOVE,MOVE], 
+                    body, 
                     'Creep' + Game.time, 
                     { 
                         memory: { 
@@ -27,5 +45,13 @@ export class SpawnLogic
                     });
             }
         }
+    }
+
+    pushBasicBody(body : BodyPartConstant[]) {
+        body.push(WORK);
+        body.push(CARRY);
+        body.push(CARRY);
+        body.push(MOVE);
+        body.push(MOVE);
     }
 }
