@@ -31,7 +31,7 @@ export class SpawnLogic
         }
 
         if (!this.spawn.spawning) {
-            if (creepcount < energySlots || idlingCreeps < 3) {
+            if (creepcount < energySlots || idlingCreeps === 0) {
                 this.spawn.spawnCreep(
                     body, 
                     'Creep' + Game.time, 

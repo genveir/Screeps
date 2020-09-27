@@ -273,25 +273,47 @@ export class RoomLogic {
             .find(FIND_MY_STRUCTURES)
             .filter(s => s.structureType === STRUCTURE_EXTENSION)
             .map(s => s.pos);
-        buildAround.unshift(spawnPos);
+
+        if (buildAround.length === 0)
+        {
+            this.tryBuildExtension(new RoomPosition(spawnPos.x + 2, spawnPos.y + 2, spawnPos.roomName), sources, []);
+            this.tryBuildExtension(new RoomPosition(spawnPos.x + 2, spawnPos.y - 2, spawnPos.roomName), sources, []);
+            this.tryBuildExtension(new RoomPosition(spawnPos.x - 2, spawnPos.y + 2, spawnPos.roomName), sources, []);
+            this.tryBuildExtension(new RoomPosition(spawnPos.x - 2, spawnPos.y - 2, spawnPos.roomName), sources, []);
+        }
+
+        var forbiddenPositions : RoomPosition[] = []
+        forbiddenPositions.push(new RoomPosition(spawnPos.x + 1, spawnPos.y + 1, spawnPos.roomName));
+        forbiddenPositions.push(new RoomPosition(spawnPos.x + 1, spawnPos.y - 1, spawnPos.roomName));
+        forbiddenPositions.push(new RoomPosition(spawnPos.x - 1, spawnPos.y + 1, spawnPos.roomName));
+        forbiddenPositions.push(new RoomPosition(spawnPos.x - 1, spawnPos.y - 1, spawnPos.roomName));
 
         var stopTrying : Boolean = false;
         buildAround.forEach(ba => {
             if (stopTrying) return;
             var results : number[];
-            stopTrying = this.tryBuildExtension(new RoomPosition(ba.x + 2, ba.y, ba.roomName), sources);
-            if (!stopTrying) stopTrying = this.tryBuildExtension(new RoomPosition(ba.x, ba.y + 2, ba.roomName), sources);
-            if (!stopTrying) stopTrying = this.tryBuildExtension(new RoomPosition(ba.x - 2, ba.y, ba.roomName), sources);
-            if (!stopTrying) stopTrying = this.tryBuildExtension(new RoomPosition(ba.x, ba.y - 2, ba.roomName), sources);
+            stopTrying = this.tryBuildExtension(new RoomPosition(ba.x + 1, ba.y + 1, ba.roomName), sources, forbiddenPositions);
+            if (!stopTrying) stopTrying = this.tryBuildExtension(new RoomPosition(ba.x + 1, ba.y - 1, ba.roomName), sources, forbiddenPositions);
+            if (!stopTrying) stopTrying = this.tryBuildExtension(new RoomPosition(ba.x - 1, ba.y + 1, ba.roomName), sources, forbiddenPositions);
+            if (!stopTrying) stopTrying = this.tryBuildExtension(new RoomPosition(ba.x - 1, ba.y - 1, ba.roomName), sources, forbiddenPositions);
+
+            var csites = this.room.find(FIND_MY_CONSTRUCTION_SITES).filter(s => s.structureType === STRUCTURE_EXTENSION).length;
+            if (csites > 5) stopTrying = true;
         });
     }
 
-    tryBuildExtension(pos : RoomPosition, sources : Source[]) : boolean {
+    tryBuildExtension(pos : RoomPosition, sources : Source[], forbiddenPositions : RoomPosition[]) : boolean {
         var tooClose : boolean = false;
         sources.forEach(source => {
             if (PositionUtil.getManhattanDistance(pos, source.pos) < 4) tooClose = true;
         });
         if (tooClose) return false;
+
+        var forbidden :boolean = false;
+        forbiddenPositions.forEach(fp => {
+            if (pos.x === fp.x && pos.y === fp.y && pos.roomName === fp.roomName) forbidden = true;
+        });
+        if (forbidden) return false;
 
         var result = pos.createConstructionSite(STRUCTURE_EXTENSION);
 
