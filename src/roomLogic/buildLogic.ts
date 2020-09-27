@@ -20,6 +20,10 @@ export class BuildLogic {
                 this.buildControllerRingRoad();
                 this.buildSpawnTower();
             } 
+            if (this.room.controller.level > 3)
+            {
+                this.buildSecondLevelSpawnRingRoads();
+            }
         }
 
         this.buildAllPossibleExtensions();
@@ -101,7 +105,19 @@ export class BuildLogic {
 
         for (var i = 0; i < spawns.length; i++)
         {
-            var definition = RoadUtil.getSpawnRingRoad(spawns[i]);
+            var definition = RoadUtil.getRingRoad(spawns[i].pos, 1);
+
+            this.buildRoad(definition);
+        }
+    }
+
+    private buildSecondLevelSpawnRingRoads() : void {
+        var spawns = this.room.find(FIND_MY_SPAWNS);
+        if (spawns.length === 0) return;
+
+        for (var i = 0; i < spawns.length; i++)
+        {
+            var definition = RoadUtil.getRingRoad(spawns[i].pos, 2);
 
             this.buildRoad(definition);
         }
