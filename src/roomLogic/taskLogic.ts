@@ -102,7 +102,7 @@ export class TaskLogic {
     private manageFillTasks(taskList : TaskList) : void {
         if (Memory.debug) console.log("starting manageFillTasks");
         
-        var fillAble = this.room.find(FIND_MY_STRUCTURES)
+        var fillAble = this.room.find(FIND_STRUCTURES)
             .filter(s => this.isFillable(s))
             .map(s => <StructureWithEnergyStore>s);
 
