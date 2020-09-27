@@ -25,6 +25,7 @@ export class SpawnLogic
         }
 
         var availableEnergy = this.spawn.store.energy + energyInExtensions;
+        new RoomVisual(this.spawn.room.name).text(availableEnergy + "⚡ available", this.spawn.pos.x, this.spawn.pos.y + 1);
 
         var body = this.buildWorkerBody(availableEnergy, 300, 900);
 

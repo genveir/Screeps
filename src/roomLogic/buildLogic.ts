@@ -72,7 +72,7 @@ export class BuildLogic {
         var spawns = this.room.find(FIND_MY_SPAWNS);
         if (spawns.length === 0) return;
 
-        var definition = RoadUtil.getRoadDefinition(this.room, "controllerRoad", spawns[0].pos, this.room.controller.pos, 1);
+        var definition = RoadUtil.getRoadDefinition(this.room, "controllerRoad", spawns[0].pos, this.room.controller.pos, 4);
 
         if (definition) this.buildRoad(definition)
     }
