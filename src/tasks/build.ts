@@ -33,6 +33,8 @@ export class Build extends BaseTask implements Task {
     }
 
     public execute(creep : Creep) {
+        if (this.moveAwayFromSources(creep)) return;
+        
         var site = this.getSite();
         if (site)
         {

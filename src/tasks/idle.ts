@@ -20,19 +20,8 @@ export class Idle extends BaseTask implements Task {
     }
 
     public execute(creep : Creep) {        
-        var sources = creep.room.find(FIND_SOURCES).map(s => s.pos);
-        var spawns = creep.room.find(FIND_MY_STRUCTURES).filter(s => s.structureType === STRUCTURE_SPAWN).map(s => s.pos);
-        var dontStayNextTo = sources.concat(spawns);
-
-        var isAdjacent : boolean = false;
-        dontStayNextTo.forEach(s => {
-            if(PositionUtil.getFlyDistance(creep.pos, s) === 1) isAdjacent = true;
-        });
-
-        if (isAdjacent) { // don't stay next to an energy source so noone can harvest it
-            var dir = <DirectionConstant>Math.floor(Math.random() * 8);
-            creep.move(dir);
-        }
+        this.moveAwayFromSources(creep);
+        this.moveAwayFromSpawns(creep);
 
         this.unclaim();
     }

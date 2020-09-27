@@ -1,3 +1,4 @@
+import { PositionUtil } from "../util/position";
 import { Task } from "./task";
 import { TaskList } from "./tasklist";
 
@@ -38,5 +39,34 @@ export abstract class BaseTask implements Task {
 
     public isEqualTo(task : Task) : boolean {
         return this.serialize() === task.serialize();
+    }
+
+    protected moveAwayFromSources(creep : Creep) : boolean {
+        var sources = creep.room.find(FIND_SOURCES).map(s => s.pos);
+
+        var isAdjacent : boolean = false;
+        sources.forEach(s => {
+            if(PositionUtil.getFlyDistance(creep.pos, s) === 1) isAdjacent = true;
+        });
+
+        if (isAdjacent) this.randomMove(creep);
+        return isAdjacent;
+    }
+
+    protected moveAwayFromSpawns(creep : Creep) : boolean {
+        var spawns = creep.room.find(FIND_MY_STRUCTURES).filter(s => s.structureType === STRUCTURE_SPAWN).map(s => s.pos);
+
+        var isAdjacent : boolean = false;
+        spawns.forEach(s => {
+            if(PositionUtil.getFlyDistance(creep.pos, s) === 1) isAdjacent = true;
+        });
+
+        if (isAdjacent) this.randomMove(creep);
+        return isAdjacent;
+    }
+
+    protected randomMove(creep : Creep) {
+        var dir = <DirectionConstant>Math.floor(Math.random() * 8);
+        creep.move(dir);   
     }
 }
