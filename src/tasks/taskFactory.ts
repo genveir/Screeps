@@ -7,6 +7,7 @@ import { Harvest } from './harvest';
 import { Task } from './task';import { ErrorTask } from './error';
 import { Idle } from './idle';
 import { Fill } from './fill';
+import { GrabRuin } from './grabRuin';
 
 export class TaskFactory {
     public CreateTask(serialized : string) : Task {
@@ -32,6 +33,7 @@ export class TaskFactory {
             case Fill.type : return new Fill(deserialized.id, deserialized.claimedBy, deserialized.structure);
             case Idle.type: return new Idle(deserialized.id, deserialized.claimedBy);
             case GrabTombstone.type: return new GrabTombstone(deserialized.id, deserialized.claimedBy, deserialized.tombstone);
+            case GrabRuin.type: return new GrabRuin(deserialized.id, deserialized.claimedBy, deserialized.ruin);
             default: return new ErrorTask(deserialized.id, deserialized.claimedBy, deserialized);
         }
     }

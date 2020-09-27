@@ -1,27 +1,12 @@
-import { GrabTombstone } from './tasks/grabTombstone';
-import { RoadUtil } from './util/road';
-import { Fill } from './tasks/fill';
-import { Build } from './tasks/build';
-import { Upgrade } from './tasks/upgrade';
-import { FillSpawn } from './tasks/fillSpawn';
-import { Harvest } from './tasks/harvest';
-import { PositionUtil } from './util/position';
-import { TaskList } from './tasks/tasklist';
-import { Repair } from './tasks/repair';
+import { PositionUtil } from "../util/position";
+import { RoadUtil } from "../util/road";
 
-export class RoomLogic {
-    constructor(private room: Room) {
-        if (!this.room.memory.taskList) this.room.memory.taskList = [];
-        if (!this.room.memory.energySlots) this.initializeEnergySlots();
+export class BuildLogic {
+    constructor(private room : Room) {
+
     }
 
-    run() {
-        this.fireTowers();
-
-        // persistent task list
-        var taskList = TaskList.getInstance(this.room);
-        if (taskList.getAll().length === 0) this.initializeTasks(taskList);
-
+    public run() {
         if (this.room.controller)
         {
             if (this.room.controller.level > 1) 
@@ -38,169 +23,16 @@ export class RoomLogic {
         }
 
         this.buildAllPossibleExtensions();
-
-        this.manageBuildTasks(taskList);
-        this.manageRepairTasks(taskList);
-        this.manageFillTasks(taskList);
-        this.manageGrabTombstoneTasks(taskList);
-
-        // this.printTaskInfo(taskList);
-
-        this.room.memory.taskList = taskList.serialize();
-    }
-
-    private fireTowers() {
-        var towers = this.room.find(FIND_MY_STRUCTURES).filter(s => s.structureType === STRUCTURE_TOWER).map(s => <StructureTower>s);
-        if (towers.length === 0) return;
-
-        var enemies = this.room.find(FIND_HOSTILE_CREEPS);
-        if (enemies.length === 0) return;
-
-        towers.forEach(t => {
-            var closest : number = 1000;
-            var target : Creep;
-            enemies.forEach(e => {
-                var distance = PositionUtil.getManhattanDistance(t.pos, e.pos);
-                if (distance < closest)  {
-                    closest = distance;
-                    target = e;
-                };
-            })
-
-            t.attack(target!);
-        });
-    }
-
-    private printTaskInfo(taskList : TaskList)
-    {
-        var tasks = taskList.getAll();
-        var totalTasks = tasks.length;
-        var claimedTasks = tasks.filter(t => t.claimedBy).length;
-        var unclaimedTasks = tasks.filter(t => !t.claimedBy).length;
-
-        console.log("there are " + totalTasks + " tasks in room " + this.room.name + ", " + claimedTasks + " are claimed, " + unclaimedTasks + " are not");
-    }
-
-    private initializeEnergySlots() : void {
-        console.log("initializing energy slots for room " + this.room.name);
-
-        var energySources = this.room.find(FIND_SOURCES);
-
-        var energySlots : SavedHarvestPosition[] = [];
-        energySources.forEach(es => {
-            var id = es.id;
-            var pos = es.pos;
-
-            var emptySurrounding = PositionUtil.getEmptySurrounding(pos);
-            emptySurrounding.forEach(es => 
-            {
-                energySlots.push({ id: id, pos: es })
-            });
-        });
-
-        this.room.memory.energySlots = energySlots;
-    }
-
-    private initializeTasks(taskList : TaskList) : void {
-        console.log("initializing tasks for room " + this.room.name);
-
-        var harvestSlots = this.room.memory.energySlots;
-
-        var harvestTasks = harvestSlots.map(hs => {
-            var roomPos = new RoomPosition(hs.pos.x, hs.pos.y, hs.pos.roomName);
-            taskList.addTask(new Harvest(TaskList.getNewId(), null, hs.id, roomPos));
-        });
-
-        var controller = this.room.controller;
-        if (controller)
-        {
-            for (var i = 0; i < harvestTasks.length * 3; i++) {
-                taskList.addTask(new Upgrade(TaskList.getNewId(), null, controller.id));
-            }
-        }
-
-        this.room.find(FIND_MY_SPAWNS).forEach(spawn => 
-        {
-            for (var i = 0; i < harvestTasks.length * 3; i++) {
-                taskList.addTask(new FillSpawn(TaskList.getNewId(), null, spawn.id))
-            }
-        });
-    }
-
-    private manageBuildTasks(taskList : TaskList) : void {
-        var constructionSites = this.room.find(FIND_CONSTRUCTION_SITES);
-        var buildTasks = taskList.getAll().filter(t => t.type === Build.type).map(t => <Build>t);
-
-        constructionSites.forEach(cs => {
-            var buildCount = buildTasks.filter(bt => bt.constructionSite === cs.id).length;
-            
-            for (var i = buildCount; i < 2; i++) {
-                taskList.addTask(new Build(TaskList.getNewId(), null, cs.id));
-            }
-        });
-    }
-
-    private manageRepairTasks(taskList : TaskList) : void {
-        var structures : Structure[] = this.room.find(FIND_MY_STRUCTURES).filter(s => s.hits < s.hitsMax);
-        var roads : Structure[] = this.room.find(FIND_STRUCTURES).filter(s => s.structureType === STRUCTURE_ROAD).filter(s => s.hits < s.hitsMax / 2);
-        var toRepair : Structure[] = structures.concat(roads);
-
-        var repairTasks = taskList.getAll().filter(t => t.type === Repair.type).map(t => <Repair>t);
-
-        toRepair.forEach(s => {
-            var repairCount = repairTasks.filter(rt => rt.structure === s.id).length;
-
-            if (repairCount < 1) taskList.addTask(new Repair(TaskList.getNewId(), null, s.id));
-        })
-    }
-
-    private manageFillTasks(taskList : TaskList) : void {
-        var fillAble = this.room.find(FIND_MY_STRUCTURES)
-            .filter(s => this.isFillable(s))
-            .map(s => <StructureWithEnergyStore>s);
-
-        var refuelTasks = taskList.getAll().filter(t => t.type === Fill.type).map(t => <Fill>t);
-
-        fillAble.forEach(s => {
-            var refuelCount = refuelTasks.filter(rt => rt.structure == s.id).length;
-            var numberRequired = this.getNumTasksForStructure(s);
-
-            for (var i = refuelCount; i < numberRequired; i++) {
-                console.log("adding fill task for " + s.structureType + " " + s.id);
-                taskList.addTask(new Fill(TaskList.getNewId(), null, s.id));
-            } 
-        });
-    }
-
-    private isFillable(structure : Structure) {
-        var asAny = <any>structure;
-        
-        return asAny.store && asAny.store.getCapacity(RESOURCE_ENERGY) !== 0;
-    }
-
-    private getNumTasksForStructure(structure : Structure) : number {
-        switch(structure.structureType) {
-            case STRUCTURE_TOWER : return 5;
-            default: return 1;
-        }
-    }
-
-    private manageGrabTombstoneTasks(taskList : TaskList) {
-        var tombstones = this.room.find(FIND_TOMBSTONES);
-
-        var grabTasks = taskList.getAll().filter(t => t.type === GrabTombstone.type).map(t => <GrabTombstone>t);
-
-        tombstones.forEach(ts => {
-            var grabCount = grabTasks.filter(gt => gt.tombstone === ts.id).length;
-
-            if (grabCount === 0) {
-                taskList.addTask(new GrabTombstone(TaskList.getNewId(), null, ts.id));
-            }
-        });
     }
 
     private buildSpawnTower() : void {
-        var towers = this.room.find(FIND_MY_STRUCTURES).filter(s => s.structureType === STRUCTURE_TOWER);
+        var towers = this.room
+            .find(FIND_MY_STRUCTURES)
+            .filter(s => s.structureType === STRUCTURE_TOWER);
+
+        var towerConstruction = this.room
+            .find(FIND_MY_CONSTRUCTION_SITES)
+            .filter(cs => cs.structureType === STRUCTURE_TOWER);
 
         if (!this.room.controller) return;
 
@@ -209,7 +41,7 @@ export class RoomLogic {
 
         var spawnPos = spawns[0].pos;
 
-        if (towers.length === 0)
+        if (towers.length + towerConstruction.length === 0)
         {
             for (var xOffset = -2; xOffset <= 2; xOffset++) {
                 for (var yOffset = -2; yOffset <= 2; yOffset++) {
@@ -334,6 +166,9 @@ export class RoomLogic {
             if (pos.x === fp.x && pos.y === fp.y && pos.roomName === fp.roomName) forbidden = true;
         });
         if (forbidden) return false;
+
+        var doubleStruct = pos.lookFor(LOOK_STRUCTURES);
+        if (doubleStruct.length > 0) return false;
 
         var result = pos.createConstructionSite(STRUCTURE_EXTENSION);
 

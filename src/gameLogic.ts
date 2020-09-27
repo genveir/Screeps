@@ -1,4 +1,4 @@
-import {RoomLogic} from "./roomLogic"
+import {RoomLogic} from "./roomLogic/roomLogic"
 
 export class GameLogic {
     run() : void {
