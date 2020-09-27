@@ -13,7 +13,7 @@ export abstract class BaseTask implements Task {
     public claim(creep : Creep) {
         this.claimedBy = creep.id;
 
-        creep.say(this.type);
+        if (this.type !== "IDLE") creep.say(this.type);
         creep.memory.savedTask = { active: true, roomName: creep.room.name, taskId: this.id };
     }
 
