@@ -33,11 +33,7 @@ export class PositionUtil {
     }
 
     public static getFlyDistance(a : {x : number, y : number}, b : {x : number, y : number}) {
-        var positiveX = Math.abs(a.x - b.x);
-        var positiveY = Math.abs(a.y - b.y);
-
-        if (positiveX > positiveY) return positiveX;
-        else return positiveY;
+        return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
     }
 
     public static getManhattanDistance(a : {x : number, y : number}, b : {x : number, y : number}) {
