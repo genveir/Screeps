@@ -36,9 +36,11 @@ export class RoomLogic {
             } 
         }
 
+        this.buildAllPossibleExtensions();
+
         this.manageBuildTasks(taskList);
         this.manageRepairTasks(taskList);
-        this.manageRefuelTasks(taskList);
+        this.manageFillTasks(taskList);
 
         // this.printTaskInfo(taskList);
 
@@ -106,14 +108,14 @@ export class RoomLogic {
         var controller = this.room.controller;
         if (controller)
         {
-            for (var i = 0; i < harvestTasks.length * 2; i++) {
+            for (var i = 0; i < harvestTasks.length * 3; i++) {
                 taskList.addTask(new Upgrade(TaskList.getNewId(), null, controller.id));
             }
         }
 
         this.room.find(FIND_MY_SPAWNS).forEach(spawn => 
         {
-            for (var i = 0; i < harvestTasks.length * 2; i++) {
+            for (var i = 0; i < harvestTasks.length * 3; i++) {
                 taskList.addTask(new FillSpawn(TaskList.getNewId(), null, spawn.id))
             }
         });
@@ -146,20 +148,35 @@ export class RoomLogic {
         })
     }
 
-    private manageRefuelTasks(taskList : TaskList) : void {
-        var towers = this.room.find(FIND_MY_STRUCTURES).filter(s => s.structureType === STRUCTURE_TOWER).map(s => <StructureTower>s);
-        if (towers.length === 0) return;
+    private manageFillTasks(taskList : TaskList) : void {
+        var fillAble = this.room.find(FIND_MY_STRUCTURES)
+            .filter(s => this.isFillable(s))
+            .map(s => <StructureWithEnergyStore>s);
 
         var refuelTasks = taskList.getAll().filter(t => t.type === Fill.type).map(t => <Fill>t);
 
-        towers.forEach(t => {
-            var refuelCount = refuelTasks.filter(rt => rt.structure == t.id).length;
+        fillAble.forEach(s => {
+            var refuelCount = refuelTasks.filter(rt => rt.structure == s.id).length;
+            var numberRequired = this.getNumTasksForStructure(s);
 
-            for (var i = refuelCount; i < 5; i++) {
-                console.log("adding fill task for tower " + t.id);
-                taskList.addTask(new Fill(TaskList.getNewId(), null, t.id));
+            for (var i = refuelCount; i < numberRequired; i++) {
+                console.log("adding fill task for " + s.structureType + " " + s.id);
+                taskList.addTask(new Fill(TaskList.getNewId(), null, s.id));
             } 
-        })
+        });
+    }
+
+    private isFillable(structure : Structure) {
+        var asAny = <any>structure;
+        
+        return asAny.store && asAny.store.getCapacity(RESOURCE_ENERGY) !== 0;
+    }
+
+    private getNumTasksForStructure(structure : Structure) : number {
+        switch(structure.structureType) {
+            case STRUCTURE_TOWER : return 5;
+            default: return 1;
+        }
     }
 
     private buildSpawnTower() : void {
@@ -215,6 +232,10 @@ export class RoomLogic {
             var definition = RoadUtil.getRoadDefinition(this.room, "spawnToSource" + sources[i].id, spawns[0].pos, sources[i].pos, 1);
 
             if (definition) this.buildRoad(definition);
+
+            var ringDef = RoadUtil.getRingRoad(sources[i].pos, 1);
+
+            if (ringDef) this.buildRoad(ringDef);
         }
     }
 
@@ -236,6 +257,45 @@ export class RoomLogic {
 
         var definition = RoadUtil.getControllerRingRoad(controller);
         this.buildRoad(definition);
+    }
+
+    private buildAllPossibleExtensions() : void {
+        var csites = this.room.find(FIND_MY_CONSTRUCTION_SITES).filter(s => s.structureType === STRUCTURE_EXTENSION).length;
+        if (csites > 0) return;
+
+        var spawns = this.room.find(FIND_MY_SPAWNS);
+        if (!spawns) return;
+        var spawnPos = spawns[0].pos;
+
+        var sources = this.room.find(FIND_SOURCES);
+
+        var buildAround = this.room
+            .find(FIND_MY_STRUCTURES)
+            .filter(s => s.structureType === STRUCTURE_EXTENSION)
+            .map(s => s.pos);
+        buildAround.unshift(spawnPos);
+
+        var stopTrying : Boolean = false;
+        buildAround.forEach(ba => {
+            if (stopTrying) return;
+            var results : number[];
+            stopTrying = this.tryBuildExtension(new RoomPosition(ba.x + 2, ba.y, ba.roomName), sources);
+            if (!stopTrying) stopTrying = this.tryBuildExtension(new RoomPosition(ba.x, ba.y + 2, ba.roomName), sources);
+            if (!stopTrying) stopTrying = this.tryBuildExtension(new RoomPosition(ba.x - 2, ba.y, ba.roomName), sources);
+            if (!stopTrying) stopTrying = this.tryBuildExtension(new RoomPosition(ba.x, ba.y - 2, ba.roomName), sources);
+        });
+    }
+
+    tryBuildExtension(pos : RoomPosition, sources : Source[]) : boolean {
+        var tooClose : boolean = false;
+        sources.forEach(source => {
+            if (PositionUtil.getManhattanDistance(pos, source.pos) < 4) tooClose = true;
+        });
+        if (tooClose) return true;
+
+        var result = pos.createConstructionSite(STRUCTURE_EXTENSION);
+
+        return result === ERR_FULL || result === ERR_GCL_NOT_ENOUGH;
     }
 
     buildRoad(definition : RoadDefinition) {

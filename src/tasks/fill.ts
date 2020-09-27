@@ -14,7 +14,7 @@ export class Fill extends BaseTask implements Task {
     private getStructureWithEnergyStore(structure : Id<Structure>) : StructureWithEnergyStore | null {
         if (this._structure === null)
         {
-        var instance : any | null = Game.getObjectById(structure);
+            var instance : any | null = Game.getObjectById(structure);
         
             if (!instance || !instance.store || instance.store.getCapacity(RESOURCE_ENERGY) === 0) this._structure = null;
             else this._structure = <StructureWithEnergyStore>instance;
@@ -41,7 +41,12 @@ export class Fill extends BaseTask implements Task {
         }
         else
         {
-            return Math.min(200, structure.store.getFreeCapacity(RESOURCE_ENERGY));
+            switch(structure.structureType)
+            {
+                case STRUCTURE_TOWER: return 500;
+                case STRUCTURE_EXTENSION: return 300;
+                default: return 100;
+            }
         }
     }
 

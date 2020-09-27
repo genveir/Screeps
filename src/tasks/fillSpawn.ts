@@ -25,7 +25,7 @@ export class FillSpawn extends BaseTask implements Task {
         }
         else
         {
-            return spawn.store.getFreeCapacity(RESOURCE_ENERGY); // 0 if the spawn is full
+            return 300;
         }
     }
 
