@@ -36,6 +36,8 @@ export class Repair extends BaseTask implements Task {
     }
 
     public execute(creep : Creep) {
+        if (this.moveAwayFromSources(creep)) return;
+
         var structure = this.getStructure();
         if (structure)
         {
