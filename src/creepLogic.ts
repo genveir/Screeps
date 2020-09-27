@@ -33,6 +33,11 @@ export class CreepLogic {
         else task = savedTask;
         
         task.execute(this.creep);
+
+        if (Memory.debug)
+        {
+            new RoomVisual(this.creep.room.name).text(task.type + ", ⚡" + this.creep.store.energy + "/" + this.creep.store.getCapacity(), this.creep.pos, {font: 0.3});
+        }
     }
 
     private getTask() : Task

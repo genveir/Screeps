@@ -3,8 +3,6 @@ import { GameLogic } from "./gameLogic";
 import { SpawnLogic }  from "./spawnLogic";
 import { CreepLogic } from "./creepLogic";
 
-Memory.debug = false;
-
 // clean up dead creep memory
 for (var creepName in Memory.creeps) {
     if (!Game.creeps[creepName]) {

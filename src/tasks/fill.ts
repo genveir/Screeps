@@ -48,6 +48,11 @@ export class Fill extends BaseTask implements Task {
                 case STRUCTURE_TOWER: prio = 500000;
                 case STRUCTURE_EXTENSION: prio = 300000;
                 case STRUCTURE_SPAWN: prio = 300000;
+                case STRUCTURE_CONTAINER: {
+                    var hasSomeEnergy = creep.store.energy > 0;
+                    var isNotFull = creep.store.energy < creep.store.getCapacity(RESOURCE_ENERGY);
+                    if (hasSomeEnergy && isNotFull) prio = 250000;
+                }
             }
 
             return prio - PositionUtil.getFlyDistance(structure.pos, creep.pos);

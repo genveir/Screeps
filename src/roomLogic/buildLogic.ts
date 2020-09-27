@@ -14,6 +14,7 @@ export class BuildLogic {
                 this.buildSourceRoads();
                 this.buildControllerRoad();
                 this.buildSpawnRingRoads();
+                this.buildAggregateContainer();
             }
             if (this.room.controller.level > 2)
             {
@@ -109,6 +110,28 @@ export class BuildLogic {
 
             this.buildRoad(definition);
         }
+    }
+
+    private buildAggregateContainer() : void {
+        var spawns = this.room.find(FIND_MY_SPAWNS);
+        if (spawns.length === 0) return;
+
+        var spawn = spawns[0];
+        var options : RoomPosition[] = [];
+        options.push(new RoomPosition(spawn.pos.x + 1, spawn.pos.y + 1, spawn.pos.roomName));
+        options.push(new RoomPosition(spawn.pos.x + 1, spawn.pos.y - 1, spawn.pos.roomName));
+        options.push(new RoomPosition(spawn.pos.x - 1, spawn.pos.y + 1, spawn.pos.roomName));
+        options.push(new RoomPosition(spawn.pos.x - 1, spawn.pos.y - 1, spawn.pos.roomName));
+
+        var built = this.room.find(FIND_STRUCTURES).filter(s => s.structureType === STRUCTURE_CONTAINER).length > 0 ||
+            this.room.find(FIND_MY_CONSTRUCTION_SITES).filter(s => s.structureType === STRUCTURE_CONTAINER).length > 0;
+
+        options.forEach(o => {
+            if (built) return;
+            
+            var result = o.createConstructionSite(STRUCTURE_CONTAINER);
+            if (result === 0) built = true;
+        })
     }
 
     private buildSecondLevelSpawnRingRoads() : void {

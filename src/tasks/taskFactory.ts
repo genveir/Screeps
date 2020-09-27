@@ -1,12 +1,12 @@
-import { GrabTombstone } from './grabTombstone';
 import { Repair } from './repair';
 import { Build } from './build';
 import { Upgrade } from './upgrade';
 import { Harvest } from './harvest';
-import { Task } from './task';import { ErrorTask } from './error';
+import { Task } from './task';
+import { ErrorTask } from './error';
 import { Idle } from './idle';
 import { Fill } from './fill';
-import { GrabRuin } from './grabRuin';
+import { Grab } from './grab';
 
 export class TaskFactory {
     public CreateTask(serialized : string) : Task {
@@ -30,8 +30,7 @@ export class TaskFactory {
             case Repair.type: return new Repair(deserialized.id, deserialized.claimedBy, deserialized.structure);
             case Fill.type : return new Fill(deserialized.id, deserialized.claimedBy, deserialized.structure);
             case Idle.type: return new Idle(deserialized.id, deserialized.claimedBy);
-            case GrabTombstone.type: return new GrabTombstone(deserialized.id, deserialized.claimedBy, deserialized.tombstone);
-            case GrabRuin.type: return new GrabRuin(deserialized.id, deserialized.claimedBy, deserialized.ruin);
+            case Grab.type: return new Grab(deserialized.id, deserialized.claimedBy, deserialized.item);
             default: return new ErrorTask(deserialized.id, deserialized.claimedBy, deserialized);
         }
     }

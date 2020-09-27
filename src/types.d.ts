@@ -37,6 +37,6 @@ interface SavedTask {
     taskId : string;
 }
 
-interface StructureWithEnergyStore extends Structure {
+interface StructureWithEnergyStore extends Structure<StructureConstant> {
     store: Store<RESOURCE_ENERGY, false>;
 }

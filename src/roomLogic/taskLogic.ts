@@ -4,8 +4,7 @@ import { Harvest } from "../tasks/harvest";
 import { Repair } from "../tasks/repair";
 import { TaskList } from "../tasks/tasklist";
 import { Upgrade } from "../tasks/upgrade";
-import { GrabTombstone } from '../tasks/grabTombstone';
-import { GrabRuin } from '../tasks/grabRuin';
+import { Grab } from '../tasks/grab';
 
 export class TaskLogic {
     constructor(private room : Room) {
@@ -23,8 +22,7 @@ export class TaskLogic {
         this.manageBuildTasks(taskList);
         this.manageRepairTasks(taskList);
         this.manageFillTasks(taskList);
-        this.manageGrabTombstoneTasks(taskList);
-        this.manageGrabRuinTasks(taskList);
+        this.manageGrabTasks(taskList);
 
         this.room.memory.taskList = taskList.serialize();
     }
@@ -108,10 +106,10 @@ export class TaskLogic {
             .filter(s => this.isFillable(s))
             .map(s => <StructureWithEnergyStore>s);
 
-        var refuelTasks = taskList.getAll().filter(t => t.type === Fill.type).map(t => <Fill>t);
+        var fillTasks = taskList.getAll().filter(t => t.type === Fill.type).map(t => <Fill>t);
 
         fillAble.forEach(s => {
-            var refuelCount = refuelTasks.filter(rt => rt.structure == s.id).length;
+            var refuelCount = fillTasks.filter(rt => rt.structure == s.id).length;
             var numberRequired = this.getNumTasksForStructure(s);
 
             for (var i = refuelCount; i < numberRequired; i++) {
@@ -131,38 +129,62 @@ export class TaskLogic {
         switch(structure.structureType) {
             case STRUCTURE_TOWER : return 5;
             case STRUCTURE_SPAWN: return 15;
+            case STRUCTURE_CONTAINER: return 3;
             default: return 1;
         }
     }
 
-    private manageGrabTombstoneTasks(taskList : TaskList) {
+    private manageGrabTasks(taskList : TaskList) {
+        if (Memory.debug) console.log("starting manageGrabTasks");
+
+        var grabTasks = taskList.getAll().filter(t => t.type === Grab.type).map(t => <Grab>t);
+
+        this.manageGrabTombstoneTasks(taskList, grabTasks);
+        this.manageGrabRuinTasks(taskList, grabTasks);
+        this.manageGrabContainerTasks(taskList, grabTasks);
+    }
+
+    private manageGrabTombstoneTasks(taskList : TaskList, grabTasks : Grab[]) {
         if (Memory.debug) console.log("starting manageGrabTombstoneTasks");
         
         var tombstones = this.room.find(FIND_TOMBSTONES);
 
-        var grabTasks = taskList.getAll().filter(t => t.type === GrabTombstone.type).map(t => <GrabTombstone>t);
-
         tombstones.forEach(ts => {
-            var grabCount = grabTasks.filter(gt => gt.tombstone === ts.id).length;
+            var grabCount = grabTasks.filter(gt => gt.item === ts.id).length;
 
             if (grabCount === 0) {
-                taskList.addTask(new GrabTombstone(TaskList.getNewId(), null, ts.id));
+                console.log("adding grab task for tombstone " + ts.id);
+                taskList.addTask(new Grab(TaskList.getNewId(), null, ts.id));
             }
         });
     }
 
-    private manageGrabRuinTasks(taskList : TaskList) {
+    private manageGrabRuinTasks(taskList : TaskList, grabTasks : Grab[]) {
         if (Memory.debug) console.log("starting manageGrabRuinTasks");
         
         var ruins = this.room.find(FIND_RUINS);
 
-        var grabTasks = taskList.getAll().filter(t => t.type === GrabRuin.type).map(t => <GrabRuin>t);
-
         ruins.forEach(r => {
-            var grabCount = grabTasks.filter(gt => gt.ruin === r.id).length;
+            var grabCount = grabTasks.filter(gt => gt.item === r.id).length;
 
             if (grabCount < 3) {
-                taskList.addTask(new GrabRuin(TaskList.getNewId(), null, r.id));
+                console.log("adding grab task for ruin " + r.id);
+                taskList.addTask(new Grab(TaskList.getNewId(), null, r.id));
+            }
+        });
+    }
+
+    private manageGrabContainerTasks(taskList : TaskList, grabTasks : Grab[]) {
+        if (Memory.debug) console.log("starting manageGrabContainerTasks");
+        
+        var containers = this.room.find(FIND_STRUCTURES).filter(s => s.structureType === STRUCTURE_CONTAINER);
+
+        containers.forEach(c => {
+            var grabCount = grabTasks.filter(gt => gt.item === c.id).length;
+
+            if (grabCount < 3) {
+                console.log("adding grab task for container " + c.id);
+                taskList.addTask(new Grab(TaskList.getNewId(), null, c.id));
             }
         });
     }
