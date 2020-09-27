@@ -1,3 +1,4 @@
+import { GrabTombstone } from './tasks/grabTombstone';
 import { RoadUtil } from './util/road';
 import { Fill } from './tasks/fill';
 import { Build } from './tasks/build';
@@ -41,6 +42,7 @@ export class RoomLogic {
         this.manageBuildTasks(taskList);
         this.manageRepairTasks(taskList);
         this.manageFillTasks(taskList);
+        this.manageGrabTombstoneTasks(taskList);
 
         // this.printTaskInfo(taskList);
 
@@ -58,7 +60,11 @@ export class RoomLogic {
             var closest : number = 1000;
             var target : Creep;
             enemies.forEach(e => {
-                if (PositionUtil.getManhattanDistance(t.pos, e.pos) < closest) target = e;
+                var distance = PositionUtil.getManhattanDistance(t.pos, e.pos);
+                if (distance < closest)  {
+                    closest = distance;
+                    target = e;
+                };
             })
 
             t.attack(target!);
@@ -177,6 +183,20 @@ export class RoomLogic {
             case STRUCTURE_TOWER : return 5;
             default: return 1;
         }
+    }
+
+    private manageGrabTombstoneTasks(taskList : TaskList) {
+        var tombstones = this.room.find(FIND_TOMBSTONES);
+
+        var grabTasks = taskList.getAll().filter(t => t.type === GrabTombstone.type).map(t => <GrabTombstone>t);
+
+        tombstones.forEach(ts => {
+            var grabCount = grabTasks.filter(gt => gt.tombstone === ts.id).length;
+
+            if (grabCount === 0) {
+                taskList.addTask(new GrabTombstone(TaskList.getNewId(), null, ts.id));
+            }
+        });
     }
 
     private buildSpawnTower() : void {

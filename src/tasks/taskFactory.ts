@@ -1,3 +1,4 @@
+import { GrabTombstone } from './grabTombstone';
 import { Repair } from './repair';
 import { Build } from './build';
 import { FillSpawn } from './fillSpawn';
@@ -30,6 +31,7 @@ export class TaskFactory {
             case Repair.type: return new Repair(deserialized.id, deserialized.claimedBy, deserialized.structure);
             case Fill.type : return new Fill(deserialized.id, deserialized.claimedBy, deserialized.structure);
             case Idle.type: return new Idle(deserialized.id, deserialized.claimedBy);
+            case GrabTombstone.type: return new GrabTombstone(deserialized.id, deserialized.claimedBy, deserialized.tombstone);
             default: return new ErrorTask(deserialized.id, deserialized.claimedBy, deserialized);
         }
     }
