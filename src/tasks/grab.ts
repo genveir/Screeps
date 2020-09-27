@@ -28,7 +28,6 @@ export class Grab extends BaseTask implements Task {
         var item = this.getItemWithEnergyStore();
         if (!item)
         {
-            console.log("grab: item " + this.item + " does not exist");
             this.unclaim();
             this.clearOnNextTick = true;
         }

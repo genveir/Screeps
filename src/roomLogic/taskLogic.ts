@@ -153,7 +153,6 @@ export class TaskLogic {
             var grabCount = grabTasks.filter(gt => gt.item === ts.id).length;
 
             if (grabCount === 0) {
-                console.log("adding grab task for tombstone " + ts.id);
                 taskList.addTask(new Grab(TaskList.getNewId(), null, ts.id));
             }
         });
@@ -168,7 +167,6 @@ export class TaskLogic {
             var grabCount = grabTasks.filter(gt => gt.item === r.id).length;
 
             if (grabCount < 3) {
-                console.log("adding grab task for ruin " + r.id);
                 taskList.addTask(new Grab(TaskList.getNewId(), null, r.id));
             }
         });
@@ -183,7 +181,6 @@ export class TaskLogic {
             var grabCount = grabTasks.filter(gt => gt.item === c.id).length;
 
             if (grabCount < 3) {
-                console.log("adding grab task for container " + c.id);
                 taskList.addTask(new Grab(TaskList.getNewId(), null, c.id));
             }
         });
