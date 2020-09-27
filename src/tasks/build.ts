@@ -11,7 +11,6 @@ export class Build extends BaseTask implements Task {
     private getSite() : ConstructionSite | null {
         var constructionSite = Game.getObjectById(this.constructionSite);
         if (!constructionSite) {
-            console.log("constructionsite no longer exists");
             this.unclaim();
             this.clearOnNextTick = true;
         }
@@ -41,6 +40,7 @@ export class Build extends BaseTask implements Task {
             if (result === ERR_NOT_IN_RANGE) {
                 creep.moveTo(site);
             }
+            else if (result === ERR_NOT_ENOUGH_RESOURCES) {}
             else if (result === 0) {}
             else {console.log("build failed with code " + result); }
         }   

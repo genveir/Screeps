@@ -23,6 +23,7 @@ export class BuildLogic {
         }
 
         this.buildAllPossibleExtensions();
+        this.buildAllExtensionAccessRoads();
     }
 
     private buildSpawnTower() : void {
@@ -173,6 +174,22 @@ export class BuildLogic {
         var result = pos.createConstructionSite(STRUCTURE_EXTENSION);
 
         return result === ERR_FULL || result === ERR_GCL_NOT_ENOUGH;
+    }
+
+    buildAllExtensionAccessRoads() {
+        var numConstructionSites = this.room.find(FIND_MY_CONSTRUCTION_SITES).length;
+        var extensions = this.room.find(FIND_STRUCTURES).filter(s => s.structureType === STRUCTURE_EXTENSION).map(s => <StructureExtension>s);
+
+        extensions.forEach(e => {
+            if (numConstructionSites > 0) return;
+
+            var posBelow = new RoomPosition(e.pos.x, e.pos.y + 1, e.pos.roomName);
+            var terrain = posBelow.lookFor(LOOK_TERRAIN);
+            if (terrain[0] === "wall") return;
+
+            var result = posBelow.createConstructionSite(STRUCTURE_ROAD);
+            if (result === 0) numConstructionSites++;
+        })
     }
 
     buildRoad(definition : RoadDefinition) {
