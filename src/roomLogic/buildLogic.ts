@@ -50,12 +50,13 @@ export class BuildLogic {
                     {
                         var buildSite = new RoomPosition(spawnPos.x + xOffset, spawnPos.y + yOffset, spawnPos.roomName);
 
-                        var sites = buildSite.lookFor(LOOK_CONSTRUCTION_SITES).filter(cs => cs.structureType === STRUCTURE_TOWER);
-                        if (sites.length > 0) return;
+                        var sites = buildSite.lookFor(LOOK_STRUCTURES);
+                        if (sites.length === 0)
+                        {
+                            var result = buildSite.createConstructionSite(STRUCTURE_TOWER);
 
-                        var result = buildSite.createConstructionSite(STRUCTURE_TOWER);
-
-                        if (result === 0) return;
+                            if (result === 0) return;
+                        }
                     }
                 }
             }
@@ -133,7 +134,7 @@ export class BuildLogic {
         this.tryBuildExtension(new RoomPosition(spawnPos.x + 2, spawnPos.y - 2, spawnPos.roomName), sources, []);
         this.tryBuildExtension(new RoomPosition(spawnPos.x - 2, spawnPos.y + 2, spawnPos.roomName), sources, []);
         this.tryBuildExtension(new RoomPosition(spawnPos.x - 2, spawnPos.y - 2, spawnPos.roomName), sources, []);
-        this.tryBuildExtension(new RoomPosition(spawnPos.x + 2, spawnPos.y, spawnPos.roomName), sources, []);
+        this.tryBuildExtension(new RoomPosition(spawnPos.x - 2, spawnPos.y, spawnPos.roomName), sources, []);
         this.tryBuildExtension(new RoomPosition(spawnPos.x + 2, spawnPos.y, spawnPos.roomName), sources, []);
         this.tryBuildExtension(new RoomPosition(spawnPos.x, spawnPos.y + 2, spawnPos.roomName), sources, []);
         this.tryBuildExtension(new RoomPosition(spawnPos.x, spawnPos.y - 2, spawnPos.roomName), sources, []);
@@ -154,7 +155,7 @@ export class BuildLogic {
             if (!stopTrying) stopTrying = this.tryBuildExtension(new RoomPosition(ba.x - 1, ba.y - 1, ba.roomName), sources, forbiddenPositions);
 
             var csites = this.room.find(FIND_MY_CONSTRUCTION_SITES).filter(s => s.structureType === STRUCTURE_EXTENSION).length;
-            if (csites > 5) stopTrying = true;
+            if (csites > 2) stopTrying = true;
         });
     }
 
