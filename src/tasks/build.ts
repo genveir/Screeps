@@ -23,7 +23,7 @@ export class Build extends BaseTask implements Task {
         if (!site) return 0;
         else {
             
-            return 100;
+            return 100000;
         }
     }
 

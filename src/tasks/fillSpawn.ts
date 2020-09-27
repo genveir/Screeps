@@ -25,7 +25,7 @@ export class FillSpawn extends BaseTask implements Task {
         }
         else
         {
-            return 300;
+            return 300000;
         }
     }
 

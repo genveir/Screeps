@@ -9,7 +9,7 @@ export class GrabRuin extends BaseTask implements Task {
     }
 
     public getPriority(creep : Creep) {
-        return 105;
+        return 105000;
     }
 
     private getRuin() : Ruin | null {

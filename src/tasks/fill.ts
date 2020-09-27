@@ -43,9 +43,9 @@ export class Fill extends BaseTask implements Task {
         {
             switch(structure.structureType)
             {
-                case STRUCTURE_TOWER: return 500;
-                case STRUCTURE_EXTENSION: return 300;
-                default: return 100;
+                case STRUCTURE_TOWER: return 500000;
+                case STRUCTURE_EXTENSION: return 300000;
+                default: return 100000;
             }
         }
     }

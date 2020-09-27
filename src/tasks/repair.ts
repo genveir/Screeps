@@ -23,7 +23,7 @@ export class Repair extends BaseTask implements Task {
         var structure = this.getStructure();
         if (!structure) return 0;
         else {
-            return 105;
+            return 105000;
         }
     }
 

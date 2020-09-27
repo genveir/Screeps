@@ -22,7 +22,7 @@ export class Upgrade extends BaseTask implements Task {
         var controller = this.getController();
         if (!controller) return 0;
         
-        if (controller.ticksToDowngrade < 1000) return 1000; // don't let the controller downgrade.
+        if (controller.ticksToDowngrade < 1000) return 1000000; // don't let the controller downgrade.
         return 1; // otherwise minimal, this is the job to do if there's no other job.
     }
 

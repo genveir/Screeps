@@ -9,7 +9,7 @@ export class Harvest extends BaseTask implements Task {
     }
 
     public getPriority(creep : Creep) {
-        return 100;
+        return 100000;
     }
 
     private getSource() : Source | null {
