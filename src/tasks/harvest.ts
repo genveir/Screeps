@@ -12,17 +12,31 @@ export class Harvest extends BaseTask implements Task {
         return 100;
     }
 
+    private getSource() : Source | null {
+        var source = Game.getObjectById(this.source);
+        if (!source) {
+            this.unclaim();
+        }
+        return source;
+    }
+
     public canPerform(creep : Creep) {
-        return creep.store.getFreeCapacity() > 0;
+        var source = this.getSource();
+
+        if (!source) return false;
+        if (source.energy === 0) return false;
+        if (creep.store.getFreeCapacity() === 0) return false;
+        if (creep.getActiveBodyparts(WORK) === 0) return false;
+        if (creep.getActiveBodyparts(MOVE) === 0) return false;
+        if (creep.getActiveBodyparts(CARRY) === 0) return false;
+
+        return true;
     }
 
     public execute(creep : Creep) {
         if (creep.pos.isEqualTo(this.pos.x, this.pos.y)) {
-            var source = Game.getObjectById(this.source);
-            if (!source) {
-                this.unclaim();
-            }
-            else
+            var source = this.getSource();
+            if (source)
             {
                 creep.harvest(source);
             
