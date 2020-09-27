@@ -180,7 +180,7 @@ export class TaskLogic {
         containers.forEach(c => {
             var grabCount = grabTasks.filter(gt => gt.item === c.id).length;
 
-            if (grabCount < 3) {
+            if (grabCount < 20) {
                 taskList.addTask(new Grab(TaskList.getNewId(), null, c.id));
             }
         });
