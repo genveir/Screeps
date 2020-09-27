@@ -1,7 +1,6 @@
 import { GrabTombstone } from './grabTombstone';
 import { Repair } from './repair';
 import { Build } from './build';
-import { FillSpawn } from './fillSpawn';
 import { Upgrade } from './upgrade';
 import { Harvest } from './harvest';
 import { Task } from './task';import { ErrorTask } from './error';
@@ -27,7 +26,6 @@ export class TaskFactory {
         {
             case Harvest.type: return new Harvest(deserialized.id, deserialized.claimedBy, deserialized.source, deserialized.pos);
             case Upgrade.type: return new Upgrade(deserialized.id, deserialized.claimedBy, deserialized.controller);
-            case FillSpawn.type: return new FillSpawn(deserialized.id, deserialized.claimedBy, deserialized.spawn);
             case Build.type: return new Build(deserialized.id, deserialized.claimedBy, deserialized.constructionSite);
             case Repair.type: return new Repair(deserialized.id, deserialized.claimedBy, deserialized.structure);
             case Fill.type : return new Fill(deserialized.id, deserialized.claimedBy, deserialized.structure);

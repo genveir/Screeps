@@ -1,6 +1,6 @@
+import { PositionUtil } from './../util/position';
 import { Fill } from './../tasks/fill';
 import { Build } from "../tasks/build";
-import { FillSpawn } from "../tasks/fillSpawn";
 import { Harvest } from "../tasks/harvest";
 import { Repair } from "../tasks/repair";
 import { TaskList } from "../tasks/tasklist";
@@ -15,8 +15,11 @@ export class TaskLogic {
 
     run() {
         // persistent task list
+        if (Memory.debug) console.log("loading task list");
         var taskList = TaskList.getInstance(this.room);
-        if (taskList.getAll().length === 0) this.initializeTasks(taskList);
+
+        this.manageHarvestTasks(taskList);
+        this.manageUpgradeTasks(taskList);
 
         this.manageBuildTasks(taskList);
         this.manageRepairTasks(taskList);
@@ -27,33 +30,50 @@ export class TaskLogic {
         this.room.memory.taskList = taskList.serialize();
     }
 
-    private initializeTasks(taskList : TaskList) : void {
-        console.log("initializing tasks for room " + this.room.name);
+    private manageHarvestTasks(taskList : TaskList) {
+        if (Memory.debug) console.log("starting manageHarvestTasks");
 
         var harvestSlots = this.room.memory.energySlots;
 
-        var harvestTasks = harvestSlots.map(hs => {
+        var harvestTasks = taskList.getAll()
+            .filter(ht => ht.type === Harvest.type)
+            .map(ht => <Harvest>ht);
+
+        harvestSlots.forEach(hs => {
             var roomPos = new RoomPosition(hs.pos.x, hs.pos.y, hs.pos.roomName);
-            taskList.addTask(new Harvest(TaskList.getNewId(), null, hs.id, roomPos));
-        });
-
-        var controller = this.room.controller;
-        if (controller)
-        {
-            for (var i = 0; i < harvestTasks.length * 3; i++) {
-                taskList.addTask(new Upgrade(TaskList.getNewId(), null, controller.id));
-            }
-        }
-
-        this.room.find(FIND_MY_SPAWNS).forEach(spawn => 
-        {
-            for (var i = 0; i < harvestTasks.length * 3; i++) {
-                taskList.addTask(new FillSpawn(TaskList.getNewId(), null, spawn.id))
-            }
+            var taskExists : boolean = false;
+            harvestTasks.forEach(ht => 
+            { 
+                if (roomPos.x === ht.pos.x && roomPos.y === ht.pos.y && roomPos.roomName === ht.pos.roomName) taskExists = true;
+            });
+            
+            if (!taskExists) {
+                console.log("adding harvest task for " + roomPos);
+                taskList.addTask(new Harvest(TaskList.getNewId(), null, hs.id, roomPos));
+            } 
         });
     }
 
+    private manageUpgradeTasks(taskList : TaskList) {
+        if (Memory.debug) console.log("starting manageUpgradeTasks");
+        
+        var controller = this.room.controller;
+        if (!controller) return;
+
+        var upgradeTasks = taskList.getAll()
+            .filter(ht => ht.type === Upgrade.type)
+            .map(ht => <Upgrade>ht)
+            .length;
+
+        for (var i = upgradeTasks; i < 15; i++) {
+            console.log("adding upgrade task for " + controller.id);
+            taskList.addTask(new Upgrade(TaskList.getNewId(), null, controller.id));
+        }
+    }
+
     private manageBuildTasks(taskList : TaskList) : void {
+        if (Memory.debug) console.log("starting manageBuildTasks");
+        
         var constructionSites = this.room.find(FIND_CONSTRUCTION_SITES);
         var buildTasks = taskList.getAll().filter(t => t.type === Build.type).map(t => <Build>t);
 
@@ -67,6 +87,8 @@ export class TaskLogic {
     }
 
     private manageRepairTasks(taskList : TaskList) : void {
+        if (Memory.debug) console.log("starting manageRepairTasks");
+        
         var structures : Structure[] = this.room.find(FIND_MY_STRUCTURES).filter(s => s.hits < s.hitsMax);
         var roads : Structure[] = this.room.find(FIND_STRUCTURES).filter(s => s.structureType === STRUCTURE_ROAD).filter(s => s.hits < s.hitsMax / 2);
         var toRepair : Structure[] = structures.concat(roads);
@@ -81,6 +103,8 @@ export class TaskLogic {
     }
 
     private manageFillTasks(taskList : TaskList) : void {
+        if (Memory.debug) console.log("starting manageFillTasks");
+        
         var fillAble = this.room.find(FIND_MY_STRUCTURES)
             .filter(s => this.isFillable(s))
             .map(s => <StructureWithEnergyStore>s);
@@ -107,11 +131,14 @@ export class TaskLogic {
     private getNumTasksForStructure(structure : Structure) : number {
         switch(structure.structureType) {
             case STRUCTURE_TOWER : return 5;
+            case STRUCTURE_SPAWN: return 15;
             default: return 1;
         }
     }
 
     private manageGrabTombstoneTasks(taskList : TaskList) {
+        if (Memory.debug) console.log("starting manageGrabTombstoneTasks");
+        
         var tombstones = this.room.find(FIND_TOMBSTONES);
 
         var grabTasks = taskList.getAll().filter(t => t.type === GrabTombstone.type).map(t => <GrabTombstone>t);
@@ -126,6 +153,8 @@ export class TaskLogic {
     }
 
     private manageGrabRuinTasks(taskList : TaskList) {
+        if (Memory.debug) console.log("starting manageGrabRuinTasks");
+        
         var ruins = this.room.find(FIND_RUINS);
 
         var grabTasks = taskList.getAll().filter(t => t.type === GrabRuin.type).map(t => <GrabRuin>t);

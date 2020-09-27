@@ -5,7 +5,7 @@ import { Task } from './task';
 export class Harvest extends BaseTask implements Task {
     public static type : string = "HARVEST";
 
-    constructor(id : string, claimedBy: Id<Creep> | null, private source : Id<Source>, private pos : RoomPosition) {
+    constructor(id : string, claimedBy: Id<Creep> | null, private source : Id<Source>, public pos : RoomPosition) {
         super(id, Harvest.type, claimedBy);
     }
 

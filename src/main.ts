@@ -3,6 +3,8 @@ import { GameLogic } from "./gameLogic";
 import { SpawnLogic }  from "./spawnLogic";
 import { CreepLogic } from "./creepLogic";
 
+Memory.debug = false;
+
 // clean up dead creep memory
 for (var creepName in Memory.creeps) {
     if (!Game.creeps[creepName]) {
@@ -10,9 +12,11 @@ for (var creepName in Memory.creeps) {
     }
 }
 
+if (Memory.debug) console.log("starting gamelogic");
 // run logic that determines overall goals and strategies
 new GameLogic().run();
 
+if (Memory.debug) console.log("starting spawnlogic");
 // run logic per spawn
 for (var spawnName in Game.spawns) {
     var spawn = Game.spawns[spawnName];
@@ -21,6 +25,7 @@ for (var spawnName in Game.spawns) {
     spawnLogic.run();
 }
 
+if (Memory.debug) console.log("starting creeplogic");
 // run logic per creep
 for (var creepName in Game.creeps) {
     var creep = Game.creeps[creepName];
@@ -29,4 +34,5 @@ for (var creepName in Game.creeps) {
     creepLogic.run();
 }
 
+if (Memory.debug) console.log("saving task list");
 TaskList.saveAll();

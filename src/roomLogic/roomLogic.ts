@@ -15,10 +15,13 @@ export class RoomLogic {
     }
 
     run() {
+        if (Memory.debug) console.log("firing towers in " + this.room.name);
         this.fireTowers();
 
+        if (Memory.debug) console.log("running build logic for " + this.room.name);
         this.buildLogic.run();
 
+        if (Memory.debug) console.log("running task logic for " + this.room.name);
         this.taskLogic.run();
     }
 

@@ -13,11 +13,16 @@ export class SpawnLogic
 
         var energySlots = spawnRoom.memory.energySlots.length;
 
-        var energyInExtensions = spawnRoom.find(FIND_MY_STRUCTURES)
+        var energyExtensions = spawnRoom.find(FIND_MY_STRUCTURES)
             .filter(s => s.structureType === STRUCTURE_EXTENSION)
-            .map(s => <StructureExtension>s)
-            .map(s => s.store.energy)
-            .reduce((a, b) => a + b);
+            .map(s => <StructureExtension>s);
+
+        var energyInExtensions = 0;
+        if (energyExtensions.length > 0)
+        {
+            energyInExtensions = energyExtensions.map(s => s.store.energy)
+                .reduce((a, b) => a + b);
+        }
 
         var availableEnergy = this.spawn.store.energy + energyInExtensions;
 
