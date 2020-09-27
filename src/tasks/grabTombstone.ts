@@ -1,3 +1,4 @@
+import { PositionUtil } from '../util/position';
 import { BaseTask } from './baseTask';
 import { Task } from './task';
 
@@ -9,7 +10,10 @@ export class GrabTombstone extends BaseTask implements Task {
     }
 
     public getPriority(creep : Creep) {
-        return 105000;
+        var tombstone = this.getTombstone();
+        if (!tombstone) return 0;
+        
+        return 105000 - PositionUtil.getFlyDistance(tombstone.pos, creep.pos);
     }
 
     private getTombstone() : Tombstone | null {

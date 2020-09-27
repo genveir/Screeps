@@ -1,5 +1,6 @@
 import { Task } from './task';
 import { BaseTask } from './baseTask';
+import { PositionUtil } from '../util/position';
 
 export class FillSpawn extends BaseTask implements Task {
     public static readonly type : string = "FILLSPAWN";
@@ -25,7 +26,7 @@ export class FillSpawn extends BaseTask implements Task {
         }
         else
         {
-            return 300000;
+            return 300000 - PositionUtil.getFlyDistance(spawn.pos, creep.pos);;
         }
     }
 

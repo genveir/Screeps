@@ -1,5 +1,6 @@
 import { Task } from './task';
 import { BaseTask } from './baseTask';
+import { PositionUtil } from '../util/position';
 
 export class Repair extends BaseTask implements Task {
     public static readonly type : string = "REPAIR";
@@ -23,7 +24,7 @@ export class Repair extends BaseTask implements Task {
         var structure = this.getStructure();
         if (!structure) return 0;
         else {
-            return 105000;
+            return 105000 - PositionUtil.getFlyDistance(structure.pos, creep.pos);;
         }
     }
 
@@ -44,6 +45,7 @@ export class Repair extends BaseTask implements Task {
                 if (result === ERR_NOT_IN_RANGE) {
                     creep.moveTo(structure);
                 }
+                else if (result === ERR_NOT_ENOUGH_RESOURCES) {}
                 else if (result === 0) {}
                 else {console.log("repair failed with code " + result); }
             }

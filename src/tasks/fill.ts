@@ -1,5 +1,6 @@
 import { Task } from './task';
 import { BaseTask } from './baseTask';
+import { PositionUtil } from '../util/position';
 
 export class Fill extends BaseTask implements Task {
     public static readonly type : string = "FILL";
@@ -34,19 +35,21 @@ export class Fill extends BaseTask implements Task {
         return structure;
     }
 
-    public getPriority() {
+    public getPriority(creep : Creep) {
         var structure = this.getStructure();
         if (!structure) {
             return 0;
         }
         else
         {
+            var prio = 100000;
             switch(structure.structureType)
             {
-                case STRUCTURE_TOWER: return 500000;
-                case STRUCTURE_EXTENSION: return 300000;
-                default: return 100000;
+                case STRUCTURE_TOWER: prio = 500000;
+                case STRUCTURE_EXTENSION: prio = 300000;
             }
+
+            return prio - PositionUtil.getFlyDistance(structure.pos, creep.pos);
         }
     }
 

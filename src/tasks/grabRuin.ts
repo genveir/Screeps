@@ -1,3 +1,4 @@
+import { PositionUtil } from '../util/position';
 import { BaseTask } from './baseTask';
 import { Task } from './task';
 
@@ -9,7 +10,10 @@ export class GrabRuin extends BaseTask implements Task {
     }
 
     public getPriority(creep : Creep) {
-        return 105000;
+        var ruin = this.getRuin();
+        if (!ruin) return 0;
+
+        return 105000 - PositionUtil.getFlyDistance(ruin.pos, creep.pos);;
     }
 
     private getRuin() : Ruin | null {

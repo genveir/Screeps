@@ -1,3 +1,4 @@
+import { PositionUtil } from '../util/position';
 import { BaseTask } from './baseTask';
 import { Task } from './task';
 
@@ -9,7 +10,7 @@ export class Harvest extends BaseTask implements Task {
     }
 
     public getPriority(creep : Creep) {
-        return 100000;
+        return 100000 - PositionUtil.getFlyDistance(this.pos, creep.pos);;
     }
 
     private getSource() : Source | null {

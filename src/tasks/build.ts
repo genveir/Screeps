@@ -1,3 +1,4 @@
+import { PositionUtil } from './../util/position';
 import { Task } from './task';
 import { BaseTask } from './baseTask';
 
@@ -22,7 +23,7 @@ export class Build extends BaseTask implements Task {
         var site = this.getSite();
         if (!site) return 0;
         else {
-            return 100000;
+            return 100000 - PositionUtil.getFlyDistance(site.pos, creep.pos);
         }
     }
 
