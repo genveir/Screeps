@@ -22,7 +22,6 @@ export class Build extends BaseTask implements Task {
         var site = this.getSite();
         if (!site) return 0;
         else {
-            
             return 100000;
         }
     }

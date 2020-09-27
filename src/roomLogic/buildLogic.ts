@@ -158,7 +158,7 @@ export class BuildLogic {
     tryBuildExtension(pos : RoomPosition, sources : Source[], forbiddenPositions : RoomPosition[]) : boolean {
         var tooClose : boolean = false;
         sources.forEach(source => {
-            if (PositionUtil.getManhattanDistance(pos, source.pos) < 4) tooClose = true;
+            if (PositionUtil.getFlyDistance(pos, source.pos) < 3) tooClose = true;
         });
         if (tooClose) return false;
 

@@ -33,7 +33,7 @@ export class RoomLogic {
             var closest : number = 1000;
             var target : Creep;
             enemies.forEach(e => {
-                var distance = PositionUtil.getManhattanDistance(t.pos, e.pos);
+                var distance = PositionUtil.getFlyDistance(t.pos, e.pos);
                 if (distance < closest)  {
                     closest = distance;
                     target = e;

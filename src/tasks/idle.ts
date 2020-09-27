@@ -26,7 +26,7 @@ export class Idle extends BaseTask implements Task {
 
         var isAdjacent : boolean = false;
         dontStayNextTo.forEach(s => {
-            if(PositionUtil.getManhattanDistance(creep.pos, s) <= 2) isAdjacent = true;
+            if(PositionUtil.getFlyDistance(creep.pos, s) === 1) isAdjacent = true;
         });
 
         if (isAdjacent) { // don't stay next to an energy source so noone can harvest it

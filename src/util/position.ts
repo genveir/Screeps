@@ -32,6 +32,14 @@ export class PositionUtil {
         return aVal - bVal;
     }
 
+    public static getFlyDistance(a : {x : number, y : number}, b : {x : number, y : number}) {
+        var positiveX = Math.abs(a.x - b.x);
+        var positiveY = Math.abs(a.y - b.y);
+
+        if (positiveX > positiveY) return positiveX;
+        else return positiveY;
+    }
+
     public static getManhattanDistance(a : {x : number, y : number}, b : {x : number, y : number}) {
         return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
     }
