@@ -291,7 +291,7 @@ export class RoomLogic {
         sources.forEach(source => {
             if (PositionUtil.getManhattanDistance(pos, source.pos) < 4) tooClose = true;
         });
-        if (tooClose) return true;
+        if (tooClose) return false;
 
         var result = pos.createConstructionSite(STRUCTURE_EXTENSION);
 
