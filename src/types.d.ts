@@ -1,5 +1,8 @@
 interface FlagMemory { [name: string]: any }
-interface SpawnMemory { [name: string]: any }
+interface SpawnMemory 
+{  
+    noIdlerTicks: number
+}
 
 interface Memory { [name: string]: any }
 

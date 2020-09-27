@@ -11,6 +11,9 @@ export class SpawnLogic
         var creepcount = creeps.length;
         var idlingCreeps = creeps.filter(c => !c.memory.savedTask.active).length;
 
+        if (idlingCreeps === 0) this.spawn.memory.noIdlerTicks++;
+        else this.spawn.memory.noIdlerTicks = 0;
+
         var energySlots = spawnRoom.memory.energySlots.length;
 
         var energyExtensions = spawnRoom.find(FIND_MY_STRUCTURES)
@@ -25,12 +28,12 @@ export class SpawnLogic
         }
 
         var availableEnergy = this.spawn.store.energy + energyInExtensions;
-        new RoomVisual(this.spawn.room.name).text(availableEnergy + "⚡ available", this.spawn.pos.x, this.spawn.pos.y + 1);
+        new RoomVisual(this.spawn.room.name).text(availableEnergy + "⚡ " + idlingCreeps + "😴", this.spawn.pos.x, this.spawn.pos.y + 1);
 
         var body = this.buildWorkerBody(availableEnergy, 300, 900);
 
         if (!this.spawn.spawning && body) {
-            if (creepcount < energySlots || idlingCreeps === 0) {
+            if (creepcount < energySlots || this.spawn.memory.noIdlerTicks === 5) {
                 this.spawn.spawnCreep(
                     body, 
                     'Creep' + Game.time, 
