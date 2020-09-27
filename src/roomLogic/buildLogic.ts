@@ -86,9 +86,11 @@ export class BuildLogic {
 
             if (definition) this.buildRoad(definition);
 
-            var ringDef = RoadUtil.getRingRoad(sources[i].pos, 1);
+            var ringDef1 = RoadUtil.getRingRoad(sources[i].pos, 1);
+            if (ringDef1) this.buildRoad(ringDef1);
 
-            if (ringDef) this.buildRoad(ringDef);
+            var ringDef2 = RoadUtil.getRingRoad(sources[i].pos, 2);
+            if (ringDef2) this.buildRoad(ringDef2);
         }
     }
 
@@ -135,7 +137,6 @@ export class BuildLogic {
         this.tryBuildExtension(new RoomPosition(spawnPos.x + 2, spawnPos.y, spawnPos.roomName), sources, []);
         this.tryBuildExtension(new RoomPosition(spawnPos.x, spawnPos.y + 2, spawnPos.roomName), sources, []);
         this.tryBuildExtension(new RoomPosition(spawnPos.x, spawnPos.y - 2, spawnPos.roomName), sources, []);
-        
 
         var forbiddenPositions : RoomPosition[] = []
         forbiddenPositions.push(new RoomPosition(spawnPos.x + 1, spawnPos.y + 1, spawnPos.roomName));
