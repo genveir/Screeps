@@ -26,16 +26,9 @@ export class SpawnLogic
 
         var availableEnergy = this.spawn.store.energy + energyInExtensions;
 
-        var body : BodyPartConstant[] = []
-        this.pushBasicBody(body);
+        var body = this.buildWorkerBody(availableEnergy, 300, 900);
 
-        var bodyDoubles = Math.floor((availableEnergy - 300) / 300);
-        if (bodyDoubles > 2) bodyDoubles = 2;
-        for (var i = 0; i < bodyDoubles; i++) {
-            this.pushBasicBody(body);
-        }
-
-        if (!this.spawn.spawning) {
+        if (!this.spawn.spawning && body) {
             if (creepcount < energySlots || idlingCreeps === 0) {
                 this.spawn.spawnCreep(
                     body, 
@@ -53,11 +46,47 @@ export class SpawnLogic
         }
     }
 
-    pushBasicBody(body : BodyPartConstant[]) {
-        body.push(WORK);
-        body.push(CARRY);
-        body.push(CARRY);
-        body.push(MOVE);
-        body.push(MOVE);
+    workerBody : BodyPartConstant[] = [MOVE, WORK, CARRY, MOVE, CARRY]
+    buildWorkerBody(availableEnergy : number, minimumToSpend : number, maximumToSpend : number) : BodyPartConstant[] | null {
+        var body : BodyPartConstant[] = [];
+        var cost = 0;
+
+        if (availableEnergy > maximumToSpend) availableEnergy = maximumToSpend;
+
+        var workerIndex = 0;
+        while(availableEnergy > 0)
+        {
+            var part = this.workerBody[workerIndex];
+            var partCost = SpawnLogic.getPartCost(part);
+            body.push(part);
+            cost += partCost;
+            availableEnergy -= partCost;
+
+            workerIndex++;
+            if (workerIndex == this.workerBody.length) workerIndex = 0;
+        }
+
+        if (availableEnergy < 0) {
+            var lastPart = body.pop();
+            if (lastPart) cost -= SpawnLogic.getPartCost(lastPart);
+        }
+
+        if (cost < minimumToSpend) return null;
+        else return body;
+    }
+
+    static getPartCost(part : BodyPartConstant) : number {
+        switch(part)
+        {
+            case MOVE: return 50;
+            case WORK: return 100;
+            case CARRY: return 50;
+            case ATTACK: return 80;
+            case RANGED_ATTACK: return 150;
+            case HEAL: return 250;
+            case TOUGH: return 10;
+            case CLAIM: return 600;
+            default: return 1000000;
+        }
     }
 }
