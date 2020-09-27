@@ -36,11 +36,15 @@ export class Repair extends BaseTask implements Task {
     }
 
     public execute(creep : Creep) {
-        if (this.moveAwayFromSources(creep)) return;
-
         var structure = this.getStructure();
         if (structure)
         {
+            if (PositionUtil.getFlyDistance(creep.pos, structure.pos) > 3)
+            {
+                if (this.moveAwayFromSources(creep)) return;
+                else creep.moveTo(structure);
+            }
+
             if (structure.hits >= structure.hitsMax) this.clearOnNextTick = true;
             else {
                 var result = creep.repair(structure);
