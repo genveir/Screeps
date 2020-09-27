@@ -127,17 +127,15 @@ export class BuildLogic {
             .filter(s => s.structureType === STRUCTURE_EXTENSION)
             .map(s => s.pos);
 
-        if (buildAround.length === 0)
-        {
-            this.tryBuildExtension(new RoomPosition(spawnPos.x + 2, spawnPos.y + 2, spawnPos.roomName), sources, []);
-            this.tryBuildExtension(new RoomPosition(spawnPos.x + 2, spawnPos.y - 2, spawnPos.roomName), sources, []);
-            this.tryBuildExtension(new RoomPosition(spawnPos.x - 2, spawnPos.y + 2, spawnPos.roomName), sources, []);
-            this.tryBuildExtension(new RoomPosition(spawnPos.x - 2, spawnPos.y - 2, spawnPos.roomName), sources, []);
-            this.tryBuildExtension(new RoomPosition(spawnPos.x + 2, spawnPos.y, spawnPos.roomName), sources, []);
-            this.tryBuildExtension(new RoomPosition(spawnPos.x + 2, spawnPos.y, spawnPos.roomName), sources, []);
-            this.tryBuildExtension(new RoomPosition(spawnPos.x, spawnPos.y + 2, spawnPos.roomName), sources, []);
-            this.tryBuildExtension(new RoomPosition(spawnPos.x, spawnPos.y - 2, spawnPos.roomName), sources, []);
-        }
+        this.tryBuildExtension(new RoomPosition(spawnPos.x + 2, spawnPos.y + 2, spawnPos.roomName), sources, []);
+        this.tryBuildExtension(new RoomPosition(spawnPos.x + 2, spawnPos.y - 2, spawnPos.roomName), sources, []);
+        this.tryBuildExtension(new RoomPosition(spawnPos.x - 2, spawnPos.y + 2, spawnPos.roomName), sources, []);
+        this.tryBuildExtension(new RoomPosition(spawnPos.x - 2, spawnPos.y - 2, spawnPos.roomName), sources, []);
+        this.tryBuildExtension(new RoomPosition(spawnPos.x + 2, spawnPos.y, spawnPos.roomName), sources, []);
+        this.tryBuildExtension(new RoomPosition(spawnPos.x + 2, spawnPos.y, spawnPos.roomName), sources, []);
+        this.tryBuildExtension(new RoomPosition(spawnPos.x, spawnPos.y + 2, spawnPos.roomName), sources, []);
+        this.tryBuildExtension(new RoomPosition(spawnPos.x, spawnPos.y - 2, spawnPos.roomName), sources, []);
+        
 
         var forbiddenPositions : RoomPosition[] = []
         forbiddenPositions.push(new RoomPosition(spawnPos.x + 1, spawnPos.y + 1, spawnPos.roomName));
