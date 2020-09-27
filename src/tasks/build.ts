@@ -33,11 +33,15 @@ export class Build extends BaseTask implements Task {
     }
 
     public execute(creep : Creep) {
-        if (this.moveAwayFromSources(creep)) return;
-        
         var site = this.getSite();
         if (site)
         {
+            if (PositionUtil.getFlyDistance(creep.pos, site.pos) > 3)
+            {
+                if (this.moveAwayFromSources(creep)) return;
+                else creep.moveTo(site);
+            }
+
             var result = creep.build(site);
             if (result === ERR_NOT_IN_RANGE) {
                 creep.moveTo(site);

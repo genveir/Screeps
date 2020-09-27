@@ -22,11 +22,19 @@ export class Idle extends BaseTask implements Task {
     public execute(creep : Creep) {        
         this.moveAwayFromSources(creep);
         this.moveAwayFromSpawns(creep);
+        this.moveAwayFromRoads(creep);
 
         this.unclaim();
     }
 
     public serialize() : string {
         return JSON.stringify(this);
+    }
+
+    private moveAwayFromRoads(creep : Creep)
+    {
+        var isOnARoad = creep.pos.lookFor(LOOK_STRUCTURES).filter(s => s.structureType === STRUCTURE_ROAD).length > 0;
+
+        if (isOnARoad) this.randomMove(creep);
     }
 }

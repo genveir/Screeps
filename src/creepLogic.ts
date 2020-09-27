@@ -1,7 +1,5 @@
-import { RoomLogic } from './roomLogic/roomLogic';
 import { Idle } from './tasks/idle';
 import { TaskList } from './tasks/tasklist';
-import { TaskFactory } from "./tasks/taskFactory";
 import { Task } from "./tasks/task";
 
 export class CreepLogic {
