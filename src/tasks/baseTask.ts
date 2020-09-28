@@ -1,5 +1,4 @@
 import { PositionUtil } from "../util/position";
-import { TaskUtil } from "../util/task";
 import { Task } from "./task";
 
 export abstract class BaseTask implements Task {
@@ -10,13 +9,27 @@ export abstract class BaseTask implements Task {
     }
 
     protected abstract _getPriority(creep : Creep) : number;
+
+    private static priorities : {[id: string]: number } = {};
     public getPriority(creep : Creep) : number {
-        return TaskUtil.getPriorityWithCaching(this._getPriority, creep);
+        var key = this.id + "" + creep.id;
+
+        if (!BaseTask.priorities[key]) {
+            BaseTask.priorities[key] = this._getPriority(creep);
+        }
+        return BaseTask.priorities[key];
     }
     
     protected abstract _getSuitability(creep : Creep) : number;
+    
+    private static suitabilities : {[id: string]: number } = {};
     public getSuitability(creep : Creep) : number {
-        return TaskUtil.getPriorityWithCaching(this._getSuitability, creep);
+        var key = this.id + "" + creep.id;
+
+        if (!BaseTask.suitabilities[key]) {
+            BaseTask.suitabilities[key] = this._getSuitability(creep);
+        }
+        return BaseTask.suitabilities[key];
     }
 
     public claim(creep : Creep) {

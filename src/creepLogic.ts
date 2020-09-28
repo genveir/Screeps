@@ -1,8 +1,6 @@
 import { Idle } from './tasks/implementations/idle';
 import { TaskList } from './tasks/tasklist';
 import { Task } from "./tasks/task";
-import { BaseTask } from './tasks/baseTask';
-import { TaskUtil } from './util/task';
 
 export class CreepLogic {
     constructor(private creep : Creep)
