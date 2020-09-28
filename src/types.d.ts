@@ -39,6 +39,7 @@ interface RoomMemory {
 
 interface CreepMemory {
     savedTask : SavedTask;
+    debug? : boolean;
 }
 
 interface SavedTask {

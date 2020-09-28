@@ -52,8 +52,7 @@ export class SpawnLogic
                                 active: false, 
                                 roomName: this.spawn.room.name, 
                                 taskId: ""
-                            },
-                            route: []
+                            }
                         }
                     });
             }

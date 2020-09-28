@@ -46,6 +46,7 @@ export class Harvest extends BaseTask implements Task {
             creep.moveTo(this.pos.x, this.pos.y, {reusePath: 20});
         }
 
+        if (creep.memory.debug) console.log(" creep has suitability " + this.getSuitability(creep));
         if (this.getSuitability(creep) <= 0) this.unclaim();
     }
 

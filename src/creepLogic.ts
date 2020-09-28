@@ -34,7 +34,7 @@ export class CreepLogic {
         
         task.execute(this.creep);
 
-        if (Memory.debug)
+        if (Memory.debug || this.creep.memory.debug)
         {
             new RoomVisual(this.creep.room.name).text(task.type + ", ⚡" + this.creep.store.energy + "/" + this.creep.store.getCapacity(), this.creep.pos, {font: 0.3});
         }
@@ -57,12 +57,12 @@ export class CreepLogic {
             else return bPrio - aPrio;
         });
 
-        if (Memory.debug) console.log("creep " + this.creep.name + " is looking for a task");
+        if (Memory.debug|| this.creep.memory.debug) console.log("creep " + this.creep.name + " is looking for a task");
 
         for (var i = 0; i < tasks.length; i++) {
             var task = tasks[i];
 
-            if (Memory.debug) console.log("considering " + task.type + " prio = " + task.getPriority(this.creep) + " suit = " + task.getSuitability(this.creep) + " claimed = " + (task.claimedBy !== null));
+            if (Memory.debug|| this.creep.memory.debug) console.log("considering " + task.type + " prio = " + task.getPriority(this.creep) + " suit = " + task.getSuitability(this.creep) + " claimed = " + (task.claimedBy !== null));
 
             if(task.getSuitability(this.creep) > 0) 
             {
