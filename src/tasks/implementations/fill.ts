@@ -67,7 +67,7 @@ export class Fill extends BaseTask implements Task {
         var structure = this.getStructure();
 
         if (structure && creep.store.energy > 0 && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
-            return 100000;
+            return 100000 - PositionUtil.getFlyDistance(structure.pos, creep.pos);
         }
         else {
             return 0;
