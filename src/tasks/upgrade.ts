@@ -37,7 +37,7 @@ export class Upgrade extends BaseTask implements Task {
         {
             var result = creep.upgradeController(controller);
             if (result === ERR_NOT_IN_RANGE) {
-                creep.moveTo(controller);
+                creep.moveTo(controller, {reusePath: 20});
             }
         }   
         if (!this.canPerform(creep)) this.unclaim();

@@ -42,14 +42,14 @@ export class Repair extends BaseTask implements Task {
             if (PositionUtil.getFlyDistance(creep.pos, structure.pos) > 3)
             {
                 if (this.moveAwayFromSources(creep)) return;
-                else creep.moveTo(structure);
+                else creep.moveTo(structure, {reusePath: 20});
             }
 
             if (structure.hits >= structure.hitsMax) this.clearOnNextTick = true;
             else {
                 var result = creep.repair(structure);
                 if (result === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(structure);
+                    creep.moveTo(structure, {reusePath: 20});
                 }
                 else if (result === ERR_NOT_ENOUGH_RESOURCES) {}
                 else if (result === 0) {}

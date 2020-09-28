@@ -68,7 +68,7 @@ export class Grab extends BaseTask implements Task {
         {
             var result = creep.withdraw(item, RESOURCE_ENERGY);
             if (result === ERR_NOT_IN_RANGE) {
-                creep.moveTo(item);
+                creep.moveTo(item, {reusePath: 20});
             }
         }
 

@@ -48,7 +48,7 @@ export class Harvest extends BaseTask implements Task {
             }
         }
         else {
-            creep.moveTo(this.pos.x, this.pos.y);
+            creep.moveTo(this.pos.x, this.pos.y, {reusePath: 20});
         }
     }
 

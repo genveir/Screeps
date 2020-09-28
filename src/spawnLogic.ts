@@ -14,10 +14,11 @@ export class SpawnLogic
         var creepcount = creeps.length;
         
         var taskList = TaskList.getInstance(spawnRoom);
-        var idlingCreeps = creeps.map(c => c.memory.savedTask.taskId)
-            .map(tid => taskList.getById(tid))
-            .filter(task => task && task.type === Idle.type)
-            .length;
+        var taskIds = creeps.map(c => c.memory.savedTask.taskId);
+        var tasks = taskIds.map(tid => taskList.getById(tid));
+        var idleTasks = tasks.filter(t => t === null);
+
+        var idlingCreeps = idleTasks.length;
 
         if (idlingCreeps === 0) this.spawn.memory.noIdlerTicks++;
         else this.spawn.memory.noIdlerTicks = 0;
@@ -41,7 +42,7 @@ export class SpawnLogic
         var body = this.buildWorkerBody(availableEnergy, 300, 900);
 
         if (!this.spawn.spawning && body) {
-            if (creepcount < energySlots || this.spawn.memory.noIdlerTicks > 14) {
+            if (creepcount < energySlots || this.spawn.memory.noIdlerTicks > 29) {
                 this.spawn.spawnCreep(
                     body, 
                     'Creep' + Game.time, 

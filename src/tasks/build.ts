@@ -38,14 +38,14 @@ export class Build extends BaseTask implements Task {
         {
             if (PositionUtil.getFlyDistance(creep.pos, site.pos) > 3)
             {
-                creep.moveTo(site);
+                creep.moveTo(site, {reusePath: 20});
             }
             else {
                 if (this.moveAwayFromSources(creep)) return;
 
                 var result = creep.build(site);
                 if (result === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(site);
+                    creep.moveTo(site, {reusePath: 20});
                 }
                 else if (result === ERR_NOT_ENOUGH_RESOURCES) {}
                 else if (result === 0) {}
