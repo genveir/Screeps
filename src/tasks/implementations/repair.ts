@@ -24,14 +24,14 @@ export class Repair extends BaseTask implements Task {
         var structure = this.getStructure();
         if (!structure) return 0;
         else {
-            return 105000 - PositionUtil.getFlyDistance(structure.pos, creep.pos);;
+            return 105000 - PositionUtil.getFlyDistance(structure.pos, creep.pos);
         }
     }
 
     protected _getSuitability(creep : Creep) {
         var structure = this.getStructure();
 
-        if (structure && creep.store.energy > 0 && structure.hits < structure.hitsMax) return 100000;
+        if (structure && creep.store.energy > 0 && structure.hits < structure.hitsMax) return 100000 - PositionUtil.getFlyDistance(structure.pos, creep.pos);
         return 0;
     }
 
