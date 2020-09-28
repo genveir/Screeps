@@ -86,9 +86,7 @@ export class TaskLogic {
     private manageRepairTasks(taskList : TaskList) : void {
         if (Memory.debug) console.log("starting manageRepairTasks");
         
-        var structures : Structure[] = this.room.find(FIND_MY_STRUCTURES).filter(s => s.hits < s.hitsMax);
-        var roads : Structure[] = this.room.find(FIND_STRUCTURES).filter(s => s.structureType === STRUCTURE_ROAD).filter(s => s.hits < s.hitsMax / 2);
-        var toRepair : Structure[] = structures.concat(roads);
+        var toRepair : Structure[] = this.room.find(FIND_STRUCTURES).filter(s => s.hits < s.hitsMax * .25);
 
         var repairTasks = taskList.getAll().filter(t => t.type === Repair.type).map(t => <Repair>t);
 
