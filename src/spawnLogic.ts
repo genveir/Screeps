@@ -1,3 +1,6 @@
+import { Idle } from "./tasks/idle";
+import { TaskList } from "./tasks/tasklist";
+
 export class SpawnLogic
 {
     constructor(private spawn : StructureSpawn) {
@@ -9,7 +12,12 @@ export class SpawnLogic
 
         var creeps = spawnRoom.find(FIND_CREEPS);
         var creepcount = creeps.length;
-        var idlingCreeps = creeps.filter(c => !c.memory.savedTask.active).length;
+        
+        var taskList = TaskList.getInstance(spawnRoom);
+        var idlingCreeps = creeps.map(c => c.memory.savedTask.taskId)
+            .map(tid => taskList.getById(tid))
+            .filter(task => task && task.type === Idle.type)
+            .length;
 
         if (idlingCreeps === 0) this.spawn.memory.noIdlerTicks++;
         else this.spawn.memory.noIdlerTicks = 0;
