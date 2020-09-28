@@ -11,8 +11,14 @@ interface RoomMemory {
     energySlots : SavedHarvestPosition[];
     roads : { [name: string] : RoadDefinition}
     controllerRoadPath : SavedPosition[];
-    energyPerformance: number[];
-    energySums: EnergySum[]
+    logging : RoomLogging;
+ }
+
+ interface RoomLogging {
+    controllerPerTick: number[];
+    controllerPerCycle: EnergySum[];
+    creepsCost : number[];
+    creepsPerCycle: EnergySum[];
  }
 
  interface EnergySum {

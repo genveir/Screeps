@@ -1,3 +1,4 @@
+import { Logging } from './../util/logging';
 import { TaskLogic } from './taskLogic';
 import { BuildLogic } from './buildLogic';
 import { PositionUtil } from '../util/position';
@@ -9,8 +10,6 @@ export class RoomLogic {
     constructor(private room: Room) {
         if (!this.room.memory.taskList) this.room.memory.taskList = [];
         if (!this.room.memory.energySlots) this.initializeEnergySlots();
-        if (!this.room.memory.energyPerformance) this.room.memory.energyPerformance = [];
-        if (!this.room.memory.energySums) this.room.memory.energySums = [];
 
         this.buildLogic = new BuildLogic(this.room);
         this.taskLogic = new TaskLogic(this.room);
@@ -26,22 +25,7 @@ export class RoomLogic {
         if (Memory.debug) console.log("running task logic for " + this.room.name);
         this.taskLogic.run();
 
-        this.monitorEnergyPerformance()
-    }
-
-    private monitorEnergyPerformance() {
-        if (this.room.controller) this.room.memory.energyPerformance.push(this.room.controller.progress);
-        if (this.room.memory.energyPerformance.length === 300) 
-        {
-            this.room.memory.energySums.push({finalTick: Game.time, totalProgress: this.room.memory.energyPerformance[299] - this.room.memory.energyPerformance[0]});
-            this.room.memory.energyPerformance = [];
-        }
-
-        if (this.room.memory.energySums.length > 0 && this.room.controller)
-        {
-            var lastSum = this.room.memory.energySums[this.room.memory.energySums.length - 1];
-            new RoomVisual(this.room.name).text(lastSum.totalProgress + "⚡ (" + (300 - this.room.memory.energyPerformance.length) + "...)", this.room.controller.pos.x, this.room.controller.pos.y + 1, {font: 0.5});
-        }
+        Logging.monitorControllerPerformance(this.room);
     }
 
     private fireTowers() {
