@@ -42,7 +42,7 @@ export class SpawnLogic
         var body = this.buildWorkerBody(availableEnergy, 300, 900);
 
         if (!this.spawn.spawning && body) {
-            if (creepcount < energySlots || this.spawn.memory.noIdlerTicks > 29) {
+            if (creepcount < energySlots || this.spawn.memory.noIdlerTicks > 19) {
                 this.spawn.spawnCreep(
                     body, 
                     'Creep' + Game.time, 
@@ -52,7 +52,8 @@ export class SpawnLogic
                                 active: false, 
                                 roomName: this.spawn.room.name, 
                                 taskId: ""
-                            }
+                            },
+                            route: []
                         }
                     });
             }
