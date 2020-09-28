@@ -20,7 +20,7 @@ export class Repair extends BaseTask implements Task {
         return structure;
     }
 
-    public getPriority(creep : Creep) {
+    protected _getPriority(creep : Creep) {
         var structure = this.getStructure();
         if (!structure) return 0;
         else {
@@ -28,7 +28,7 @@ export class Repair extends BaseTask implements Task {
         }
     }
 
-    public getSuitability(creep : Creep) {
+    protected _getSuitability(creep : Creep) {
         var structure = this.getStructure();
 
         if (structure && creep.store.energy > 0 && structure.hits < structure.hitsMax) return 100000;

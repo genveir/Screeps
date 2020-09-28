@@ -34,7 +34,7 @@ export class Grab extends BaseTask implements Task {
         return item;
     }
 
-    public getPriority(creep : Creep) {
+    protected _getPriority(creep : Creep) {
         var item = this.getItem();
         if (!item) {
             return 0;
@@ -45,7 +45,7 @@ export class Grab extends BaseTask implements Task {
         }
     }
 
-    public getSuitability(creep : Creep) {
+    protected _getSuitability(creep : Creep) {
         var item = this.getItem();
 
         if (!item) return 0;

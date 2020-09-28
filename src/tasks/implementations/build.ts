@@ -19,7 +19,7 @@ export class Build extends BaseTask implements Task {
         return constructionSite;
     }
 
-    public getPriority(creep : Creep) {
+    protected _getPriority(creep : Creep) {
         var site = this.getSite();
         if (!site) return 0;
         else {
@@ -27,7 +27,7 @@ export class Build extends BaseTask implements Task {
         }
     }
 
-    public getSuitability(creep : Creep) {
+    protected _getSuitability(creep : Creep) {
         if (creep.store.energy > 0) return 100000;
         return 0;
     }

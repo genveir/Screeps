@@ -35,7 +35,7 @@ export class Fill extends BaseTask implements Task {
         return structure;
     }
 
-    public getPriority(creep : Creep) {
+    protected _getPriority(creep : Creep) {
         var structure = this.getStructure();
         if (!structure) {
             return 0;
@@ -63,7 +63,7 @@ export class Fill extends BaseTask implements Task {
         }
     }
 
-    public getSuitability(creep : Creep) {
+    protected _getSuitability(creep : Creep) {
         var structure = this.getStructure();
 
         if (structure && creep.store.energy > 0 && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {

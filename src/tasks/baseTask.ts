@@ -9,9 +9,16 @@ export abstract class BaseTask implements Task {
         this.clearOnNextTick = false;
     }
 
-    public abstract getPriority(creep : Creep) : number;
+    protected abstract _getPriority(creep : Creep) : number;
+    public getPriority(creep : Creep) : number {
+        return this._getPriority(creep);
+    }
     
-    public abstract getSuitability(creep : Creep) : number;
+    protected abstract _getSuitability(creep : Creep) : number;
+    public getSuitability(creep : Creep) : number {
+        return this._getSuitability(creep);
+    }
+
 
     public claim(creep : Creep) {
         this.claimedBy = creep.id;

@@ -11,11 +11,11 @@ export class Idle extends BaseTask implements Task {
         this.clearOnNextTick = true;
     }
 
-    public getPriority(creep : Creep) {
+    protected _getPriority(creep : Creep) {
         return -1000000;
     }
 
-    public getSuitability(creep : Creep) {
+    protected _getSuitability(creep : Creep) {
         return -1000000;
     }
 

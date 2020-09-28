@@ -11,11 +11,11 @@ export class ErrorTask extends BaseTask implements Task {
         //console.log("invalid task: " + message)
     }
 
-    public getPriority(creep : Creep) {
+    protected _getPriority(creep : Creep) {
         return -1000000;
     }
 
-    public getSuitability(creep: Creep) {
+    protected _getSuitability(creep: Creep) {
         return -1000000;
     }
 

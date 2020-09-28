@@ -1,6 +1,8 @@
 import { Idle } from './tasks/implementations/idle';
 import { TaskList } from './tasks/tasklist';
 import { Task } from "./tasks/task";
+import { BaseTask } from './tasks/baseTask';
+import { TaskUtil } from './util/task';
 
 export class CreepLogic {
     constructor(private creep : Creep)
@@ -44,23 +46,22 @@ export class CreepLogic {
     {
         var tasks = TaskList.getInstance(this.creep.room).getAll();
 
-        tasks.sort((a, b) => a.getPriority(this.creep) - b.getPriority(this.creep));
+        TaskUtil.sort(tasks, this.creep);
+        if (Memory.debug) console.log("creep " + this.creep.name + " is looking for a task");
 
-        var toReturn : Task;
-        toReturn = new Idle(TaskList.getNewId(), this.creep.id);
+        for (var i = 0; i < tasks.length; i++) {
+            var task = tasks[i];
 
-        tasks.forEach(task => 
-        {
+            if (Memory.debug) console.log("considering " + task.type + " prio = " + task.getPriority(this.creep) + " suit = " + task.getSuitability(this.creep) + " claimed = " + (task.claimedBy !== null));
+
             if(task.getSuitability(this.creep) > 0) 
             {
                 if (!task.claimedBy) 
                 {
-                    toReturn = task;
-                    return;
+                    return task;
                 }
             }
-        });
-
-        return toReturn;
+        }
+        return new Idle(TaskList.getNewId(), this.creep.id);
     }
 }

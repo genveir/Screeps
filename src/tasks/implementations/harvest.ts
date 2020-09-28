@@ -17,11 +17,11 @@ export class Harvest extends BaseTask implements Task {
         return source;
     }
 
-    public getPriority(creep : Creep) {
-        return 100000 - PositionUtil.getFlyDistance(this.pos, creep.pos);;
+    protected _getPriority(creep : Creep) {
+        return 100000;
     }
 
-    public getSuitability(creep : Creep) {
+    protected _getSuitability(creep : Creep) {
         var source = this.getSource();
 
         if (!source) return 0;
@@ -30,7 +30,8 @@ export class Harvest extends BaseTask implements Task {
         if (creep.getActiveBodyparts(WORK) === 0) return 0;
         if (creep.getActiveBodyparts(CARRY) === 0) return 0;
         if (creep.getActiveBodyparts(MOVE) === 0) return 0;
-        return 100000;
+
+        return 100000 - PositionUtil.getFlyDistance(this.pos, creep.pos);
     }
 
     public execute(creep : Creep) {
