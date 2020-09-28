@@ -1,5 +1,5 @@
-import { Task } from './task';
-import { BaseTask } from './baseTask';
+import { Task } from '../task';
+import { BaseTask } from '../baseTask';
 
 export class Upgrade extends BaseTask implements Task {
     public static readonly type : string = "UPGRADE";

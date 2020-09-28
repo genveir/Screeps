@@ -1,4 +1,4 @@
-import { Idle } from './tasks/idle';
+import { Idle } from './tasks/implementations/idle';
 import { TaskList } from './tasks/tasklist';
 import { Task } from "./tasks/task";
 

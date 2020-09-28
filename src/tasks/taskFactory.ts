@@ -1,12 +1,12 @@
-import { Repair } from './repair';
-import { Build } from './build';
-import { Upgrade } from './upgrade';
-import { Harvest } from './harvest';
+import { Repair } from './implementations/repair';
+import { Build } from './implementations/build';
+import { Upgrade } from './implementations/upgrade';
+import { Harvest } from './implementations/harvest';
 import { Task } from './task';
-import { ErrorTask } from './error';
-import { Idle } from './idle';
-import { Fill } from './fill';
-import { Grab } from './grab';
+import { ErrorTask } from './implementations/error';
+import { Idle } from './implementations/idle';
+import { Fill } from './implementations/fill';
+import { Grab } from './implementations/grab';
 
 export class TaskFactory {
     public CreateTask(serialized : string) : Task {

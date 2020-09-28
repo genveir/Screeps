@@ -1,6 +1,6 @@
-import { Task } from './task';
-import { BaseTask } from './baseTask';
-import { PositionUtil } from '../util/position';
+import { Task } from '../task';
+import { BaseTask } from '../baseTask';
+import { PositionUtil } from '../../util/position';
 
 export class Repair extends BaseTask implements Task {
     public static readonly type : string = "REPAIR";

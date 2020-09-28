@@ -1,6 +1,6 @@
-import { PositionUtil } from '../util/position';
-import { BaseTask } from './baseTask';
-import { Task } from './task';
+import { PositionUtil } from '../../util/position';
+import { BaseTask } from '../baseTask';
+import { Task } from '../task';
 
 export class Harvest extends BaseTask implements Task {
     public static type : string = "HARVEST";

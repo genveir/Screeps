@@ -1,5 +1,5 @@
-import { Task } from './task';
-import { BaseTask } from './baseTask';
+import { Task } from '../task';
+import { BaseTask } from '../baseTask';
 
 export class ErrorTask extends BaseTask implements Task {
     public static type : string = "ERROR";

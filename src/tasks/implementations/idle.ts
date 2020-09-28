@@ -1,6 +1,6 @@
-import { PositionUtil } from './../util/position';
-import { Task } from './task';
-import { BaseTask } from './baseTask';
+import { PositionUtil } from '../../util/position';
+import { Task } from '../task';
+import { BaseTask } from '../baseTask';
 
 export class Idle extends BaseTask implements Task {
     public static type : string = "IDLE";

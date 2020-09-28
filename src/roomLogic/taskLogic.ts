@@ -1,10 +1,10 @@
-import { Fill } from './../tasks/fill';
-import { Build } from "../tasks/build";
-import { Harvest } from "../tasks/harvest";
-import { Repair } from "../tasks/repair";
+import { Fill } from '../tasks/implementations/fill';
+import { Build } from "../tasks/implementations/build";
+import { Harvest } from "../tasks/implementations/harvest";
+import { Repair } from "../tasks/implementations/repair";
 import { TaskList } from "../tasks/tasklist";
-import { Upgrade } from "../tasks/upgrade";
-import { Grab } from '../tasks/grab';
+import { Upgrade } from "../tasks/implementations/upgrade";
+import { Grab } from '../tasks/implementations/grab';
 
 export class TaskLogic {
     constructor(private room : Room) {
