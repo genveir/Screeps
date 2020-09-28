@@ -32,6 +32,12 @@ export class Fill extends BaseTask implements Task {
             this.unclaimAll();
             this.clearOnNextTick = true;
         }
+        else if (structure.store.getFreeCapacity(RESOURCE_ENERGY) === 0)
+        {
+            this.unclaimAll();
+            this.clearOnNextTick = true;
+        }
+
         return structure;
     }
 
