@@ -107,16 +107,24 @@ export class TaskLogic {
         var fillTasks = taskList.getAll().filter(t => t.type === Fill.type).map(t => <Fill>t);
 
         fillAble.forEach(s => {
+            var fillTask = fillTasks.filter(rt => rt.structure == s.id);
+
             if (s.store.getFreeCapacity(RESOURCE_ENERGY) > 0)
             {
-                var refuelCount = fillTasks.filter(rt => rt.structure == s.id).length;
                 var numberRequired = this.getNumTasksForStructure(s);
 
-                if (refuelCount === 0) {
+                if (fillTask.length === 0) {
                     if (Memory.debug) console.log("adding fill task for " + s.structureType + " " + s.id);
                     taskList.addTask(new Fill(TaskList.getNewId(), [], numberRequired, s.id));
                 }
-            } 
+            }
+            else
+            {
+                fillTask.forEach(ft => {
+                    ft.unclaimAll();
+                    ft.clearOnNextTick = true;
+                });
+            }
         });
     }
 
