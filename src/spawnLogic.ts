@@ -14,11 +14,11 @@ export class SpawnLogic
         var creepcount = creeps.length;
         
         var taskList = TaskList.getInstance(spawnRoom);
-        var taskIds = creeps.map(c => c.memory.savedTask.taskId);
-        var tasks = taskIds.map(tid => taskList.getById(tid));
-        var idleTasks = tasks.filter(t => t === null);
-
-        var idlingCreeps = idleTasks.length;
+        
+        var idlingCreeps = creeps.map(c => c.memory.savedTask.taskId)
+            .map(tid => taskList.getById(tid))
+            .filter(t => t === null)
+            .length;
 
         if (idlingCreeps === 0) this.spawn.memory.noIdlerTicks++;
         else this.spawn.memory.noIdlerTicks = 0;
