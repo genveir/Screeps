@@ -41,21 +41,24 @@ export class Repair extends BaseTask implements Task {
         {
             if (PositionUtil.getFlyDistance(creep.pos, structure.pos) > 3)
             {
+                creep.moveTo(structure, {reusePath: 20});
+            }
+            else 
+            {
                 if (this.moveAwayFromSources(creep)) return;
-                else creep.moveTo(structure, {reusePath: 20});
-            }
 
-            if (structure.hits >= structure.hitsMax) this.clearOnNextTick = true;
-            else {
-                var result = creep.repair(structure);
-                if (result === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(structure, {reusePath: 20});
+                if (structure.hits >= structure.hitsMax) this.clearOnNextTick = true;
+                else {
+                    var result = creep.repair(structure);
+                    if (result === ERR_NOT_IN_RANGE) {
+                        creep.moveTo(structure, {reusePath: 20});
+                    }
+                    else if (result === ERR_NOT_ENOUGH_RESOURCES) {}
+                    else if (result === 0) {}
+                    else {console.log("repair failed with code " + result); }
                 }
-                else if (result === ERR_NOT_ENOUGH_RESOURCES) {}
-                else if (result === 0) {}
-                else {console.log("repair failed with code " + result); }
-            }
-        }   
+            }   
+        }
         if (this.getSuitability(creep) <= 0) this.unclaim();
     }
 
