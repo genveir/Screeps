@@ -5,15 +5,15 @@ import { PositionUtil } from '../../util/position';
 export class Repair extends BaseTask implements Task {
     public static readonly type : string = "REPAIR";
 
-    constructor(id : string, claimedBy : Id<Creep> | null, public structure : Id<Structure>) {
-        super(id, Repair.type, claimedBy);
+    constructor(id : string, claimedBy : Id<Creep>[], numAllowed : number, public structure : Id<Structure>) {
+        super(id, Repair.type, claimedBy, numAllowed);
     }
 
     private getStructure() : Structure | null {
         var structure = Game.getObjectById(this.structure);
         if (!this.structure) {
             console.log("structure no longer exists");
-            this.unclaim();
+            this.unclaimAll();
             this.clearOnNextTick = true;
         }
 
@@ -59,7 +59,7 @@ export class Repair extends BaseTask implements Task {
                 }
             }   
         }
-        if (this.getSuitability(creep) <= 0) this.unclaim();
+        if (this.getSuitability(creep) <= 0) this.unclaim(creep.id);
     }
 
     public serialize() : string {

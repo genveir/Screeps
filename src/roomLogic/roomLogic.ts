@@ -24,6 +24,8 @@ export class RoomLogic {
 
         if (Memory.debug) console.log("running task logic for " + this.room.name);
         this.taskLogic.run();
+
+        if (Memory.debug) console.log("finished with room logic");
     }
 
     private fireTowers() {

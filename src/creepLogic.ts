@@ -62,23 +62,23 @@ export class CreepLogic {
         for (var i = 0; i < tasks.length; i++) {
             var task = tasks[i];
 
-            if (Memory.debug|| this.creep.memory.debug) console.log("considering " + task.type + " prio = " + task.getPriority(this.creep) + " suit = " + task.getSuitability(this.creep) + " claimed = " + (task.claimedBy !== null));
+            if (Memory.debug|| this.creep.memory.debug) console.log("considering " + task.type + " prio = " + task.getPriority(this.creep) + " suit = " + task.getSuitability(this.creep) + " claimed = " + task.claimedBy.length + " out of " + task.numAllowed);
 
             if(task.getSuitability(this.creep) > 0) 
             {
-                if (!task.claimedBy) 
+                if (task.claimedBy.length < task.numAllowed)
                 {
                     return task;
                 }
                 else {
-                    var otherCreep = Game.getObjectById(task.claimedBy);
-                    if (otherCreep && task.getSuitability(this.creep) > task.getSuitability(otherCreep)) {
-                        task.unclaim();
+                    var otherCreep = Game.getObjectById(task.claimedBy[0]);
+                    if (!otherCreep || task.getSuitability(this.creep) > task.getSuitability(otherCreep)) {
+                        task.unclaim(task.claimedBy[0]);
                         return task;
                     }
                 }
             }
         }
-        return new Idle(TaskList.getNewId(), this.creep.id);
+        return new Idle(TaskList.getNewId());
     }
 }

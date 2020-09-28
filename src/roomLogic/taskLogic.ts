@@ -46,7 +46,7 @@ export class TaskLogic {
             
             if (!taskExists) {
                 console.log("adding harvest task for " + roomPos);
-                taskList.addTask(new Harvest(TaskList.getNewId(), null, hs.id, roomPos));
+                taskList.addTask(new Harvest(TaskList.getNewId(), [], 1, hs.id, roomPos));
             } 
         });
     }
@@ -62,9 +62,9 @@ export class TaskLogic {
             .map(ht => <Upgrade>ht)
             .length;
 
-        for (var i = upgradeTasks; i < 15; i++) {
+        if (upgradeTasks === 0) {
             console.log("adding upgrade task for " + controller.id);
-            taskList.addTask(new Upgrade(TaskList.getNewId(), null, controller.id));
+            taskList.addTask(new Upgrade(TaskList.getNewId(), [], 100, controller.id));
         }
     }
 
@@ -75,10 +75,10 @@ export class TaskLogic {
         var buildTasks = taskList.getAll().filter(t => t.type === Build.type).map(t => <Build>t);
 
         constructionSites.forEach(cs => {
-            var buildCount = buildTasks.filter(bt => bt.constructionSite === cs.id).length;
+            var csTasks = buildTasks.filter(bt => bt.constructionSite === cs.id).length;
             
-            for (var i = buildCount; i < 2; i++) {
-                taskList.addTask(new Build(TaskList.getNewId(), null, cs.id));
+            if (csTasks === 0) {
+                taskList.addTask(new Build(TaskList.getNewId(), [], 2, cs.id));
             }
         });
     }
@@ -93,7 +93,7 @@ export class TaskLogic {
         toRepair.forEach(s => {
             var repairCount = repairTasks.filter(rt => rt.structure === s.id).length;
 
-            if (repairCount < 1) taskList.addTask(new Repair(TaskList.getNewId(), null, s.id));
+            if (repairCount === 0) taskList.addTask(new Repair(TaskList.getNewId(), [], 1, s.id));
         })
     }
 
@@ -110,9 +110,9 @@ export class TaskLogic {
             var refuelCount = fillTasks.filter(rt => rt.structure == s.id).length;
             var numberRequired = this.getNumTasksForStructure(s);
 
-            for (var i = refuelCount; i < numberRequired; i++) {
+            if (refuelCount === 0) {
                 console.log("adding fill task for " + s.structureType + " " + s.id);
-                taskList.addTask(new Fill(TaskList.getNewId(), null, s.id));
+                taskList.addTask(new Fill(TaskList.getNewId(), [], numberRequired, s.id));
             } 
         });
     }
@@ -151,7 +151,7 @@ export class TaskLogic {
             var grabCount = grabTasks.filter(gt => gt.item === ts.id).length;
 
             if (grabCount === 0) {
-                taskList.addTask(new Grab(TaskList.getNewId(), null, ts.id));
+                taskList.addTask(new Grab(TaskList.getNewId(), [], 1, ts.id));
             }
         });
     }
@@ -164,8 +164,8 @@ export class TaskLogic {
         ruins.forEach(r => {
             var grabCount = grabTasks.filter(gt => gt.item === r.id).length;
 
-            if (grabCount < 3) {
-                taskList.addTask(new Grab(TaskList.getNewId(), null, r.id));
+            if (grabCount === 0) {
+                taskList.addTask(new Grab(TaskList.getNewId(), [], 3, r.id));
             }
         });
     }
@@ -178,8 +178,8 @@ export class TaskLogic {
         containers.forEach(c => {
             var grabCount = grabTasks.filter(gt => gt.item === c.id).length;
 
-            if (grabCount < 20) {
-                taskList.addTask(new Grab(TaskList.getNewId(), null, c.id));
+            if (grabCount === 0) {
+                taskList.addTask(new Grab(TaskList.getNewId(), [], 5, c.id));
             }
         });
     }

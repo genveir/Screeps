@@ -5,14 +5,14 @@ import { BaseTask } from '../baseTask';
 export class Build extends BaseTask implements Task {
     public static readonly type : string = "BUILD";
 
-    constructor(id : string, claimedBy : Id<Creep> | null, public constructionSite : Id<ConstructionSite>) {
-        super(id, Build.type, claimedBy);
+    constructor(id : string, claimedBy : Id<Creep>[], numAllowed : number, public constructionSite : Id<ConstructionSite>) {
+        super(id, Build.type, claimedBy, numAllowed);
     }
 
     private getSite() : ConstructionSite | null {
         var constructionSite = Game.getObjectById(this.constructionSite);
         if (!constructionSite) {
-            this.unclaim();
+            this.unclaimAll();
             this.clearOnNextTick = true;
         }
 
@@ -52,7 +52,7 @@ export class Build extends BaseTask implements Task {
                 else {console.log("build failed with code " + result); }
             }
         }   
-        if (this.getSuitability(creep) <= 0) this.unclaim();
+        if (this.getSuitability(creep) <= 0) this.unclaim(creep.id);
     }
 
     public serialize() : string {

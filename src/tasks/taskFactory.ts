@@ -14,8 +14,6 @@ export class TaskFactory {
 
         this.unclaimTaskIfClaimedByDeadCreep(task);
 
-        this.checkClaimIntegrity(task);
-
         return task;
     }
 
@@ -24,35 +22,22 @@ export class TaskFactory {
 
         switch(deserialized.type)
         {
-            case Harvest.type: return new Harvest(deserialized.id, deserialized.claimedBy, deserialized.source, deserialized.pos);
-            case Upgrade.type: return new Upgrade(deserialized.id, deserialized.claimedBy, deserialized.controller);
-            case Build.type: return new Build(deserialized.id, deserialized.claimedBy, deserialized.constructionSite);
-            case Repair.type: return new Repair(deserialized.id, deserialized.claimedBy, deserialized.structure);
-            case Fill.type : return new Fill(deserialized.id, deserialized.claimedBy, deserialized.structure);
-            case Idle.type: return new Idle(deserialized.id, deserialized.claimedBy);
-            case Grab.type: return new Grab(deserialized.id, deserialized.claimedBy, deserialized.item);
-            default: return new ErrorTask(deserialized.id, deserialized.claimedBy, deserialized);
+            case Harvest.type: return new Harvest(deserialized.id, deserialized.claimedBy, deserialized.numAllowed, deserialized.source, deserialized.pos);
+            case Upgrade.type: return new Upgrade(deserialized.id, deserialized.claimedBy, deserialized.numAllowed, deserialized.controller);
+            case Build.type: return new Build(deserialized.id, deserialized.claimedBy, deserialized.numAllowed, deserialized.constructionSite);
+            case Repair.type: return new Repair(deserialized.id, deserialized.claimedBy, deserialized.numAllowed, deserialized.structure);
+            case Fill.type : return new Fill(deserialized.id, deserialized.claimedBy, deserialized.numAllowed, deserialized.structure);
+            case Idle.type: return new Idle(deserialized.id);
+            case Grab.type: return new Grab(deserialized.id, deserialized.claimedBy, deserialized.numAllowed, deserialized.item);
+            default: return new ErrorTask(deserialized.id, deserialized);
         }
     }
 
     private unclaimTaskIfClaimedByDeadCreep(task : Task) : void {
         var claimedBy = task.claimedBy;
-        if (claimedBy) {
-            if (!Game.getObjectById(claimedBy)) task.unclaim();
-        }
-    }
-
-    private checkClaimIntegrity(task : Task) : void {
-        if (task.claimedBy)
+        for (var i = 0; i < task.claimedBy.length; i++)
         {
-            var matchingCreep = Game.getObjectById(task.claimedBy);
-            if (!matchingCreep) {console.log("creep does not exist");}
-            else if (!matchingCreep.memory.savedTask)
-            {
-                console.log("creep matched to task " + task.type + " " + task.id + " did not have a claim");
-                console.log("creep: " + JSON.stringify(matchingCreep));
-                task.unclaim();
-            }   
+            if (!Game.getObjectById(claimedBy[i])) task.unclaim(claimedBy[i]);
         }
     }
 }

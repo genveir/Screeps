@@ -5,8 +5,8 @@ import { PositionUtil } from '../../util/position';
 export class Grab extends BaseTask implements Task {
     public static readonly type : string = "GRAB";
     
-    constructor(id: string, claimedBy : Id<Creep> | null, public item : Id<Structure> | Id<Tombstone> | Id<Ruin>) {
-        super(id, Grab.type, claimedBy);
+    constructor(id: string, claimedBy : Id<Creep>[], numAllowed : number, public item : Id<Structure> | Id<Tombstone> | Id<Ruin>) {
+        super(id, Grab.type, claimedBy, numAllowed);
 
         this._item = null;
     }
@@ -28,7 +28,7 @@ export class Grab extends BaseTask implements Task {
         var item = this.getItemWithEnergyStore();
         if (!item)
         {
-            this.unclaim();
+            this.unclaimAll();
             this.clearOnNextTick = true;
         }
         return item;
@@ -63,7 +63,7 @@ export class Grab extends BaseTask implements Task {
         var item = this.getItem();
         if (!item)
         {
-            this.unclaim();
+            this.unclaimAll();
         }
         else
         {
@@ -73,7 +73,7 @@ export class Grab extends BaseTask implements Task {
             }
         }
 
-        if (this.getSuitability(creep) <= 0) this.unclaim();
+        if (this.getSuitability(creep) <= 0) this.unclaim(creep.id);
     }
 
     public serialize() {

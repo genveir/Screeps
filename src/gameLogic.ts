@@ -10,17 +10,22 @@ export class GameLogic {
 
             if (Memory.logging.lastSaved && room.controller)
             {
+                if (Memory.debug) console.log("setting room visuals");
+
                 var lastSum = room.memory.logging.controllerPerCycle[Memory.logging.lastSaved];
                 new RoomVisual(room.name).text(lastSum + "⚡ (" + (300 - Game.time % 300) + "...)", room.controller.pos.x, room.controller.pos.y + 1, {font: 0.5});
 
                 var lastStates = room.memory.logging.sourcesPerCycle[Memory.logging.lastSaved];
-                room.find(FIND_SOURCES).forEach(source => {
-                    var lastState = lastStates[source.id];
-                    new RoomVisual(room.name).text(lastState.energyHarvested + "⚡ " + lastState.numEmptyTicks + "🚫", source.pos.x, source.pos.y + 1, {font: 0.5});
-                });
+                if (lastStates) {
+                    room.find(FIND_SOURCES).forEach(source => {
+                        var lastState = lastStates[source.id];
+                        if (lastState) new RoomVisual(room.name).text(lastState.energyHarvested + "⚡ " + lastState.numEmptyTicks + "🚫", source.pos.x, source.pos.y + 1, {font: 0.5});
+                    });
+                }
 
-                
                 var spawn = "🚧"
+
+                if (Memory.debug) console.log("done with room visuals");
             }
         }
     }

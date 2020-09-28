@@ -5,8 +5,8 @@ import { PositionUtil } from '../../util/position';
 export class Fill extends BaseTask implements Task {
     public static readonly type : string = "FILL";
     
-    constructor(id: string, claimedBy : Id<Creep> | null, public structure : Id<Structure>) {
-        super(id, Fill.type, claimedBy);
+    constructor(id: string, claimedBy : Id<Creep>[], numAllowed : number, public structure : Id<Structure>) {
+        super(id, Fill.type, claimedBy, numAllowed);
 
         this._structure = null;
     }
@@ -29,7 +29,7 @@ export class Fill extends BaseTask implements Task {
         if (!structure)
         {
             console.log("structure " + this.structure + " does not exist");
-            this.unclaim();
+            this.unclaimAll();
             this.clearOnNextTick = true;
         }
         return structure;
@@ -79,7 +79,7 @@ export class Fill extends BaseTask implements Task {
         if (!structure)
         {
             console.log("structure " + this.structure + " does not exist");
-            this.unclaim();
+            this.unclaimAll();
         }
         else
         {
@@ -89,7 +89,7 @@ export class Fill extends BaseTask implements Task {
             }
         }
 
-        if (this.getSuitability(creep) <= 0) this.unclaim();
+        if (this.getSuitability(creep) <= 0) this.unclaim(creep.id);
     }
 
     public serialize() {

@@ -4,8 +4,8 @@ import { BaseTask } from '../baseTask';
 export class ErrorTask extends BaseTask implements Task {
     public static type : string = "ERROR";
 
-    public constructor(id : string, claimedBy : Id<Creep> | null, private message : string) {
-        super(id, ErrorTask.type, claimedBy);
+    public constructor(id : string, private message : string) {
+        super(id, ErrorTask.type, [], 0);
 
         this.clearOnNextTick = true;
         //console.log("invalid task: " + message)
@@ -24,7 +24,7 @@ export class ErrorTask extends BaseTask implements Task {
         console.log("creep: " + JSON.stringify(creep));
 
         creep.memory.savedTask.active = false;
-        this.unclaim();
+        this.unclaimAll();
     }
 
     public serialize() : string {

@@ -1,7 +1,9 @@
 export interface Task {
     id : string;
     type : string;
-    claimedBy : Id<Creep> | null;
+
+    numAllowed : number;
+    claimedBy : Id<Creep>[];
 
     clearOnNextTick : boolean;
 
@@ -9,7 +11,8 @@ export interface Task {
     getSuitability(creep : Creep) : number;
 
     claim(creep : Creep) : void;
-    unclaim() : void;
+    unclaim(cid : Id<Creep>) : void;
+    unclaimAll() : void;
 
     execute(creep: Creep) : void;
 

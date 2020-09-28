@@ -5,8 +5,8 @@ import { BaseTask } from '../baseTask';
 export class Idle extends BaseTask implements Task {
     public static type : string = "IDLE";
 
-    public constructor(id : string, claimedBy : Id<Creep> | null) {
-        super(id, Idle.type, claimedBy);
+    public constructor(id : string) {
+        super(id, Idle.type, [], 0);
 
         this.clearOnNextTick = true;
     }
@@ -24,7 +24,7 @@ export class Idle extends BaseTask implements Task {
         this.moveAwayFromSpawns(creep);
         this.moveAwayFromRoads(creep);
 
-        this.unclaim();
+        this.unclaimAll();
     }
 
     public serialize() : string {

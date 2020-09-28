@@ -4,15 +4,15 @@ import { BaseTask } from '../baseTask';
 export class Upgrade extends BaseTask implements Task {
     public static readonly type : string = "UPGRADE";
 
-    constructor(id : string, claimedBy : Id<Creep> | null, private controller : Id<StructureController>) {
-        super(id, Upgrade.type, claimedBy);
+    constructor(id : string, claimedBy : Id<Creep>[], numAllowed : number, private controller : Id<StructureController>) {
+        super(id, Upgrade.type, claimedBy, numAllowed);
     }
 
     private getController() : StructureController | null {
         var controller = Game.getObjectById(this.controller);
         if (!controller) {
             console.log("somehow this creep is not in a room with a controller");
-            this.unclaim();
+            this.unclaimAll();
         }
 
         return controller;
@@ -40,7 +40,7 @@ export class Upgrade extends BaseTask implements Task {
                 creep.moveTo(controller, {reusePath: 20});
             }
         }   
-        if (this.getSuitability(creep) <= 0) this.unclaim();
+        if (this.getSuitability(creep) <= 0) this.unclaim(creep.id);
     }
 
     public serialize() : string {
