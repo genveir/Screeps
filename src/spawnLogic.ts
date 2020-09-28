@@ -33,7 +33,7 @@ export class SpawnLogic
         var body = this.buildWorkerBody(availableEnergy, 300, 900);
 
         if (!this.spawn.spawning && body) {
-            if (creepcount < energySlots || this.spawn.memory.noIdlerTicks === 5) {
+            if (creepcount < energySlots || this.spawn.memory.noIdlerTicks > 14) {
                 this.spawn.spawnCreep(
                     body, 
                     'Creep' + Game.time, 
