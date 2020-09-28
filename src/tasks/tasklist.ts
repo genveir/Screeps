@@ -74,6 +74,6 @@ export class TaskList {
         var currentId = Memory.taskId;
         Memory.taskId = currentId + 1;
 
-        return currentId;
+        return currentId + "";
     }
 }

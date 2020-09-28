@@ -25,7 +25,11 @@ export class RoomLogic {
         if (Memory.debug) console.log("running task logic for " + this.room.name);
         this.taskLogic.run();
 
-        Logging.monitorControllerPerformance(this.room);
+        if (Memory.logging.lastSaved && this.room.controller)
+        {
+            var lastSum = this.room.memory.logging.controllerPerCycle[Memory.logging.lastSaved];
+            new RoomVisual(this.room.name).text(lastSum + "⚡ (" + (300 - Game.time % 300) + "...)", this.room.controller.pos.x, this.room.controller.pos.y + 1, {font: 0.5});
+        }
     }
 
     private fireTowers() {

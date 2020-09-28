@@ -4,7 +4,16 @@ interface SpawnMemory
     noIdlerTicks: number
 }
 
-interface Memory { [name: string]: any }
+interface Memory 
+{ 
+    debug : boolean;
+    taskId : number;
+    logging : GameLogging
+}
+
+interface GameLogging {
+    lastSaved : number | null;
+}
 
 interface RoomMemory { 
     taskList : string[];
@@ -16,14 +25,28 @@ interface RoomMemory {
 
  interface RoomLogging {
     controllerPerTick: number[];
-    controllerPerCycle: EnergySum[];
+    controllerPerCycle: EnergySums;
     creepsCost : number[];
-    creepsPerCycle: EnergySum[];
+    creepsPerCycle: EnergySums;
+    sourceStates : SourceState[];
+    sourcesPerCycle: SourceStats;
  }
 
- interface EnergySum {
-     finalTick : number,
-     totalProgress : number
+ interface EnergySums { [finalTick: number]: number}
+
+ interface SourceState {
+     id: Id<Source>;
+     energy: number;
+ }
+
+ interface SourceStats { [finalTick: number]: SourceStat }
+
+ interface SourceStat {
+     [id : string] : 
+     { 
+        energyHarvested : number;
+        numEmptyTicks: number;
+     }
  }
 
  interface RoadDefinition {

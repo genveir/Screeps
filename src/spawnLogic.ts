@@ -1,5 +1,6 @@
 import { Idle } from "./tasks/implementations/idle";
 import { TaskList } from "./tasks/tasklist";
+import { Logging } from "./util/logging";
 
 export class SpawnLogic
 {
@@ -43,8 +44,8 @@ export class SpawnLogic
 
         if (!this.spawn.spawning && body) {
             if (creepcount < energySlots || this.spawn.memory.noIdlerTicks > 19) {
-                this.spawn.spawnCreep(
-                    body, 
+                var result = this.spawn.spawnCreep(
+                    body.body, 
                     'Creep' + Game.time, 
                     { 
                         memory: { 
@@ -55,12 +56,13 @@ export class SpawnLogic
                             }
                         }
                     });
+                if (result === 0) Logging.logSpawn(this.spawn, body.cost);
             }
         }
     }
 
     workerBody : BodyPartConstant[] = [MOVE, WORK, CARRY, MOVE, CARRY]
-    buildWorkerBody(availableEnergy : number, minimumToSpend : number, maximumToSpend : number) : BodyPartConstant[] | null {
+    buildWorkerBody(availableEnergy : number, minimumToSpend : number, maximumToSpend : number) : {cost : number, body : BodyPartConstant[] } | null {
         var body : BodyPartConstant[] = [];
         var cost = 0;
 
@@ -85,7 +87,7 @@ export class SpawnLogic
         }
 
         if (cost < minimumToSpend) return null;
-        else return body;
+        else return {cost: cost, body: body};
     }
 
     static getPartCost(part : BodyPartConstant) : number {

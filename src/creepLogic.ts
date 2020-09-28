@@ -5,7 +5,7 @@ import { Task } from "./tasks/task";
 export class CreepLogic {
     constructor(private creep : Creep)
     {
-
+        
     }
 
     public run()
