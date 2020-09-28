@@ -60,6 +60,13 @@ export class CreepLogic {
                 {
                     return task;
                 }
+                else {
+                    var otherCreep = Game.getObjectById(task.claimedBy);
+                    if (otherCreep && task.getSuitability(this.creep) > task.getSuitability(otherCreep)) {
+                        task.unclaim();
+                        return task;
+                    }
+                }
             }
         }
         return new Idle(TaskList.getNewId(), this.creep.id);

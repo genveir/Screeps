@@ -1,6 +1,5 @@
 import { PositionUtil } from "../util/position";
 import { Task } from "./task";
-import { TaskList } from "./tasklist";
 
 export abstract class BaseTask implements Task {
     public clearOnNextTick : boolean;
@@ -18,7 +17,6 @@ export abstract class BaseTask implements Task {
     public getSuitability(creep : Creep) : number {
         return this._getSuitability(creep);
     }
-
 
     public claim(creep : Creep) {
         this.claimedBy = creep.id;
