@@ -18,7 +18,7 @@ export class Upgrade extends BaseTask implements Task {
         return controller;
     }
 
-    public getPriority() {
+    public getPriority(creep : Creep) {
         var controller = this.getController();
         if (!controller) return 0;
         
@@ -26,9 +26,9 @@ export class Upgrade extends BaseTask implements Task {
         return 1; // otherwise minimal, this is the job to do if there's no other job.
     }
 
-    public canPerform(creep : Creep)
-    {
-        return creep.store.energy > 0;
+    public getSuitability(creep : Creep) {
+        if (creep.store.energy > 0) return 100000;
+        return 0;
     }
 
     public execute(creep : Creep) {
@@ -40,7 +40,7 @@ export class Upgrade extends BaseTask implements Task {
                 creep.moveTo(controller, {reusePath: 20});
             }
         }   
-        if (!this.canPerform(creep)) this.unclaim();
+        if (this.getSuitability(creep) <= 0) this.unclaim();
     }
 
     public serialize() : string {

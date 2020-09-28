@@ -28,11 +28,11 @@ export class Repair extends BaseTask implements Task {
         }
     }
 
-    public canPerform(creep : Creep)
-    {
+    public getSuitability(creep : Creep) {
         var structure = this.getStructure();
-        if (!structure) return false;
-        return creep.store.energy > 0 && structure.hits < structure.hitsMax;
+
+        if (structure && creep.store.energy > 0 && structure.hits < structure.hitsMax) return 100000;
+        return 0;
     }
 
     public execute(creep : Creep) {
@@ -56,7 +56,7 @@ export class Repair extends BaseTask implements Task {
                 else {console.log("repair failed with code " + result); }
             }
         }   
-        if (!this.canPerform(creep)) this.unclaim();
+        if (this.getSuitability(creep) <= 0) this.unclaim();
     }
 
     public serialize() : string {

@@ -9,10 +9,6 @@ export class Harvest extends BaseTask implements Task {
         super(id, Harvest.type, claimedBy);
     }
 
-    public getPriority(creep : Creep) {
-        return 100000 - PositionUtil.getFlyDistance(this.pos, creep.pos);;
-    }
-
     private getSource() : Source | null {
         var source = Game.getObjectById(this.source);
         if (!source) {
@@ -21,17 +17,20 @@ export class Harvest extends BaseTask implements Task {
         return source;
     }
 
-    public canPerform(creep : Creep) {
+    public getPriority(creep : Creep) {
+        return 100000 - PositionUtil.getFlyDistance(this.pos, creep.pos);;
+    }
+
+    public getSuitability(creep : Creep) {
         var source = this.getSource();
 
-        if (!source) return false;
-        if (source.energy === 0) return false;
-        if (creep.store.getFreeCapacity() === 0) return false;
-        if (creep.getActiveBodyparts(WORK) === 0) return false;
-        if (creep.getActiveBodyparts(MOVE) === 0) return false;
-        if (creep.getActiveBodyparts(CARRY) === 0) return false;
-
-        return true;
+        if (!source) return 0;
+        if (source.energy === 0) return 0;
+        if (creep.store.getFreeCapacity() === 0) return 0;
+        if (creep.getActiveBodyparts(WORK) === 0) return 0;
+        if (creep.getActiveBodyparts(CARRY) === 0) return 0;
+        if (creep.getActiveBodyparts(MOVE) === 0) return 0;
+        return 100000;
     }
 
     public execute(creep : Creep) {
@@ -40,16 +39,13 @@ export class Harvest extends BaseTask implements Task {
             if (source)
             {
                 creep.harvest(source);
-            
-                if (!this.canPerform(creep))
-                {
-                    this.unclaim();
-                } 
             }
         }
         else {
             creep.moveTo(this.pos.x, this.pos.y, {reusePath: 20});
         }
+
+        if (this.getSuitability(creep) <= 0) this.unclaim();
     }
 
     public serialize() : string {

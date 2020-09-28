@@ -45,16 +45,17 @@ export class Grab extends BaseTask implements Task {
         }
     }
 
-    public canPerform(creep: Creep) {
+    public getSuitability(creep : Creep) {
         var item = this.getItem();
 
-        if (!item) { return false; }
+        if (!item) return 0;
         else {
-            if ((<any>item).structureType && (<any>item).structureType === STRUCTURE_CONTAINER)
-            {
-                return creep.store.energy === 0 && item.store.energy >= creep.store.getCapacity();
+            if ((<any>item).structureType && (<any>item).structureType === STRUCTURE_CONTAINER) {
+                if (creep.store.energy === 0 && item.store.energy >= creep.store.getCapacity()) return 100000;
+                else return 0;
             }
-            return creep.store.energy === 0 && item.store.energy > 0;
+            if (creep.store.energy === 0 && item.store.energy > 0) return 100000;
+            else return 0;
         }
     }
 
@@ -72,7 +73,7 @@ export class Grab extends BaseTask implements Task {
             }
         }
 
-        if (!this.canPerform(creep)) this.unclaim();
+        if (this.getSuitability(creep) <= 0) this.unclaim();
     }
 
     public serialize() {

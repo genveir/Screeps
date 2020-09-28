@@ -11,6 +11,8 @@ export abstract class BaseTask implements Task {
 
     public abstract getPriority(creep : Creep) : number;
     
+    public abstract getSuitability(creep : Creep) : number;
+
     public claim(creep : Creep) {
         this.claimedBy = creep.id;
 
@@ -30,8 +32,6 @@ export abstract class BaseTask implements Task {
             this.claimedBy = null;
         }
     }
-
-    public abstract canPerform(creep: Creep) : boolean;
 
     public abstract execute(creep: Creep) : void;
 

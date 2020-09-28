@@ -6,11 +6,10 @@ export interface Task {
     clearOnNextTick : boolean;
 
     getPriority(creep : Creep) : number;
+    getSuitability(creep : Creep) : number;
 
     claim(creep : Creep) : void;
     unclaim() : void;
-
-    canPerform(creep : Creep) : boolean;
 
     execute(creep: Creep) : void;
 

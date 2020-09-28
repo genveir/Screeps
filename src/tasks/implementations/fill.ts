@@ -63,13 +63,14 @@ export class Fill extends BaseTask implements Task {
         }
     }
 
-    public canPerform(creep: Creep) {
+    public getSuitability(creep : Creep) {
         var structure = this.getStructure();
 
-        if (!structure) { return false; }
+        if (structure && creep.store.energy > 0 && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
+            return 100000;
+        }
         else {
-        return creep.store.energy > 0 &&
-            structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+            return 0;
         }
     }
 
@@ -88,7 +89,7 @@ export class Fill extends BaseTask implements Task {
             }
         }
 
-        if (!this.canPerform(creep)) this.unclaim();
+        if (this.getSuitability(creep) <= 0) this.unclaim();
     }
 
     public serialize() {

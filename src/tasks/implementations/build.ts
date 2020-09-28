@@ -27,9 +27,9 @@ export class Build extends BaseTask implements Task {
         }
     }
 
-    public canPerform(creep : Creep)
-    {
-        return creep.store.energy > 0;
+    public getSuitability(creep : Creep) {
+        if (creep.store.energy > 0) return 100000;
+        return 0;
     }
 
     public execute(creep : Creep) {
@@ -52,7 +52,7 @@ export class Build extends BaseTask implements Task {
                 else {console.log("build failed with code " + result); }
             }
         }   
-        if (!this.canPerform(creep)) this.unclaim();
+        if (this.getSuitability(creep) <= 0) this.unclaim();
     }
 
     public serialize() : string {

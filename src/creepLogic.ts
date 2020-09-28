@@ -51,7 +51,7 @@ export class CreepLogic {
 
         tasks.forEach(task => 
         {
-            if(task.canPerform(this.creep)) 
+            if(task.getSuitability(this.creep) > 0) 
             {
                 if (!task.claimedBy) 
                 {

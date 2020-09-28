@@ -15,8 +15,8 @@ export class ErrorTask extends BaseTask implements Task {
         return -1000000;
     }
 
-    public canPerform(creep : Creep) {
-        return false;
+    public getSuitability(creep: Creep) {
+        return -1000000;
     }
 
     public execute(creep : Creep) {
