@@ -1,26 +1,19 @@
 import { Task } from "../tasks/task";
 
 export class TaskUtil {
-    public static sort(tasks : Task[], creep : Creep) {
-        var priorities : {[id: string]: number } = {};
-        var suitabilities : {[id: string] : number } = {};
+    private static priorities : {[id: string]: number } = {};
+    public static getPriorityWithCaching(priorityFunc : (creep : Creep) => number, creep : Creep) {
+        if (!this.priorities[creep.id]) {
+            this.priorities[creep.id] = priorityFunc(creep);
+        }
+        return this.priorities[creep.id];
+    }
 
-        tasks.forEach(t => {
-            priorities[t.id] = t.getPriority(creep);
-            suitabilities[t.id] = t.getSuitability(creep);
-        })
-        
-        tasks.sort((a, b) => {
-            var aPrio = priorities[a.id];
-            var bPrio = priorities[b.id];
-
-            var aSuit = suitabilities[a.id];
-            var bSuit = suitabilities[b.id];
-            
-            if (aPrio === bPrio) {
-                return bSuit - aSuit;
-            }
-            else return bPrio - aPrio;
-        });
+    private static suitabilities : {[id: string] : number } = {};
+    public static getSuitabilityWithCaching(suitabilityFunc : (creep: Creep) => number, creep: Creep) {
+        if (!this.suitabilities[creep.id]) {
+            this.suitabilities[creep.id] = suitabilityFunc(creep);
+        }
+        return this.suitabilities[creep.id];
     }
 }

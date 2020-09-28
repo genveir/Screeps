@@ -46,7 +46,19 @@ export class CreepLogic {
     {
         var tasks = TaskList.getInstance(this.creep.room).getAll();
 
-        TaskUtil.sort(tasks, this.creep);
+        tasks.sort((a, b) => {
+            var aPrio = a.getPriority(this.creep);
+            var bPrio = b.getPriority(this.creep);
+
+            var aSuit = a.getSuitability(this.creep);
+            var bSuit = b.getSuitability(this.creep);
+            
+            if (aPrio === bPrio) {
+                return bSuit - aSuit;
+            }
+            else return bPrio - aPrio;
+        });
+
         if (Memory.debug) console.log("creep " + this.creep.name + " is looking for a task");
 
         for (var i = 0; i < tasks.length; i++) {
