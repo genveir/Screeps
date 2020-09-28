@@ -54,7 +54,7 @@ export class Grab extends BaseTask implements Task {
                 if (creep.store.energy === 0 && item.store.energy >= creep.store.getCapacity()) return 100000;
                 else return 0;
             }
-            if (creep.store.energy === 0 && item.store.energy > 0) return 100000;
+            if (creep.store.energy === 0 && item.store.energy > 0) return 100000 - PositionUtil.getFlyDistance(item.pos, creep.pos);
             else return 0;
         }
     }
