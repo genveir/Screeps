@@ -83,21 +83,10 @@ export class Logging {
     private static updateSourceStats(room : Room) {
         var stats : SourceStat = {};
 
-        var last = room.memory.logging.sourceStates.slice(-1)[0];
-        if (!last) {
-            room.find(FIND_SOURCES).forEach(s => {
-                room.memory.logging.sourceStates.push({id: s.id, energy: 0});
-            });
-        }
-
         room.find(FIND_SOURCES).forEach(s => {
             var singleStats = room.memory.logging.sourceStates.filter(ss => ss.id == s.id);
-            var numEmptyTicks :number = 0;
-            var energyHarvested = 0;
-            for (var i = 1; i < singleStats.length; i++) {
-                if (singleStats[i].energy === 0) numEmptyTicks++;
-                if (singleStats[i - 1].energy !== 0) energyHarvested += (singleStats[i].energy - singleStats[i - 1].energy)
-            }
+            var numEmptyTicks = singleStats.filter(ss => ss.energy === 0).length;
+            var energyHarvested = -1 * (singleStats.splice(-1)[0].energy - singleStats[0].energy - 3000);
 
             stats[s.id] = {energyHarvested: energyHarvested, numEmptyTicks: numEmptyTicks}
         })
@@ -105,6 +94,5 @@ export class Logging {
         room.memory.logging.sourcesPerCycle[Game.time] = stats;
 
         room.memory.logging.sourceStates = [];
-        room.memory.logging.sourceStates.push(last);
     }
 }
