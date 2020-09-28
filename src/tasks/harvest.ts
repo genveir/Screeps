@@ -57,8 +57,4 @@ export class Harvest extends BaseTask implements Task {
             {id: this.id, type: this.type, source: this.source, pos: {x: this.pos.x, y: this.pos.y, roomName: this.pos.roomName}, claimedBy: this.claimedBy }
             );
     }
-
-    public report() : string {
-        return "I am a working Harvest object for source " + this.source + " and I was claimed by: " + this.claimedBy;
-    }
 }

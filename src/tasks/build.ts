@@ -58,8 +58,4 @@ export class Build extends BaseTask implements Task {
     public serialize() : string {
         return JSON.stringify(this);
     }
-
-    public report() : string {
-        return "This is a working Build task";
-    }
 }

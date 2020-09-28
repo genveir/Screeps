@@ -11,6 +11,7 @@ export interface Task {
     unclaim() : void;
 
     canPerform(creep : Creep) : boolean;
+
     execute(creep: Creep) : void;
 
     serialize() : string;
