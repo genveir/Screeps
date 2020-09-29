@@ -2,6 +2,12 @@ interface FlagMemory { [name: string]: any }
 interface SpawnMemory 
 {  
     noIdlerTicks: number
+    decisionDials : SpawnDecisionDials
+}
+
+interface SpawnDecisionDials {
+    maxIdleTicks : number;
+    creepCeiling : number;
 }
 
 interface Memory 

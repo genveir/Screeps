@@ -5,7 +5,7 @@ import { Logging } from "../util/logging";
 export class SpawnLogic
 {
     constructor(private spawn : StructureSpawn) {
-
+        if (!spawn.memory.decisionDials) spawn.memory.decisionDials = {maxIdleTicks: 10, creepCeiling: 30}
     }
 
     public run() {
@@ -38,12 +38,14 @@ export class SpawnLogic
         }
 
         var availableEnergy = this.spawn.store.energy + energyInExtensions;
-        new RoomVisual(this.spawn.room.name).text(availableEnergy + "⚡ " + idlingCreeps + "/" + creeps.length + "(" + (24 - this.spawn.memory.noIdlerTicks) + ")😴", this.spawn.pos.x, this.spawn.pos.y + 1);
+        new RoomVisual(this.spawn.room.name).text(availableEnergy + "⚡ " + 
+            idlingCreeps + "/" + creeps.length + ".." + this.spawn.memory.decisionDials.creepCeiling +
+            "(" + (this.spawn.memory.decisionDials.maxIdleTicks - this.spawn.memory.noIdlerTicks) + ")😴", this.spawn.pos.x, this.spawn.pos.y + 1);
 
         var body = this.buildWorkerBody(availableEnergy, 300, 900);
 
         if (!this.spawn.spawning && body) {
-            if (this.shouldBuildCreep(creepcount, energySlots, 20, 24)) {
+            if (this.shouldBuildCreep(creepcount, energySlots)) {
                 var result = this.spawn.spawnCreep(
                     body.body, 
                     'Creep' + Game.time, 
@@ -61,10 +63,10 @@ export class SpawnLogic
         }
     }
 
-    private shouldBuildCreep(creepcount : number, energySlots : number, creepceiling : number, idlerceiling : number) : boolean {
+    private shouldBuildCreep(creepcount : number, energySlots : number) : boolean {
         if (creepcount < energySlots) return true;
-        if (creepcount >= creepceiling) return false;
-        if (this.spawn.memory.noIdlerTicks > idlerceiling) return true;
+        if (creepcount >= this.spawn.memory.decisionDials.creepCeiling) return false;
+        if (this.spawn.memory.noIdlerTicks > this.spawn.memory.noIdlerTicks) return true;
 
         return false;
     }
