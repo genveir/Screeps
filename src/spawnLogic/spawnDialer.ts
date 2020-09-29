@@ -1,10 +1,12 @@
+const iterationLength : number = 1800;
+
 export class SpawnDialer {
     constructor(private spawn : StructureSpawn) {
 
     }
 
     public runSpawnDialer(creepcount : number, idlers: number) {
-        if (Game.time % 3600 === 1) // twiddle some dials after the end of last 5 minute logging cycle, not just before it ends
+        if (Game.time % iterationLength === 1) // twiddle some dials after the end of last 5 minute logging cycle, not just before it ends
         {
             if (Memory.debug || this.spawn.memory.debug) console.log("running spawn dialer for spawn " + this.spawn.name);
 
@@ -36,8 +38,8 @@ export class SpawnDialer {
     }
 
     private tweakDials() {
-        var changeCeilingChance = 0.1;
-        var changeIdlerWait = 0.5;
+        var changeCeilingChance = 0.3;
+        var changeIdlerWait = 0.6;
 
         if (Memory.debug || this.spawn.memory.debug) console.log("settings before tweaks: " + JSON.stringify(this.spawn.memory.settings));
 
@@ -61,7 +63,7 @@ export class SpawnDialer {
     private calculateFitness() : number {
         var relevantEnergyLogs = Object.keys(this.spawn.room.memory.logging.sourcesPerCycle)
             .map(key => <number><any>key)
-            .filter((key : number) => key > Game.time - 3600)
+            .filter((key : number) => key > Game.time - iterationLength)
             .map(key => this.spawn.room.memory.logging.sourcesPerCycle[key]);
 
         var totalIncome : number = 0;
@@ -73,7 +75,7 @@ export class SpawnDialer {
 
         var relevantCreepLogs = Object.keys(this.spawn.room.memory.logging.creepsPerCycle)
             .map(key => <number><any>key)
-            .filter((key : number) => key > Game.time - 3600)
+            .filter((key : number) => key > Game.time - iterationLength)
             .map(key => this.spawn.room.memory.logging.creepsPerCycle[key]);
 
         var totalCreepCost = relevantCreepLogs.reduce((a, b) => a + b);
