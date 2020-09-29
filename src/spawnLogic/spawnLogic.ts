@@ -1,4 +1,4 @@
-import { Idle } from "../tasks/implementations/idle";
+import { SpawnDialer } from './spawnDialer';
 import { TaskList } from "../tasks/tasklist";
 import { Logging } from "../util/logging";
 
@@ -9,35 +9,20 @@ export class SpawnLogic
     }
 
     public run() {
+        new SpawnDialer(this.spawn).run();
+
         var spawnRoom = this.spawn.room;
-
-        var creeps = spawnRoom.find(FIND_CREEPS);
-        var creepcount = creeps.length;
-        
-        var taskList = TaskList.getInstance(spawnRoom);
-        
-        var idlingCreeps = creeps.map(c => c.memory.savedTask.taskId)
-            .map(tid => taskList.getById(tid))
-            .filter(t => t === null)
-            .length;
-
-        if (idlingCreeps === 0) this.spawn.memory.noIdlerTicks++;
-        else this.spawn.memory.noIdlerTicks = 0;
-
         var energySlots = spawnRoom.memory.energySlots.length;
 
-        var energyExtensions = spawnRoom.find(FIND_MY_STRUCTURES)
-            .filter(s => s.structureType === STRUCTURE_EXTENSION)
-            .map(s => <StructureExtension>s);
+        var creeps = spawnRoom.find(FIND_MY_CREEPS);
+        var creepcount = creeps.length;
 
-        var energyInExtensions = 0;
-        if (energyExtensions.length > 0)
-        {
-            energyInExtensions = energyExtensions.map(s => s.store.energy)
-                .reduce((a, b) => a + b);
-        }
-
-        var availableEnergy = this.spawn.store.energy + energyInExtensions;
+        var idlingCreeps = this.getIdlingCreeps(creeps);
+        if (idlingCreeps === 0) this.spawn.memory.noIdlerTicks++;
+        else this.spawn.memory.noIdlerTicks = 0;
+        
+        var availableEnergy = this.calculateAvailableEnergy();
+        
         new RoomVisual(this.spawn.room.name).text(availableEnergy + "⚡ " + 
             idlingCreeps + "/" + creepcount + ".." + this.spawn.memory.decisionDials.creepCeiling +
             "(" + (this.spawn.memory.decisionDials.maxIdleTicks - this.spawn.memory.noIdlerTicks) + ")😴", this.spawn.pos.x, this.spawn.pos.y + 1);
@@ -63,9 +48,38 @@ export class SpawnLogic
         }
     }
 
+    private getIdlingCreeps(creeps : Creep[]) : number {
+        var spawnRoom = this.spawn.room;
+
+        var taskList = TaskList.getInstance(spawnRoom);
+        
+        var idlingCreeps = creeps.map(c => c.memory.savedTask.taskId)
+            .map(tid => taskList.getById(tid))
+            .filter(t => t === null)
+            .length;
+
+        return idlingCreeps;
+    }
+
+    private calculateAvailableEnergy() {
+        var spawnRoom = this.spawn.room;
+
+        var energyExtensions = spawnRoom.find(FIND_MY_STRUCTURES)
+            .filter(s => s.structureType === STRUCTURE_EXTENSION)
+            .map(s => <StructureExtension>s);
+
+        var energyInExtensions = 0;
+        if (energyExtensions.length > 0)
+        {
+            energyInExtensions = energyExtensions.map(s => s.store.energy)
+                .reduce((a, b) => a + b);
+        }
+
+        return this.spawn.store.energy + energyInExtensions;
+    }
+
     private shouldBuildCreep(creepcount : number, energySlots : number) : boolean {
         if (creepcount < energySlots) return true;
-        console.log(creepcount)
         if (creepcount >= this.spawn.memory.decisionDials.creepCeiling) return false;
         if (this.spawn.memory.noIdlerTicks > this.spawn.memory.decisionDials.maxIdleTicks) return true;
 
