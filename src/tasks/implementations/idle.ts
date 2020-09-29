@@ -43,9 +43,12 @@ export class Idle extends BaseTask implements Task {
             }
         }
         else {
-            this.moveAwayFromSources(creep);
-            this.moveAwayFromSpawns(creep);
-            this.moveAwayFromRoads(creep);
+            if (distToSource < 10 || distToContainer < 10)
+            {
+                this.moveAwayFromSources(creep);
+                this.moveAwayFromSpawns(creep);
+                this.moveAwayFromRoads(creep);
+            }
         }
         this.unclaimAll();
     }
