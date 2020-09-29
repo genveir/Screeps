@@ -7,7 +7,7 @@ export class RoadUtil {
     public static setRoads(room : Room) {
         var heatMapData = this.getHeatmap(room);
 
-        var makeRoad = heatMapData.filter(hmd => hmd.heat > 0.4);
+        var makeRoad = heatMapData.filter(hmd => hmd.heat > 0.3);
 
         var roads = makeRoad.map(mr => mr.pos);
         room.memory.roads = roads;
@@ -27,7 +27,8 @@ export class RoadUtil {
             var value = Math.floor(hmd.heat * 255);
             var color = this.rgbToHex(value, 0, 255 - value);
 
-            vis.circle(hmd.pos, {radius: 0.5, fill: color, opacity: 0.5});
+            vis.circle(hmd.pos, {radius: 0.45, fill: color, opacity: 0.1});
+            vis.circle(hmd.pos, {radius: 0.45, fill: "rgba(0, 0, 0, 0)", opacity: 1, stroke: color});
             vis.text(JSON.stringify(Math.floor(hmd.heat * 100)), hmd.pos.x, hmd.pos.y, {font : 0.3});
         });
     }
