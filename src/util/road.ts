@@ -17,6 +17,12 @@ export class RoadUtil {
         var heatMapData = this.getHeatmap(room);
 
         var vis = new RoomVisual(room.name);
+        var roads = room.memory.roads;
+        roads.forEach(r => {
+            var roomPos = new RoomPosition(r.x, r.y, r.roomName);
+            vis.circle(roomPos, {radius: 0.55, fill: "rgba(0, 0, 0, 0)", opacity: 1, stroke: "white"});
+        })
+
         heatMapData.forEach(hmd => {
             var value = Math.floor(hmd.heat * 255);
             var color = this.rgbToHex(value, 0, 255 - value);
