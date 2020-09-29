@@ -43,14 +43,20 @@ export class SpawnDialer {
 
         if (Memory.debug || this.spawn.memory.debug) console.log("settings before tweaks: " + JSON.stringify(this.spawn.memory.settings));
 
-        if (Math.random() < changeCeilingChance) {
+        var changeCeilingRoll = Math.random();
+        if (Memory.debug || this.spawn.memory.debug) console.log("ceiling roll: " + changeCeilingRoll);
+
+        if (changeCeilingRoll < changeCeilingChance) {
             var difference = Math.ceil(Math.random() * 3);
 
             if (Math.random() < 0.5) this.spawn.memory.settings.creepCeiling += difference;
             else this.spawn.memory.settings.creepCeiling -= difference;
         }
 
-        if (Math.random() < changeIdlerWait) {
+        var changeIdlerRoll = Math.random();
+        if (Memory.debug || this.spawn.memory.debug) console.log("idler roll: " + changeIdlerRoll);
+
+        if (changeIdlerRoll < changeIdlerWait) {
             var difference = Math.ceil(Math.random() * 5);
 
             if (Math.random() < 0.5) this.spawn.memory.settings.maxIdleTicks += difference;
