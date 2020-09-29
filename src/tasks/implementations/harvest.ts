@@ -43,6 +43,8 @@ export class Harvest extends BaseTask implements Task {
             {
                 creep.harvest(source);
             }
+
+            this.grabEnergyFromTombstones(creep);
         }
         else {
             MovementUtil.moveTo(creep, this.pos);

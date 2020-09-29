@@ -49,12 +49,6 @@ export class Upgrade extends BaseTask implements Task {
         if (this.getSuitability(creep) <= 0) this.unclaim(creep.id);
     }
 
-    private grabEnergyFromTombstones(creep : Creep) {
-        var tombStonesNextToMe = creep.pos.findInRange(FIND_TOMBSTONES, 1);
-
-        if (tombStonesNextToMe) creep.withdraw(tombStonesNextToMe[0], RESOURCE_ENERGY);
-    }
-
     private transferEnergyToYoungestNeighbour(creep : Creep) {
         var neighbours = creep.pos.findInRange(FIND_MY_CREEPS, 1).filter(c => c.memory.savedTask.taskId === this.id);
         if (neighbours) 

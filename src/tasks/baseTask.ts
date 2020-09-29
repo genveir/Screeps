@@ -135,4 +135,10 @@ export abstract class BaseTask implements Task {
         var dir = <DirectionConstant>Math.floor(Math.random() * 8);
         creep.move(dir);   
     }
+
+    protected grabEnergyFromTombstones(creep : Creep) {
+        var tombStonesNextToMe = creep.pos.findInRange(FIND_TOMBSTONES, 1);
+
+        if (tombStonesNextToMe) creep.withdraw(tombStonesNextToMe[0], RESOURCE_ENERGY);
+    }
 }
