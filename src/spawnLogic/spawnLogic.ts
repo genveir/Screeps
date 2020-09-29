@@ -1,6 +1,6 @@
-import { Idle } from "./tasks/implementations/idle";
-import { TaskList } from "./tasks/tasklist";
-import { Logging } from "./util/logging";
+import { Idle } from "../tasks/implementations/idle";
+import { TaskList } from "../tasks/tasklist";
+import { Logging } from "../util/logging";
 
 export class SpawnLogic
 {

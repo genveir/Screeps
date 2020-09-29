@@ -1,6 +1,6 @@
 import { TaskList } from './tasks/tasklist';
 import { GameLogic } from "./gameLogic";
-import { SpawnLogic }  from "./spawnLogic";
+import { SpawnLogic }  from "./spawnLogic/spawnLogic";
 import { CreepLogic } from "./creepLogic";
 import { Logging } from './util/logging';
 

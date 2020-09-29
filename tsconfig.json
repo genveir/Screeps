@@ -12,6 +12,7 @@
         "src/util/*.ts",
         "src/tasks/*.ts", 
         "src/roomLogic/*.ts", 
-        "src/tasks/implementations/*.ts"
+        "src/tasks/implementations/*.ts", 
+        "src/spawnLogic/*.ts"
     ]
 }
