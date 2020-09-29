@@ -91,9 +91,16 @@ export class TaskLogic {
         var repairTasks = taskList.getAll().filter(t => t.type === Repair.type).map(t => <Repair>t);
 
         toRepair.forEach(s => {
-            var repairCount = repairTasks.filter(rt => rt.structure === s.id).length;
+            var shouldMaintain : boolean = true;
+            if (s.structureType === STRUCTURE_ROAD) {
+                shouldMaintain = this.room.memory.roads.filter(r => r.x === s.pos.x && r.y === s.pos.y).length > 0;
+            }
 
-            if (repairCount === 0) taskList.addTask(new Repair(TaskList.getNewId(), [], 1, s.id));
+            if (shouldMaintain) {
+                var repairCount = repairTasks.filter(rt => rt.structure === s.id).length;
+
+                if (repairCount === 0) taskList.addTask(new Repair(TaskList.getNewId(), [], 1, s.id));
+            }
         })
     }
 

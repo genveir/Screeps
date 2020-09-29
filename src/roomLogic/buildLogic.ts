@@ -1,5 +1,5 @@
+import { RoadUtil } from './../util/road';
 import { PositionUtil } from "../util/position";
-import { RoadUtil } from "../util/road";
 
 export class BuildLogic {
     constructor(private room : Room) {
@@ -11,20 +11,12 @@ export class BuildLogic {
         {
             if (this.room.controller.level > 1) 
             {
-                this.buildSourceRoads();
-                this.buildControllerRoad();
-                this.buildSpawnRingRoads();
                 this.buildAggregateContainer();
             }
             if (this.room.controller.level > 2)
             {
-                this.buildControllerRingRoad();
                 this.buildSpawnTower();
             } 
-            if (this.room.controller.level > 3)
-            {
-                this.buildSecondLevelSpawnRingRoads();
-            }
             if (this.room.controller.level > 4)
             {
                 this.buildControllerTower();
@@ -32,7 +24,26 @@ export class BuildLogic {
         }
 
         this.buildAllPossibleExtensions();
-        this.buildAllExtensionAccessRoads();
+        
+        this.buildRoads();
+    }
+
+    private buildRoads() : void {
+        if (Game.time % 1800 === 0) {
+            RoadUtil.setRoads(this.room);
+            this.room.memory.logging.heatMap = {};
+        }
+
+        var numRoadsBeingBuilt = this.room.find(FIND_CONSTRUCTION_SITES).filter(f => f.structureType === STRUCTURE_ROAD).length;
+        var roadsToBuild = this.room.memory.roads;
+
+        for (var i = 0; i < roadsToBuild.length && numRoadsBeingBuilt < 5; i++) {
+            var pos = new RoomPosition(roadsToBuild[i].x, roadsToBuild[i].y, roadsToBuild[i].roomName);
+            var result = pos.createConstructionSite(STRUCTURE_ROAD);
+
+            if (result === 0) numRoadsBeingBuilt++;
+            else if (result === ERR_FULL) break;
+        }
     }
 
     private buildSpawnTower() : void {
@@ -82,47 +93,6 @@ export class BuildLogic {
         else return;
     }
 
-    private buildControllerRoad() : void {
-        if (!this.room.controller) return;
-        
-        var spawns = this.room.find(FIND_MY_SPAWNS);
-        if (spawns.length === 0) return;
-
-        var definition = RoadUtil.getRoadDefinition(this.room, "controllerRoad", spawns[0].pos, this.room.controller.pos, 4);
-
-        if (definition) this.buildRoad(definition)
-    }
-
-    private buildSourceRoads() : void {
-        var spawns = this.room.find(FIND_MY_SPAWNS);
-        if (spawns.length === 0) return;
-
-        var sources = this.room.find(FIND_SOURCES);
-        for (var i = 0; i < sources.length; i++) {
-            var definition = RoadUtil.getRoadDefinition(this.room, "spawnToSource" + sources[i].id, spawns[0].pos, sources[i].pos, 1);
-
-            if (definition) this.buildRoad(definition);
-
-            var ringDef1 = RoadUtil.getRingRoad(sources[i].pos, 1);
-            if (ringDef1) this.buildRoad(ringDef1);
-
-            var ringDef2 = RoadUtil.getRingRoad(sources[i].pos, 2);
-            if (ringDef2) this.buildRoad(ringDef2);
-        }
-    }
-
-    private buildSpawnRingRoads() : void {
-        var spawns = this.room.find(FIND_MY_SPAWNS);
-        if (spawns.length === 0) return;
-
-        for (var i = 0; i < spawns.length; i++)
-        {
-            var definition = RoadUtil.getRingRoad(spawns[i].pos, 1);
-
-            this.buildRoad(definition);
-        }
-    }
-
     private buildAggregateContainer() : void {
         var spawns = this.room.find(FIND_MY_SPAWNS);
         if (spawns.length === 0) return;
@@ -143,26 +113,6 @@ export class BuildLogic {
             var result = o.createConstructionSite(STRUCTURE_CONTAINER);
             if (result === 0) built = true;
         })
-    }
-
-    private buildSecondLevelSpawnRingRoads() : void {
-        var spawns = this.room.find(FIND_MY_SPAWNS);
-        if (spawns.length === 0) return;
-
-        for (var i = 0; i < spawns.length; i++)
-        {
-            var definition = RoadUtil.getRingRoad(spawns[i].pos, 2);
-
-            this.buildRoad(definition);
-        }
-    }
-
-    private buildControllerRingRoad() : void {
-        var controller = this.room.controller;
-        if (!controller) return;
-
-        var definition = RoadUtil.getControllerRingRoad(controller);
-        this.buildRoad(definition);
     }
 
     private buildAllPossibleExtensions() : void {
@@ -228,47 +178,5 @@ export class BuildLogic {
         var result = pos.createConstructionSite(STRUCTURE_EXTENSION);
 
         return result === ERR_FULL || result === ERR_GCL_NOT_ENOUGH;
-    }
-
-    buildAllExtensionAccessRoads() {
-        var numConstructionSites = this.room.find(FIND_MY_CONSTRUCTION_SITES).length;
-        var extensions = this.room.find(FIND_STRUCTURES).filter(s => s.structureType === STRUCTURE_EXTENSION).map(s => <StructureExtension>s);
-
-        extensions.forEach(e => {
-            if (numConstructionSites > 0) return;
-
-            var posBelow = new RoomPosition(e.pos.x, e.pos.y + 1, e.pos.roomName);
-            var terrain = posBelow.lookFor(LOOK_TERRAIN);
-            if (terrain[0] === "wall") return;
-
-            var result = posBelow.createConstructionSite(STRUCTURE_ROAD);
-            if (result === 0) numConstructionSites++;
-        })
-    }
-
-    buildRoad(definition : RoadDefinition) {
-        var numSites : number = 0;
-        var potentials : RoomPosition[] = [];
-        definition.route.forEach(step => {
-            var stepPos = new RoomPosition(step.x, step.y, step.roomName);
-
-            if(stepPos.lookFor(LOOK_CONSTRUCTION_SITES).length > 0) 
-            {
-                numSites++;
-            }
-            else if(stepPos.lookFor(LOOK_STRUCTURES).length === 0) potentials.push(stepPos);
-        });
-
-        var potentialsToConvert = 5 - numSites;
-        if (potentialsToConvert > potentials.length) potentialsToConvert = potentials.length;
-
-        for (var i = 0; i < potentialsToConvert; i++) {
-            var result = potentials[i].createConstructionSite(STRUCTURE_ROAD);
-
-            if (result !== 0) 
-            {
-                console.log("failed to place construction at " + potentials[i].x + "," + potentials[i].y + " with code " + result);
-            }
-        }
     }
 }

@@ -28,8 +28,7 @@ interface GameLogging {
 interface RoomMemory { 
     taskList : string[];
     energySlots : SavedHarvestPosition[];
-    roads : { [name: string] : RoadDefinition}
-    controllerRoadPath : SavedPosition[];
+    roads : SavedPosition[];
     logging : RoomLogging;
     drawHeatMap? : boolean;
  }
@@ -58,12 +57,6 @@ interface RoomMemory {
     energyHarvested : number;
     numEmptyTicks: number;
     numFullTicks : number;
- }
-
- interface RoadDefinition {
-     start : SavedPosition,
-     end : SavedPosition,
-     route : SavedPosition[]
  }
 
  interface SavedHarvestPosition {
