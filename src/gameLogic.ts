@@ -9,10 +9,12 @@ export class GameLogic {
             var room = Game.rooms[roomName];
             new RoomLogic(room).run();
 
+
+            if (Memory.debug) console.log("setting room visuals");
+            if (room.memory.drawHeatMap) RoadUtil.drawHeatMap(room);
+
             if (Memory.logging.lastSaved && room.controller)
             {
-                if (Memory.debug) console.log("setting room visuals");
-
                 var lastSum = room.memory.logging.controllerPerCycle[Memory.logging.lastSaved];
                 new RoomVisual(room.name).text(lastSum + "⚡ (" + (300 - Game.time % 300) + "...)", room.controller.pos.x, room.controller.pos.y + 1, {font: 0.5});
 
@@ -25,8 +27,6 @@ export class GameLogic {
                 }
 
                 var spawn = "🚧"
-
-                if (room.memory.drawHeatMap) RoadUtil.drawHeatMap(room);
 
                 if (Memory.debug) console.log("done with room visuals");
             }
