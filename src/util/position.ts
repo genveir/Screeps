@@ -3,6 +3,10 @@ export class PositionUtil {
     {
         var terrain = new Room.Terrain(pos.roomName);
 
+        return this.getSurroundings(pos).filter(p => terrain.get(p.x, p.y) === 1);
+    }
+
+    public static getSurroundings(pos : RoomPosition) : RoomPosition[] {
         var toReturn : RoomPosition[] = [];
         
         for (var y = -1; y <= 1; y++)
@@ -15,8 +19,6 @@ export class PositionUtil {
                 if (xPos === 0 && yPos === 0) continue;
                 if (xPos < 0 || xPos > 49) continue;
                 if (yPos < 0 || yPos > 49) continue;
-
-                if (terrain.get(xPos, yPos) === 1) continue;
 
                 toReturn.push(new RoomPosition(xPos, yPos, pos.roomName));
             }

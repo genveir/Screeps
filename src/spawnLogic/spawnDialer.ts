@@ -2,7 +2,7 @@ const iterationLength : number = 3600;
 
 export class SpawnDialer {
     constructor(private spawn : StructureSpawn) {
-
+        if (!this.spawn.memory.settingLog) this.spawn.memory.settingLog = [];
     }
 
     public runSpawnDialer(creepcount : number, idlers: number) {
@@ -12,6 +12,7 @@ export class SpawnDialer {
 
             var fitness = this.calculateFitness();
             this.spawn.memory.settings.fitness = fitness;
+
             this.spawn.memory.settingLog.push(JSON.parse(JSON.stringify(this.spawn.memory.settings)));
 
             var lastFitness = this.spawn.memory.previousSettings.fitness;
@@ -32,8 +33,6 @@ export class SpawnDialer {
             this.spawn.memory.settings.fitness = undefined;
 
             this.tweakDials();
-
-            if (!this.spawn.memory.settingLog) this.spawn.memory.settingLog = [];
         };
     }
 

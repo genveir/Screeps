@@ -1,3 +1,4 @@
+import { PositionUtil } from './../../util/position';
 import { Task } from '../task';
 import { BaseTask } from '../baseTask';
 import { MovementUtil } from '../../util/movement';
@@ -36,6 +37,7 @@ export class Upgrade extends BaseTask implements Task {
         var controller = this.getController();
         if (controller)
         {
+            this.moveAwayFromWalls(creep);
             var result = creep.upgradeController(controller);
             
             if (result === ERR_NOT_IN_RANGE) {
@@ -68,5 +70,10 @@ export class Upgrade extends BaseTask implements Task {
 
     public serialize() : string {
         return JSON.stringify(this);
+    }
+
+    private moveAwayFromWalls(creep: Creep) {
+        var surroundings = PositionUtil.getSurroundings(creep.pos).map(p => p.lookFor(LOOK_TERRAIN)[0]);
+        if (surroundings.some(s => s === "wall")) this.randomMove(creep);
     }
 }
