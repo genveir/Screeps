@@ -43,9 +43,16 @@ export class Upgrade extends BaseTask implements Task {
             }
             else {
                 this.transferEnergyToYoungestNeighbour(creep);
+                this.grabEnergyFromTombstones(creep);
             }
         }   
         if (this.getSuitability(creep) <= 0) this.unclaim(creep.id);
+    }
+
+    private grabEnergyFromTombstones(creep : Creep) {
+        var tombStonesNextToMe = creep.pos.findInRange(FIND_TOMBSTONES, 1);
+
+        if (tombStonesNextToMe) creep.withdraw(tombStonesNextToMe[0], RESOURCE_ENERGY);
     }
 
     private transferEnergyToYoungestNeighbour(creep : Creep) {
