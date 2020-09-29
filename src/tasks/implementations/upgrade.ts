@@ -1,7 +1,7 @@
+import { MovementUtil } from './../../util/movement';
 import { PositionUtil } from './../../util/position';
 import { Task } from '../task';
 import { BaseTask } from '../baseTask';
-import { MovementUtil } from '../../util/movement';
 
 export class Upgrade extends BaseTask implements Task {
     public static readonly type : string = "UPGRADE";
@@ -74,6 +74,9 @@ export class Upgrade extends BaseTask implements Task {
 
     private moveAwayFromWalls(creep: Creep) {
         var surroundings = PositionUtil.getSurroundings(creep.pos).map(p => p.lookFor(LOOK_TERRAIN)[0]);
-        if (surroundings.some(s => s === "wall")) this.randomMove(creep);
+        if (surroundings.some(s => s === "wall")) {
+            var tryToMoveTowardController = MovementUtil.moveTo(creep, this.getController()!, 1);
+            if (tryToMoveTowardController !== 0) this.randomMove(creep);
+        }
     }
 }
