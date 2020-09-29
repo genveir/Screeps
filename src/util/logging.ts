@@ -12,7 +12,8 @@ export class Logging {
                     creepsCost: [],
                     creepsPerCycle: {},
                     sourceStates: [],
-                    sourcesPerCycle: {}
+                    sourcesPerCycle: {},
+                    heatMap: {}
                 };
             }
             if (!room.memory.logging.controllerPerTick) room.memory.logging.controllerPerTick = [];
@@ -21,6 +22,7 @@ export class Logging {
             if (!room.memory.logging.creepsPerCycle) room.memory.logging.creepsPerCycle = {};
             if (!room.memory.logging.sourceStates) room.memory.logging.sourceStates = [];
             if (!room.memory.logging.sourcesPerCycle) room.memory.logging.sourcesPerCycle = {};
+            if (!room.memory.logging.heatMap) room.memory.logging.heatMap = {};
         }
     }
 

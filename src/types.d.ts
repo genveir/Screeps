@@ -40,6 +40,7 @@ interface RoomMemory {
     creepsPerCycle: EnergySums;
     sourceStates : SourceState[];
     sourcesPerCycle: SourceStats;
+    heatMap : {[pos: number]: number}
  }
 
  interface EnergySums { [finalTick: number]: number}

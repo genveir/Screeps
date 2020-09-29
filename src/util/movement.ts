@@ -16,10 +16,15 @@ export class MovementUtil {
         var result = creep.moveTo(pos, {reusePath: 20, range: range});
         if (Memory.debug || creep.memory.debug) console.log("with result " + result);
 
-        if (result === 0 && creep.pos.isEqualTo(currentPos)) 
-        {
-            if (Memory.debug || creep.memory.debug) console.log("creep couldn't move from " + currentPos.x + "," + currentPos.y);
-            creep.moveTo(pos, {reusePath: 0, range: range});
+        if (result === 0) {
+            if (creep.pos.isEqualTo(currentPos)) 
+            {
+                if (Memory.debug || creep.memory.debug) console.log("creep couldn't move from " + currentPos.x + "," + currentPos.y);
+                creep.moveTo(pos, {reusePath: 0, range: range});
+            }
+            else {
+                creep.room.memory.logging.heatMap[creep.pos.x * 100 + creep.pos.y]++;
+            }
         }
     }
 }
