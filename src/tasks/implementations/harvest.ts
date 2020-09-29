@@ -1,6 +1,5 @@
-import { RoomLogic } from './../../roomLogic/roomLogic';
+import { PositionUtil } from './../../util/position';
 import { MovementUtil } from '../../util/movement';
-import { PositionUtil } from '../../util/position';
 import { BaseTask } from '../baseTask';
 import { Task } from '../task';
 
@@ -24,10 +23,13 @@ export class Harvest extends BaseTask implements Task {
 
         var source = this.getSource();
         if (source) {
-            if (source.energy) return 0;
+            if (source.energy === 0) 
+            {
+                if (PositionUtil.getFlyDistance(this.pos, creep.pos) > source.ticksToRegeneration) return 0;
+            }
 
             var energyExpected = source.ticksToRegeneration * 10;
-            if (source.energy < energyExpected) prio += 100;
+            if (source.energy > energyExpected) prio += 100;
             if (source.energy === 3000) prio += 100;
         }
 
