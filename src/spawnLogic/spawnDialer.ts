@@ -16,7 +16,7 @@ export class SpawnDialer {
             if (Memory.debug || this.spawn.memory.debug) console.log("fitness is " + fitness);
             if (Memory.debug || this.spawn.memory.debug) console.log("previous fitness is " + lastFitness);
 
-            if (fitness < lastFitness * 0.95)
+            if (lastFitness && fitness < lastFitness * 0.95)
             {
                 if (Memory.debug || this.spawn.memory.debug) console.log("reverting to previous settings");
                 this.spawn.memory.settings = this.spawn.memory.previousSettings;
@@ -26,6 +26,7 @@ export class SpawnDialer {
             }
             
             this.spawn.memory.previousSettings = this.spawn.memory.settings;
+            this.spawn.memory.settings.fitness = undefined;
 
             this.tweakDials();
 

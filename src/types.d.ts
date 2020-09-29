@@ -11,7 +11,7 @@ interface SpawnMemory
 interface SpawnSettings {
     maxIdleTicks : number;
     creepCeiling : number;
-    fitness : number;
+    fitness : number | undefined;
 }
 
 interface Memory 
