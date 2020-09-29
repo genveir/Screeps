@@ -10,6 +10,8 @@
     "include": [
         "src/*.ts",
         "src/util/*.ts",
-        "src/tasks/*.ts", "src/roomLogic/roomLogic.ts", "src/tasks/implementations/upgrade.ts", "src/tasks/implementations/repair.ts", "src/tasks/implementations/idle.ts", "src/tasks/implementations/harvest.ts", "src/tasks/implementations/grab.ts", "src/tasks/implementations/fill.ts", "src/tasks/implementations/error.ts", "src/tasks/implementations/build.ts"
+        "src/tasks/*.ts", 
+        "src/roomLogic/*.ts", 
+        "src/tasks/implementations/*.ts"
     ]
 }
