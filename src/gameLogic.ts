@@ -1,3 +1,4 @@
+import { RoadUtil } from './util/road';
 import {RoomLogic} from "./roomLogic/roomLogic"
 
 export class GameLogic {
@@ -24,6 +25,8 @@ export class GameLogic {
                 }
 
                 var spawn = "🚧"
+
+                if (room.memory.drawHeatMap) RoadUtil.drawHeatMap(room);
 
                 if (Memory.debug) console.log("done with room visuals");
             }

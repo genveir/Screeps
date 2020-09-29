@@ -31,6 +31,7 @@ interface RoomMemory {
     roads : { [name: string] : RoadDefinition}
     controllerRoadPath : SavedPosition[];
     logging : RoomLogging;
+    drawHeatMap? : boolean;
  }
 
  interface RoomLogging {

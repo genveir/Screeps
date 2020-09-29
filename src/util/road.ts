@@ -60,4 +60,33 @@ export class RoadUtil {
         }
         return route;
     }
+
+    public static drawHeatMap(room : Room) {
+        var heatMapData = room.memory.logging.heatMap;
+
+        var highest = 0;
+        for (var key in heatMapData) {
+            if (heatMapData[key] > highest) highest = heatMapData[key];
+        }
+
+        var vis = new RoomVisual(room.name);
+        for (var key in heatMapData) {
+            var value = Math.floor(heatMapData[key] / highest * 255);
+            var color = this.rgbToHex(value, 0, 255 - value);
+
+            var nKey = <number><any>key;
+            var pos = new RoomPosition(Math.floor(nKey / 100), nKey % 100, room.name);
+
+            vis.circle(pos, {radius: 0.5, fill: color, opacity: 0.5})
+        }
+    }
+
+    private static componentToHex(c : number) {
+        var hex = c.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+      }
+      
+    private static rgbToHex(r : number, g : number, b : number) {
+        return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+    }
 }
