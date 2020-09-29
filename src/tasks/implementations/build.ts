@@ -53,7 +53,7 @@ export class Build extends BaseTask implements Task {
                 else {console.log("build failed with code " + result); }
             }
         }   
-        if (this.getSuitability(creep) <= 0) this.unclaim(creep.id);
+        if (this.getPriority(creep) <= 0 || this.getSuitability(creep) <= 0) this.unclaim(creep.id);
     }
 
     public serialize() : string {

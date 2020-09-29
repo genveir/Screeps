@@ -46,7 +46,7 @@ export class Upgrade extends BaseTask implements Task {
                 this.grabEnergyFromTombstones(creep);
             }
         }   
-        if (this.getSuitability(creep) <= 0) this.unclaim(creep.id);
+        if (this.getPriority(creep) <= 0 || this.getSuitability(creep) <= 0) this.unclaim(creep.id);
     }
 
     private transferEnergyToYoungestNeighbour(creep : Creep) {

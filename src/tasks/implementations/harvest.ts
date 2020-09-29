@@ -63,7 +63,7 @@ export class Harvest extends BaseTask implements Task {
         }
 
         if (creep.memory.debug) console.log(" creep has suitability " + this.getSuitability(creep));
-        if (this.getSuitability(creep) <= 0) this.unclaim(creep.id);
+        if (this.getPriority(creep) <= 0 || this.getSuitability(creep) <= 0) this.unclaim(creep.id);
     }
 
     public serialize() : string {
