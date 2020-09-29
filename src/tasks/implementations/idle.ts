@@ -1,3 +1,4 @@
+import { MovementUtil } from './../../util/movement';
 import { PositionUtil } from '../../util/position';
 import { Task } from '../task';
 import { BaseTask } from '../baseTask';
@@ -19,11 +20,33 @@ export class Idle extends BaseTask implements Task {
         return -1000000;
     }
 
-    public execute(creep : Creep) {        
-        this.moveAwayFromSources(creep);
-        this.moveAwayFromSpawns(creep);
-        this.moveAwayFromRoads(creep);
+    public execute(creep : Creep) {
+        var nearestSource : Source | null = null;
+        var nearestContainer : StructureContainer | null = null;
 
+        nearestSource = creep.pos.findClosestByRange(FIND_SOURCES);
+        var containers = creep.room.find(FIND_STRUCTURES).filter(s => s.structureType === STRUCTURE_CONTAINER);
+        if (containers) nearestContainer = <StructureContainer>creep.pos.findClosestByRange(containers);
+
+        var distToSource : number = 1000;
+        var distToContainer : number = 1000;
+        if (nearestSource) distToSource = creep.pos.getRangeTo(nearestSource);
+        if (nearestContainer) distToContainer = creep.pos.getRangeTo(nearestContainer);
+        
+        if (distToSource !== 1000 || distToContainer !== 1000)
+        {
+            if (distToSource <= distToContainer) {
+                if (distToSource > 9) MovementUtil.moveTo(creep, nearestSource!);
+            }
+            else {
+                if (distToContainer > 9) MovementUtil.moveTo(creep, nearestContainer!);
+            }
+        }
+        else {
+            this.moveAwayFromSources(creep);
+            this.moveAwayFromSpawns(creep);
+            this.moveAwayFromRoads(creep);
+        }
         this.unclaimAll();
     }
 

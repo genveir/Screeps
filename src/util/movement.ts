@@ -1,5 +1,5 @@
 export class MovementUtil {
-    public static moveTo(creep : Creep, pos : RoomPosition | {pos : RoomPosition} ) {
+    public static moveTo(creep : Creep, pos : RoomPosition | {pos : RoomPosition} , range? : number) {
         var currentPos = creep.pos;
 
         if (pos instanceof RoomPosition) {
@@ -12,15 +12,14 @@ export class MovementUtil {
                 console.log("moving to " + pos.pos.x + ", " + pos.pos.y);
             }
         }
-
         
-        var result = creep.moveTo(pos, {reusePath: 20});
+        var result = creep.moveTo(pos, {reusePath: 20, range: range});
         if (Memory.debug || creep.memory.debug) console.log("with result " + result);
 
         if (result === 0 && creep.pos.isEqualTo(currentPos)) 
         {
             if (Memory.debug || creep.memory.debug) console.log("creep couldn't move from " + currentPos.x + "," + currentPos.y);
-            creep.moveTo(pos, {reusePath: 0});
+            creep.moveTo(pos, {reusePath: 0, range: range});
         }
     }
 }
