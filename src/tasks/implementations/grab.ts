@@ -79,7 +79,7 @@ export class Grab extends BaseTask implements Task {
             }
         }
 
-        if (this.getSuitability(creep) <= 0) this.unclaim(creep.id);
+        if (this.getPriority(creep) <= 0 || this.getSuitability(creep) <= 0) this.unclaim(creep.id);
     }
 
     public serialize() {
