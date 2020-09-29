@@ -54,7 +54,7 @@ export class Fill extends BaseTask implements Task {
                     var hasSomeEnergy = creep.store.energy > 0;
                     var isNotFull = creep.store.energy < creep.store.getCapacity(RESOURCE_ENERGY);
 
-                    if (hasSomeEnergy && isNotFull) prio = 50000;
+                    if (hasSomeEnergy && isNotFull) prio = 250000;
                     else prio = 0;
 
                     break;
