@@ -1,4 +1,4 @@
-const iterationLength : number = 1800;
+const iterationLength : number = 3600;
 
 export class SpawnDialer {
     constructor(private spawn : StructureSpawn) {
@@ -69,7 +69,7 @@ export class SpawnDialer {
     private calculateFitness() : number {
         var relevantEnergyLogs = Object.keys(this.spawn.room.memory.logging.sourcesPerCycle)
             .map(key => <number><any>key)
-            .filter((key : number) => key > Game.time - iterationLength)
+            .filter((key : number) => key > Game.time - iterationLength / 2)
             .map(key => this.spawn.room.memory.logging.sourcesPerCycle[key]);
 
         var totalIncome : number = 0;
@@ -81,7 +81,7 @@ export class SpawnDialer {
 
         var relevantCreepLogs = Object.keys(this.spawn.room.memory.logging.creepsPerCycle)
             .map(key => <number><any>key)
-            .filter((key : number) => key > Game.time - iterationLength)
+            .filter((key : number) => key > Game.time - iterationLength / 2)
             .map(key => this.spawn.room.memory.logging.creepsPerCycle[key]);
 
         var totalCreepCost = relevantCreepLogs.reduce((a, b) => a + b);
