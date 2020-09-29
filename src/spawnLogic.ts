@@ -38,12 +38,12 @@ export class SpawnLogic
         }
 
         var availableEnergy = this.spawn.store.energy + energyInExtensions;
-        new RoomVisual(this.spawn.room.name).text(availableEnergy + "⚡ " + idlingCreeps + "/" + creeps.length + "(" + (20 - this.spawn.memory.noIdlerTicks) + ")😴", this.spawn.pos.x, this.spawn.pos.y + 1);
+        new RoomVisual(this.spawn.room.name).text(availableEnergy + "⚡ " + idlingCreeps + "/" + creeps.length + "(" + (24 - this.spawn.memory.noIdlerTicks) + ")😴", this.spawn.pos.x, this.spawn.pos.y + 1);
 
         var body = this.buildWorkerBody(availableEnergy, 300, 900);
 
         if (!this.spawn.spawning && body) {
-            if (creepcount < energySlots || this.spawn.memory.noIdlerTicks > 19) {
+            if (this.shouldBuildCreep(creepcount, energySlots, 20, 24)) {
                 var result = this.spawn.spawnCreep(
                     body.body, 
                     'Creep' + Game.time, 
@@ -57,8 +57,16 @@ export class SpawnLogic
                         }
                     });
                 if (result === 0) Logging.logSpawn(this.spawn, body.cost);
-            }
+            }    
         }
+    }
+
+    private shouldBuildCreep(creepcount : number, energySlots : number, creepceiling : number, idlerceiling : number) : boolean {
+        if (creepcount < energySlots) return true;
+        if (creepcount >= creepceiling) return false;
+        if (this.spawn.memory.noIdlerTicks > idlerceiling) return true;
+
+        return false;
     }
 
     workerBody : BodyPartConstant[] = [MOVE, WORK, CARRY, MOVE, CARRY]
