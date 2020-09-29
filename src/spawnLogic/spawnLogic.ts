@@ -39,7 +39,7 @@ export class SpawnLogic
 
         var availableEnergy = this.spawn.store.energy + energyInExtensions;
         new RoomVisual(this.spawn.room.name).text(availableEnergy + "⚡ " + 
-            idlingCreeps + "/" + creeps.length + ".." + this.spawn.memory.decisionDials.creepCeiling +
+            idlingCreeps + "/" + creepcount + ".." + this.spawn.memory.decisionDials.creepCeiling +
             "(" + (this.spawn.memory.decisionDials.maxIdleTicks - this.spawn.memory.noIdlerTicks) + ")😴", this.spawn.pos.x, this.spawn.pos.y + 1);
 
         var body = this.buildWorkerBody(availableEnergy, 300, 900);
@@ -65,8 +65,9 @@ export class SpawnLogic
 
     private shouldBuildCreep(creepcount : number, energySlots : number) : boolean {
         if (creepcount < energySlots) return true;
+        console.log(creepcount)
         if (creepcount >= this.spawn.memory.decisionDials.creepCeiling) return false;
-        if (this.spawn.memory.noIdlerTicks > this.spawn.memory.noIdlerTicks) return true;
+        if (this.spawn.memory.noIdlerTicks > this.spawn.memory.decisionDials.maxIdleTicks) return true;
 
         return false;
     }
