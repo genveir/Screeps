@@ -37,20 +37,22 @@ export class Idle extends BaseTask implements Task {
         {
             if (distToSource <= distToContainer) {
                 if (distToSource > 9) MovementUtil.moveTo(creep, nearestSource!);
+                else this.stayOutOfTheWay(creep);
             }
             else {
                 if (distToContainer > 9) MovementUtil.moveTo(creep, nearestContainer!);
+                else this.stayOutOfTheWay(creep);
             }
         }
-        else {
-            if (distToSource < 10 || distToContainer < 10)
-            {
-                this.moveAwayFromSources(creep);
-                this.moveAwayFromSpawns(creep);
-                this.moveAwayFromRoads(creep);
-            }
-        }
+        else this.stayOutOfTheWay(creep);
+        
         this.unclaimAll();
+    }
+
+    private stayOutOfTheWay(creep: Creep) {
+        this.moveAwayFromSources(creep);
+        this.moveAwayFromSpawns(creep);
+        this.moveAwayFromRoads(creep);
     }
 
     public serialize() : string {
