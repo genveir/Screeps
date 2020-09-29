@@ -42,23 +42,27 @@ export class Grab extends BaseTask implements Task {
         }
         else
         {
-            if (item.store.energy === 0) return 0;
-            return 105000 - PositionUtil.getFlyDistance(item.pos, creep.pos);
+            var energyAvailable = item.store.energy;
+
+            var prio = energyAvailable * 1000;
+            return prio - PositionUtil.getFlyDistance(item.pos, creep.pos);
         }
     }
 
     protected _getSuitability(creep : Creep) {
         var item = this.getItem();
 
-        if (!item) return 0;
-        else {
+        if (item)
+        {
             if ((<any>item).structureType && (<any>item).structureType === STRUCTURE_CONTAINER) {
                 if (creep.store.energy === 0 && item.store.energy >= creep.store.getCapacity()) return 100000;
-                else return 0;
             }
-            if (creep.store.getFreeCapacity() > item.store.energy) return 100000 - PositionUtil.getFlyDistance(item.pos, creep.pos);
-            else return 0;
+            else {
+                return creep.store.getFreeCapacity() * 1000 - PositionUtil.getFlyDistance(item.pos, creep.pos);
+            }
         }
+
+        return 0;
     }
 
     public execute(creep: Creep) {
