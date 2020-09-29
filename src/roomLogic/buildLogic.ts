@@ -25,6 +25,10 @@ export class BuildLogic {
             {
                 this.buildSecondLevelSpawnRingRoads();
             }
+            if (this.room.controller.level > 4)
+            {
+                this.buildControllerTower();
+            }
         }
 
         this.buildAllPossibleExtensions();
@@ -32,28 +36,37 @@ export class BuildLogic {
     }
 
     private buildSpawnTower() : void {
-        var towers = this.room
-            .find(FIND_MY_STRUCTURES)
-            .filter(s => s.structureType === STRUCTURE_TOWER);
-
-        var towerConstruction = this.room
-            .find(FIND_MY_CONSTRUCTION_SITES)
-            .filter(cs => cs.structureType === STRUCTURE_TOWER);
-
         if (!this.room.controller) return;
 
         var spawns = this.room.find(FIND_MY_SPAWNS);
         if (spawns.length === 0) return;
 
         var spawnPos = spawns[0].pos;
+        this.buildTowerAtRange(spawnPos, 2);
+    }
+
+    private buildControllerTower() : void {
+        if (!this.room.controller) return;
+
+        var controller = this.room.controller;
+
+        this.buildTowerAtRange(controller.pos, 1);
+    }
+
+    private buildTowerAtRange(pos: RoomPosition, range: number) {
+        var towers = pos.findInRange(FIND_STRUCTURES, range)
+            .filter(s => s.structureType === STRUCTURE_TOWER);
+
+        var towerConstruction = pos.findInRange(FIND_CONSTRUCTION_SITES, range)
+            .filter(s => s.structureType === STRUCTURE_TOWER);
 
         if (towers.length + towerConstruction.length === 0)
         {
-            for (var xOffset = -2; xOffset <= 2; xOffset++) {
-                for (var yOffset = -2; yOffset <= 2; yOffset++) {
-                    if (xOffset === -2 || xOffset === 2 || yOffset === -2 || yOffset === 2)
+            for (var xOffset = -range; xOffset <= range; xOffset++) {
+                for (var yOffset = -range; yOffset <= range; yOffset++) {
+                    if (xOffset === -range || xOffset === range || yOffset === -range || yOffset === range)
                     {
-                        var buildSite = new RoomPosition(spawnPos.x + xOffset, spawnPos.y + yOffset, spawnPos.roomName);
+                        var buildSite = new RoomPosition(pos.x + xOffset, pos.y + yOffset, pos.roomName);
 
                         var sites = buildSite.lookFor(LOOK_STRUCTURES);
                         if (sites.length === 0)
@@ -67,8 +80,6 @@ export class BuildLogic {
             }
         }
         else return;
-
-        console.log("unable to build spawn tower");
     }
 
     private buildControllerRoad() : void {
