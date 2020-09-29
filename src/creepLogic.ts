@@ -56,6 +56,7 @@ export class CreepLogic {
             }
             else return bPrio - aPrio;
         });
+        tasks = tasks.filter(t => t.getPriority(this.creep) > 0 && t.getSuitability(this.creep) > 0);
 
         if (Memory.debug|| this.creep.memory.debug) console.log("creep " + this.creep.name + " is looking for a task");
 
@@ -64,20 +65,17 @@ export class CreepLogic {
 
             if (Memory.debug|| this.creep.memory.debug) console.log("considering " + task.type + " prio = " + task.getPriority(this.creep) + " suit = " + task.getSuitability(this.creep) + " claimed = " + task.claimedBy.length + " out of " + task.numAllowed);
 
-            if(task.getPriority(this.creep) > 0 && task.getSuitability(this.creep) > 0) 
+            if (task.claimedBy.length < task.numAllowed)
             {
-                if (task.claimedBy.length < task.numAllowed)
-                {
+                return task;
+            }
+            else {
+                var otherCreep = Game.getObjectById(task.claimedBy[0]);
+                if (!otherCreep || task.getSuitability(this.creep) > task.getSuitability(otherCreep)) {
+                    task.unclaim(task.claimedBy[0]);
                     return task;
                 }
-                else {
-                    var otherCreep = Game.getObjectById(task.claimedBy[0]);
-                    if (!otherCreep || task.getSuitability(this.creep) > task.getSuitability(otherCreep)) {
-                        task.unclaim(task.claimedBy[0]);
-                        return task;
-                    }
-                }
-            }
+            }            
         }
         return new Idle(TaskList.getNewId());
     }
