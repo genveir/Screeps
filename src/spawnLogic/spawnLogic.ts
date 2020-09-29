@@ -9,7 +9,7 @@ export class SpawnLogic
         if (!spawn.memory.settings) 
         {
             spawn.memory.settings = new DecisionDials();
-            spawn.memory.settings.creepCeiling = 20;
+            spawn.memory.settings.creepCeiling = 10;
             spawn.memory.settings.maxIdleTicks = 20;
         }
         if (!spawn.memory.previousSettings) spawn.memory.previousSettings = new DecisionDials();
