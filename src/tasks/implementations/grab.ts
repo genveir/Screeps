@@ -44,7 +44,7 @@ export class Grab extends BaseTask implements Task {
         {
             var energyAvailable = item.store.energy;
 
-            var prio = energyAvailable * 1000;
+            var prio = energyAvailable * 1500;
             return prio - PositionUtil.getFlyDistance(item.pos, creep.pos);
         }
     }
