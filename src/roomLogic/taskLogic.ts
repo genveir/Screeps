@@ -78,7 +78,7 @@ export class TaskLogic {
             var csTasks = buildTasks.filter(bt => bt.constructionSite === cs.id).length;
             
             if (csTasks === 0) {
-                taskList.addTask(new Build(TaskList.getNewId(), [], 2, cs.id));
+                taskList.addTask(new Build(TaskList.getNewId(), [], 5, cs.id));
             }
         });
     }
