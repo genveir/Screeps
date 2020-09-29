@@ -24,8 +24,11 @@ export class Harvest extends BaseTask implements Task {
 
         var source = this.getSource();
         if (source) {
+            if (source.energy) return 0;
+
             var energyExpected = source.ticksToRegeneration * 10;
             if (source.energy < energyExpected) prio += 100;
+            if (source.energy === 3000) prio += 100;
         }
 
         return prio - PositionUtil.getFlyDistance(this.pos, creep.pos);
