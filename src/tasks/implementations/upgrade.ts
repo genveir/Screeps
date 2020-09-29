@@ -37,11 +37,32 @@ export class Upgrade extends BaseTask implements Task {
         if (controller)
         {
             var result = creep.upgradeController(controller);
+            
             if (result === ERR_NOT_IN_RANGE) {
                 MovementUtil.moveTo(creep, controller.pos);
             }
+            else {
+                this.transferEnergyToYoungestNeighbour(creep);
+            }
         }   
         if (this.getSuitability(creep) <= 0) this.unclaim(creep.id);
+    }
+
+    private transferEnergyToYoungestNeighbour(creep : Creep) {
+        var neighbours = creep.pos.findInRange(FIND_MY_CREEPS, 1).filter(c => c.memory.savedTask.taskId === this.id);
+        if (neighbours) 
+        {
+            var youngest : Creep | null = null;
+            var bestAge = creep.ticksToLive!;
+            for (var creepName in neighbours) {
+                var neighbour = neighbours[creepName];
+                if (neighbour.ticksToLive! > bestAge) {
+                    youngest = neighbour;
+                    bestAge = neighbour.ticksToLive!
+                } 
+            }
+            if (youngest) creep.transfer(youngest, RESOURCE_ENERGY);
+        }
     }
 
     public serialize() : string {
