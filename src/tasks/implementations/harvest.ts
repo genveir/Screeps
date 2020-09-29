@@ -26,7 +26,7 @@ export class Harvest extends BaseTask implements Task {
             if (source.energy === 0) 
             {
                 var distanceFromSource = PositionUtil.getFlyDistance(this.pos, creep.pos);
-                var expectedTravelDifficultyModifier = 1.2;
+                var expectedTravelDifficultyModifier = distanceFromSource > 10 ? 1.2 : 0.1;
                 var ticksToGetToSource = distanceFromSource * expectedTravelDifficultyModifier;
                 
                 var ticksToRegen = source.ticksToRegeneration;
