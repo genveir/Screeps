@@ -1,5 +1,6 @@
 import { Task } from '../task';
 import { BaseTask } from '../baseTask';
+import { MovementUtil } from '../../util/movement';
 
 export class Upgrade extends BaseTask implements Task {
     public static readonly type : string = "UPGRADE";
@@ -37,7 +38,7 @@ export class Upgrade extends BaseTask implements Task {
         {
             var result = creep.upgradeController(controller);
             if (result === ERR_NOT_IN_RANGE) {
-                creep.moveTo(controller, {reusePath: 20});
+                MovementUtil.moveTo(creep, controller.pos);
             }
         }   
         if (this.getSuitability(creep) <= 0) this.unclaim(creep.id);

@@ -1,3 +1,4 @@
+import { MovementUtil } from './../../util/movement';
 import { Task } from '../task';
 import { BaseTask } from '../baseTask';
 import { PositionUtil } from '../../util/position';
@@ -86,7 +87,7 @@ export class Fill extends BaseTask implements Task {
         {
             var result = creep.transfer(structure, RESOURCE_ENERGY);
             if (result === ERR_NOT_IN_RANGE) {
-                creep.moveTo(structure);
+                MovementUtil.moveTo(creep, structure.pos);
             }
         }
 

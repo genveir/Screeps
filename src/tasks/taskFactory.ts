@@ -22,7 +22,7 @@ export class TaskFactory {
 
         switch(deserialized.type)
         {
-            case Harvest.type: return new Harvest(deserialized.id, deserialized.claimedBy, deserialized.numAllowed, deserialized.source, deserialized.pos);
+            case Harvest.type: return Harvest.deserialize(deserialized);
             case Upgrade.type: return new Upgrade(deserialized.id, deserialized.claimedBy, deserialized.numAllowed, deserialized.controller);
             case Build.type: return new Build(deserialized.id, deserialized.claimedBy, deserialized.numAllowed, deserialized.constructionSite);
             case Repair.type: return new Repair(deserialized.id, deserialized.claimedBy, deserialized.numAllowed, deserialized.structure);

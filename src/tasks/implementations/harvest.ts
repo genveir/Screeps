@@ -1,3 +1,5 @@
+import { RoomLogic } from './../../roomLogic/roomLogic';
+import { MovementUtil } from '../../util/movement';
 import { PositionUtil } from '../../util/position';
 import { BaseTask } from '../baseTask';
 import { Task } from '../task';
@@ -43,7 +45,7 @@ export class Harvest extends BaseTask implements Task {
             }
         }
         else {
-            creep.moveTo(this.pos.x, this.pos.y, {reusePath: 20});
+            MovementUtil.moveTo(creep, this.pos);
         }
 
         if (creep.memory.debug) console.log(" creep has suitability " + this.getSuitability(creep));
@@ -53,4 +55,10 @@ export class Harvest extends BaseTask implements Task {
     public serialize() : string {
         return JSON.stringify(this);
     }
+
+    public static deserialize(deserialized : any) : Harvest {
+        var roomPos = new RoomPosition(deserialized.pos.x, deserialized.pos.y, deserialized.pos.roomName);
+
+        return new Harvest(deserialized.id, deserialized.claimedBy, deserialized.numAllowed, deserialized.source, roomPos);
+    } 
 }

@@ -1,3 +1,4 @@
+import { MovementUtil } from './../../util/movement';
 import { PositionUtil } from '../../util/position';
 import { Task } from '../task';
 import { BaseTask } from '../baseTask';
@@ -38,14 +39,14 @@ export class Build extends BaseTask implements Task {
         {
             if (PositionUtil.getFlyDistance(creep.pos, site.pos) > 3)
             {
-                creep.moveTo(site, {reusePath: 20});
+                MovementUtil.moveTo(creep, site.pos);
             }
             else {
                 if (this.moveAwayFromSources(creep)) return;
 
                 var result = creep.build(site);
                 if (result === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(site, {reusePath: 20});
+                    MovementUtil.moveTo(creep, site.pos);
                 }
                 else if (result === ERR_NOT_ENOUGH_RESOURCES) {}
                 else if (result === 0) {}

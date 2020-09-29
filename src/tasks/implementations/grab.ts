@@ -1,6 +1,7 @@
 import { Task } from '../task';
 import { BaseTask } from '../baseTask';
 import { PositionUtil } from '../../util/position';
+import { MovementUtil } from '../../util/movement';
 
 export class Grab extends BaseTask implements Task {
     public static readonly type : string = "GRAB";
@@ -69,7 +70,7 @@ export class Grab extends BaseTask implements Task {
         {
             var result = creep.withdraw(item, RESOURCE_ENERGY);
             if (result === ERR_NOT_IN_RANGE) {
-                creep.moveTo(item, {reusePath: 20});
+                MovementUtil.moveTo(creep, item.pos);
             }
         }
 
