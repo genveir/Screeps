@@ -10,6 +10,7 @@ export class RoomLogic {
     constructor(private room: Room) {
         if (!this.room.memory.taskList) this.room.memory.taskList = [];
         if (!this.room.memory.energySlots) this.initializeEnergySlots();
+        if (!this.room.memory.roads) this.room.memory.roads = [];
 
         this.buildLogic = new BuildLogic(this.room);
         this.taskLogic = new TaskLogic(this.room);

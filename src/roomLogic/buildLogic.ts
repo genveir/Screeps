@@ -34,7 +34,10 @@ export class BuildLogic {
             this.room.memory.logging.heatMap = {};
         }
 
-        var numRoadsBeingBuilt = this.room.find(FIND_CONSTRUCTION_SITES).filter(f => f.structureType === STRUCTURE_ROAD).length;
+        var roadsBeingBuilt = this.room.find(FIND_CONSTRUCTION_SITES).filter(f => f.structureType === STRUCTURE_ROAD);
+        
+        var numRoadsBeingBuilt : number = 0;
+        if (roadsBeingBuilt) numRoadsBeingBuilt = roadsBeingBuilt.length;
         var roadsToBuild = this.room.memory.roads;
 
         for (var i = 0; i < roadsToBuild.length && numRoadsBeingBuilt < 5; i++) {
