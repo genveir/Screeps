@@ -1,30 +1,11 @@
 export class MovementUtil {
     public static moveTo(creep : Creep, pos : RoomPosition | {pos : RoomPosition} , range? : number) {
-        var currentPos = creep.pos;
+        creep.moveTo(pos, {reusePath: 0, range: range});
 
-        if (pos instanceof RoomPosition) {
-            if (Memory.debug || creep.memory.debug) console.log("moving to " + pos.x + "," + pos.y);
-        }
-        else {
-            if (Memory.debug || creep.memory.debug) {
-                console.log("argument passed is not a room position");
-                console.log(JSON.stringify(pos));
-                console.log("moving to " + pos.pos.x + ", " + pos.pos.y);
-            }
-        }
-        
-        var result = creep.moveTo(pos, {reusePath: 20, range: range});
-        if (Memory.debug || creep.memory.debug) console.log("with result " + result);
+        var posAsNumber = creep.pos.x * 100 + creep.pos.y;
+        if (!creep.room.memory.logging.heatMap[posAsNumber]) creep.room.memory.logging.heatMap[posAsNumber] = 0;
+        creep.room.memory.logging.heatMap[posAsNumber]++;
 
-        if (result === 0) {
-            if (creep.pos.isEqualTo(currentPos)) 
-            {
-                if (Memory.debug || creep.memory.debug) console.log("creep couldn't move from " + currentPos.x + "," + currentPos.y);
-                creep.moveTo(pos, {reusePath: 0, range: range});
-            }
-            else {
-                creep.room.memory.logging.heatMap[creep.pos.x * 100 + creep.pos.y]++;
-            }
-        }
-    }
+        if (Memory.debug || creep.memory.debug) console.log("heatMap for position is now " + creep.room.memory.logging.heatMap[posAsNumber])
+    }   
 }
