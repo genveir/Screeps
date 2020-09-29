@@ -7,7 +7,7 @@ export class RoadUtil {
     public static setRoads(room : Room) {
         var heatMapData = this.getHeatmap(room);
 
-        var makeRoad = heatMapData.filter(hmd => hmd.heat > 0.3);
+        var makeRoad = heatMapData.filter(hmd => hmd.heat > 0.25);
 
         var roads = makeRoad.map(mr => mr.pos);
         room.memory.roads = roads;
