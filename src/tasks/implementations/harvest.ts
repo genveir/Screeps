@@ -20,7 +20,15 @@ export class Harvest extends BaseTask implements Task {
     }
 
     protected _getPriority(creep : Creep) {
-        return 100000;
+        var prio = 100000;
+
+        var source = this.getSource();
+        if (source) {
+            var energyExpected = source.ticksToRegeneration * 10;
+            if (source.energy < energyExpected) prio += 100;
+        }
+
+        return prio - PositionUtil.getFlyDistance(this.pos, creep.pos);
     }
 
     protected _getSuitability(creep : Creep) {
