@@ -3,11 +3,19 @@ interface SpawnMemory
 {  
     noIdlerTicks: number
     decisionDials : SpawnDecisionDials
+    debug? : boolean
 }
 
 interface SpawnDecisionDials {
     maxIdleTicks : number;
     creepCeiling : number;
+    data: SpawnDecisionData
+}
+
+interface SpawnDecisionData {
+    ticksWithHighIdlers: number;
+    ticksAtCeiliing : number;
+    lastFitness : number;
 }
 
 interface Memory 
@@ -45,15 +53,13 @@ interface RoomMemory {
      energy: number;
  }
 
- interface SourceStats { [finalTick: number]: SourceStat }
+ interface SourceStats { [finalTick: number]: SourceStat[] }
 
  interface SourceStat {
-     [id : string] : 
-     { 
-        energyHarvested : number;
-        numEmptyTicks: number;
-        numFullTicks : number;
-     }
+    id : string;
+    energyHarvested : number;
+    numEmptyTicks: number;
+    numFullTicks : number;
  }
 
  interface RoadDefinition {

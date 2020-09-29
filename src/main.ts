@@ -15,7 +15,7 @@ for (var creepName in Memory.creeps) {
 
 if (Memory.debug) console.log("starting gamelogic");
 // run logic that determines overall goals and strategies
-new GameLogic().run();
+new GameLogic().runGameLogic();
 
 if (Memory.debug) console.log("starting spawnlogic");
 // run logic per spawn
@@ -23,7 +23,7 @@ for (var spawnName in Game.spawns) {
     var spawn = Game.spawns[spawnName];
     
     var spawnLogic = new SpawnLogic(spawn);
-    spawnLogic.run();
+    spawnLogic.runSpawnLogic();
 }
 
 if (Memory.debug) console.log("starting creeplogic");

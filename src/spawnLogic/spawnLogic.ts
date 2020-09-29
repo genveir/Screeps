@@ -5,12 +5,10 @@ import { Logging } from "../util/logging";
 export class SpawnLogic
 {
     constructor(private spawn : StructureSpawn) {
-        if (!spawn.memory.decisionDials) spawn.memory.decisionDials = {maxIdleTicks: 10, creepCeiling: 30}
+        if (!spawn.memory.decisionDials) spawn.memory.decisionDials = {maxIdleTicks: 10, creepCeiling: 30, data: {ticksWithHighIdlers: 0, ticksAtCeiliing: 0, lastFitness: 0}}
     }
 
-    public run() {
-        new SpawnDialer(this.spawn).run();
-
+    public runSpawnLogic() {
         var spawnRoom = this.spawn.room;
         var energySlots = spawnRoom.memory.energySlots.length;
 
@@ -31,6 +29,7 @@ export class SpawnLogic
 
         if (!this.spawn.spawning && body) {
             if (this.shouldBuildCreep(creepcount, energySlots)) {
+                if (Memory.debug || this.spawn.memory.debug) console.log("building creep " + JSON.stringify(body));
                 var result = this.spawn.spawnCreep(
                     body.body, 
                     'Creep' + Game.time, 
@@ -46,6 +45,8 @@ export class SpawnLogic
                 if (result === 0) Logging.logSpawn(this.spawn, body.cost);
             }    
         }
+
+        new SpawnDialer(this.spawn).runSpawnDialer(creepcount, idlingCreeps);
     }
 
     private getIdlingCreeps(creeps : Creep[]) : number {

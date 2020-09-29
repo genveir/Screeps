@@ -1,7 +1,7 @@
 import {RoomLogic} from "./roomLogic/roomLogic"
 
 export class GameLogic {
-    run() : void {
+    runGameLogic() : void {
         // I don't have a global strategy yet, so there's nothing here but room logic
 
         for (var roomName in Game.rooms) {
@@ -18,8 +18,8 @@ export class GameLogic {
                 var lastStates = room.memory.logging.sourcesPerCycle[Memory.logging.lastSaved];
                 if (lastStates) {
                     room.find(FIND_SOURCES).forEach(source => {
-                        var lastState = lastStates[source.id];
-                        if (lastState) new RoomVisual(room.name).text(lastState.energyHarvested + "⚡ " + lastState.numEmptyTicks + "🚫 " + lastState.numFullTicks + "☀", source.pos.x, source.pos.y + 1, {font: 0.5});
+                        var lastState = lastStates.filter(ls => ls.id === source.id);
+                        if (lastState) new RoomVisual(room.name).text(lastState[0].energyHarvested + "⚡ " + lastState[0].numEmptyTicks + "🚫 " + lastState[0].numFullTicks + "☀", source.pos.x, source.pos.y + 1, {font: 0.5});
                     });
                 }
 
