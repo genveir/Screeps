@@ -52,6 +52,7 @@ interface RoomMemory {
      { 
         energyHarvested : number;
         numEmptyTicks: number;
+        numFullTicks : number;
      }
  }
 

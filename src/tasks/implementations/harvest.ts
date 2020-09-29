@@ -38,7 +38,6 @@ export class Harvest extends BaseTask implements Task {
         var source = this.getSource();
 
         if (!source) return 0;
-        if (source.energy === 0) return 0;
         if (creep.store.getFreeCapacity() === 0) return 0;
         if (creep.getActiveBodyparts(WORK) === 0) return 0;
         if (creep.getActiveBodyparts(CARRY) === 0) return 0;

@@ -19,7 +19,7 @@ export class GameLogic {
                 if (lastStates) {
                     room.find(FIND_SOURCES).forEach(source => {
                         var lastState = lastStates[source.id];
-                        if (lastState) new RoomVisual(room.name).text(lastState.energyHarvested + "⚡ " + lastState.numEmptyTicks + "🚫", source.pos.x, source.pos.y + 1, {font: 0.5});
+                        if (lastState) new RoomVisual(room.name).text(lastState.energyHarvested + "⚡ " + lastState.numEmptyTicks + "🚫 " + lastState.numFullTicks + "☀", source.pos.x, source.pos.y + 1, {font: 0.5});
                     });
                 }
 
