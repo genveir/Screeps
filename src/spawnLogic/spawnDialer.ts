@@ -1,25 +1,56 @@
-import { TaskList } from "../tasks/tasklist";
-
 export class SpawnDialer {
     constructor(private spawn : StructureSpawn) {
 
     }
 
     public runSpawnDialer(creepcount : number, idlers: number) {
-        if (!this.spawn.memory.decisionDials.data) this.spawn.memory.decisionDials.data = {ticksAtCeiliing: 0, ticksWithHighIdlers: 0, lastFitness: 0};
-        
-        if (creepcount === this.spawn.memory.decisionDials.creepCeiling) this.spawn.memory.decisionDials.data.ticksAtCeiliing++;
-        if (idlers > creepcount * .2) this.spawn.memory.decisionDials.data.ticksWithHighIdlers++;
-
-        if (Game.time % 2 === 1) // twiddle some dials after the end of last 5 minute logging cycle, not just before it ends
+        if (Game.time % 3600 === 1) // twiddle some dials after the end of last 5 minute logging cycle, not just before it ends
         {
+            if (Memory.debug || this.spawn.memory.debug) console.log("running spawn dialer for spawn " + this.spawn.name);
+
             var fitness = this.calculateFitness();
-            var lastFitness = this.spawn.memory.decisionDials.data.lastFitness;
+            this.spawn.memory.settings.fitness = fitness;
+            
+            var lastFitness = this.spawn.memory.previousSettings.fitness;
 
-            var change = fitness - lastFitness;
+            if (Memory.debug || this.spawn.memory.debug) console.log("fitness is " + fitness);
+            if (Memory.debug || this.spawn.memory.debug) console.log("previous fitness is " + lastFitness);
 
-            this.spawn.memory.decisionDials.data = {ticksAtCeiliing: 0, ticksWithHighIdlers: 0, lastFitness: fitness};
+            if (fitness < lastFitness * 0.95)
+            {
+                if (Memory.debug || this.spawn.memory.debug) console.log("reverting to previous settings");
+                this.spawn.memory.settings = this.spawn.memory.previousSettings;
+            }
+            else {
+                if (Memory.debug || this.spawn.memory.debug) console.log("iterating on current settings");
+            }
+            
+            this.spawn.memory.previousSettings = this.spawn.memory.settings;
+
+            this.tweakDials();
+
+            if (!this.spawn.memory.settingLog) this.spawn.memory.settingLog = [];
+            this.spawn.memory.settingLog.push(this.spawn.memory.settings);
         };
+    }
+
+    private tweakDials() {
+        var changeCeilingChance = 0.1;
+        var changeIdlerWait = 0.5;
+
+        if (Memory.debug || this.spawn.memory.debug) console.log("settings before tweaks: " + JSON.stringify(this.spawn.memory.settings));
+
+        if (Math.random() < changeCeilingChance) {
+            if (Math.random() < 0.5) this.spawn.memory.settings.creepCeiling++;
+            else this.spawn.memory.settings.creepCeiling--;
+        }
+
+        if (Math.random() < changeIdlerWait) {
+            if (Math.random() < 0.5) this.spawn.memory.settings.maxIdleTicks++;
+            else this.spawn.memory.settings.maxIdleTicks--;
+        }
+
+        if (Memory.debug || this.spawn.memory.debug) console.log("settings after tweaks: " + JSON.stringify(this.spawn.memory.settings));
     }
 
     private calculateFitness() : number {
@@ -28,8 +59,24 @@ export class SpawnDialer {
             .filter((key : number) => key > Game.time - 3600)
             .map(key => this.spawn.room.memory.logging.sourcesPerCycle[key]);
 
-        if (Memory.debug || this.spawn.memory.debug) console.log(JSON.stringify(relevantEnergyLogs));
+        var totalIncome : number = 0;
+        relevantEnergyLogs.forEach(rel => {
+            rel.forEach(source => {
+                totalIncome += source.energyHarvested
+            });
+        });
+
+        var relevantCreepLogs = Object.keys(this.spawn.room.memory.logging.creepsPerCycle)
+            .map(key => <number><any>key)
+            .filter((key : number) => key > Game.time - 3600)
+            .map(key => this.spawn.room.memory.logging.creepsPerCycle[key]);
+
+        var totalCreepCost = relevantCreepLogs.reduce((a, b) => a + b);
+
+        var fitness = totalIncome - totalCreepCost;
+
+        if (Memory.debug || this.spawn.memory.debug) console.log("fitness " + fitness + " = totalIncome: " + totalIncome + " - totalCreepCost " + totalCreepCost);
         
-        return 1000;
+        return fitness;
     }
 }

@@ -1,3 +1,4 @@
+import { DecisionDials } from './decisionData';
 import { SpawnDialer } from './spawnDialer';
 import { TaskList } from "../tasks/tasklist";
 import { Logging } from "../util/logging";
@@ -5,7 +6,13 @@ import { Logging } from "../util/logging";
 export class SpawnLogic
 {
     constructor(private spawn : StructureSpawn) {
-        if (!spawn.memory.decisionDials) spawn.memory.decisionDials = {maxIdleTicks: 10, creepCeiling: 30, data: {ticksWithHighIdlers: 0, ticksAtCeiliing: 0, lastFitness: 0}}
+        if (!spawn.memory.settings) 
+        {
+            spawn.memory.settings = new DecisionDials();
+            spawn.memory.settings.creepCeiling = 20;
+            spawn.memory.settings.maxIdleTicks = 20;
+        }
+        if (!spawn.memory.previousSettings) spawn.memory.previousSettings = new DecisionDials();
     }
 
     public runSpawnLogic() {
@@ -22,8 +29,8 @@ export class SpawnLogic
         var availableEnergy = this.calculateAvailableEnergy();
         
         new RoomVisual(this.spawn.room.name).text(availableEnergy + "⚡ " + 
-            idlingCreeps + "/" + creepcount + ".." + this.spawn.memory.decisionDials.creepCeiling +
-            "(" + (this.spawn.memory.decisionDials.maxIdleTicks - this.spawn.memory.noIdlerTicks) + ")😴", this.spawn.pos.x, this.spawn.pos.y + 1);
+            idlingCreeps + "/" + creepcount + ".." + this.spawn.memory.settings.creepCeiling +
+            "(" + (this.spawn.memory.settings.maxIdleTicks - this.spawn.memory.noIdlerTicks) + ")😴", this.spawn.pos.x, this.spawn.pos.y + 1);
 
         var body = this.buildWorkerBody(availableEnergy, 300, 900);
 
@@ -81,8 +88,8 @@ export class SpawnLogic
 
     private shouldBuildCreep(creepcount : number, energySlots : number) : boolean {
         if (creepcount < energySlots) return true;
-        if (creepcount >= this.spawn.memory.decisionDials.creepCeiling) return false;
-        if (this.spawn.memory.noIdlerTicks > this.spawn.memory.decisionDials.maxIdleTicks) return true;
+        if (creepcount >= this.spawn.memory.settings.creepCeiling) return false;
+        if (this.spawn.memory.noIdlerTicks > this.spawn.memory.settings.maxIdleTicks) return true;
 
         return false;
     }

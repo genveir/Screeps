@@ -1,21 +1,17 @@
 interface FlagMemory { [name: string]: any }
 interface SpawnMemory 
 {  
-    noIdlerTicks: number
-    decisionDials : SpawnDecisionDials
-    debug? : boolean
+    noIdlerTicks: number;
+    settings : SpawnSettings;
+    previousSettings: SpawnSettings;
+    debug? : boolean;
+    settingLog : SpawnSettings[];
 }
 
-interface SpawnDecisionDials {
+interface SpawnSettings {
     maxIdleTicks : number;
     creepCeiling : number;
-    data: SpawnDecisionData
-}
-
-interface SpawnDecisionData {
-    ticksWithHighIdlers: number;
-    ticksAtCeiliing : number;
-    lastFitness : number;
+    fitness : number;
 }
 
 interface Memory 
