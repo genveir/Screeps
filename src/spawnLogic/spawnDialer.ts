@@ -12,7 +12,7 @@ export class SpawnDialer {
 
             var fitness = this.calculateFitness();
             this.spawn.memory.settings.fitness = fitness;
-            this.spawn.memory.settingLog.push(this.spawn.memory.settings);
+            this.spawn.memory.settingLog.push(JSON.parse(JSON.stringify(this.spawn.memory.settings)));
 
             var lastFitness = this.spawn.memory.previousSettings.fitness;
 
@@ -22,13 +22,13 @@ export class SpawnDialer {
             if (lastFitness && fitness < lastFitness * 0.95)
             {
                 if (Memory.debug || this.spawn.memory.debug) console.log("reverting to previous settings");
-                this.spawn.memory.settings = this.spawn.memory.previousSettings;
+                this.spawn.memory.settings = JSON.parse(JSON.stringify(this.spawn.memory.previousSettings));
             }
             else {
                 if (Memory.debug || this.spawn.memory.debug) console.log("iterating on current settings");
             }
             
-            this.spawn.memory.previousSettings = this.spawn.memory.settings;
+            this.spawn.memory.previousSettings = JSON.parse(JSON.stringify(this.spawn.memory.settings));
             this.spawn.memory.settings.fitness = undefined;
 
             this.tweakDials();
