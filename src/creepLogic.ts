@@ -64,7 +64,7 @@ export class CreepLogic {
 
             if (Memory.debug|| this.creep.memory.debug) console.log("considering " + task.type + " prio = " + task.getPriority(this.creep) + " suit = " + task.getSuitability(this.creep) + " claimed = " + task.claimedBy.length + " out of " + task.numAllowed);
 
-            if(task.getSuitability(this.creep) > 0) 
+            if(task.getPriority(this.creep) > 0 && task.getSuitability(this.creep) > 0) 
             {
                 if (task.claimedBy.length < task.numAllowed)
                 {
