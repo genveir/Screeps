@@ -19,6 +19,7 @@ interface Memory
     debug : boolean;
     taskId : number;
     logging : GameLogging
+    hm : boolean // toggles heatmap for every room in Memory.rooms
 }
 
 interface GameLogging {

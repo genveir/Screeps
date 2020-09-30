@@ -6,6 +6,13 @@ import { Logging } from './util/logging';
 
 Logging.init();
 
+if (Memory.hm === true) {
+    for (var r in Memory.rooms) {
+        Memory.rooms[r].drawHeatMap = !Memory.rooms[r].drawHeatMap;
+    }
+    Memory.hm = false;
+}
+
 // clean up dead creep memory
 for (var creepName in Memory.creeps) {
     if (!Game.creeps[creepName]) {
