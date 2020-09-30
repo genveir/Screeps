@@ -1,10 +1,13 @@
+import { MemoryUtil } from './util/memory';
 import { TaskList } from './tasks/tasklist';
 import { GameLogic } from "./gameLogic";
 import { SpawnLogic }  from "./spawnLogic/spawnLogic";
 import { CreepLogic } from "./creepLogic";
 import { Logging } from './util/logging';
 
-Logging.init();
+MemoryUtil.init();
+MemoryUtil.migrate();
+
 
 if (Memory.hm === true) {
     for (var r in Memory.rooms) {

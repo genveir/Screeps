@@ -8,15 +8,13 @@ export class RoomLogic {
     taskLogic : TaskLogic;
 
     constructor(private room: Room) {
-        if (!this.room.memory.taskList) this.room.memory.taskList = [];
-        if (!this.room.memory.energySlots) this.initializeEnergySlots();
-        if (!this.room.memory.roads) this.room.memory.roads = [];
-
         this.buildLogic = new BuildLogic(this.room);
         this.taskLogic = new TaskLogic(this.room);
     }
 
     run() {
+        if (!this.room.memory.energySlots) this.initializeEnergySlots();
+
         if (Memory.debug) console.log("firing towers in " + this.room.name);
         this.fireTowers();
 
@@ -56,7 +54,7 @@ export class RoomLogic {
 
         var energySources = this.room.find(FIND_SOURCES);
 
-        var energySlots : SavedHarvestPosition[] = [];
+        this.room.memory.energySlots = [];
         energySources.forEach(es => {
             var id = es.id;
             var pos = es.pos;
@@ -64,10 +62,8 @@ export class RoomLogic {
             var emptySurrounding = PositionUtil.getEmptySurrounding(pos);
             emptySurrounding.forEach(es => 
             {
-                energySlots.push({ id: id, pos: es })
+                this.room.memory.energySlots!.push({ id: id, pos: es })
             });
         });
-
-        this.room.memory.energySlots = energySlots;
     }
 }

@@ -2,7 +2,7 @@ const iterationLength : number = 3600;
 
 export class SpawnDialer {
     constructor(private spawn : StructureSpawn) {
-        if (!this.spawn.memory.settingLog) this.spawn.memory.settingLog = [];
+        
     }
 
     public runSpawnDialer(creepcount : number, idlers: number) {
@@ -51,7 +51,7 @@ export class SpawnDialer {
             if (Math.random() < 0.5) this.spawn.memory.settings.creepCeiling += difference;
             else this.spawn.memory.settings.creepCeiling -= difference;
 
-            if (this.spawn.room.memory.energySlots.length > this.spawn.memory.settings.creepCeiling) {
+            if (this.spawn.room.memory.energySlots && this.spawn.room.memory.energySlots.length > this.spawn.memory.settings.creepCeiling) {
                 // spawn logic won't do anything with a lower setting.
                 this.spawn.memory.settings.creepCeiling = this.spawn.room.memory.energySlots.length;
             }
@@ -83,10 +83,10 @@ export class SpawnDialer {
             });
         });
 
-        var relevantCreepLogs = Object.keys(this.spawn.room.memory.logging.creepsPerCycle)
+        var relevantCreepLogs = Object.keys(this.spawn.room.memory.logging.workersPerCycle)
             .map(key => <number><any>key)
             .filter((key : number) => key > Game.time - iterationLength / 2)
-            .map(key => this.spawn.room.memory.logging.creepsPerCycle[key]);
+            .map(key => this.spawn.room.memory.logging.workersPerCycle[key]);
 
         var totalCreepCost = relevantCreepLogs.reduce((a, b) => a + b);
 

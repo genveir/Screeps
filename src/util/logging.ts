@@ -1,31 +1,4 @@
 export class Logging {
-    public static init() {
-        if (!Memory.logging) Memory.logging = { lastSaved: null }
-
-        for (var roomName in Game.rooms) {
-            var room = Game.rooms[roomName];
-            if (!room.memory.logging) 
-            {
-                room.memory.logging = { 
-                    controllerPerTick: [], 
-                    controllerPerCycle: {},
-                    creepsCost: [],
-                    creepsPerCycle: {},
-                    sourceStates: [],
-                    sourcesPerCycle: {},
-                    heatMap: {}
-                };
-            }
-            if (!room.memory.logging.controllerPerTick) room.memory.logging.controllerPerTick = [];
-            if (!room.memory.logging.controllerPerCycle) room.memory.logging.controllerPerCycle = {};
-            if (!room.memory.logging.creepsCost) room.memory.logging.creepsCost = [];
-            if (!room.memory.logging.creepsPerCycle) room.memory.logging.creepsPerCycle = {};
-            if (!room.memory.logging.sourceStates) room.memory.logging.sourceStates = [];
-            if (!room.memory.logging.sourcesPerCycle) room.memory.logging.sourcesPerCycle = {};
-            if (!room.memory.logging.heatMap) room.memory.logging.heatMap = {};
-        }
-    }
-
     public static update() {
         for (var roomName in Game.rooms) {
             var room = Game.rooms[roomName];
@@ -46,7 +19,7 @@ export class Logging {
     public static logSpawn(spawn : StructureSpawn, cost : number)
     {
         var room = spawn.room;
-        room.memory.logging.creepsCost.push(cost);
+        room.memory.logging.workersCost.push(cost);
     }
 
     private static updateControllerPerTick(room : Room) {
@@ -68,11 +41,11 @@ export class Logging {
 
     private static updateSpawnCost(room : Room) {
         var total = 0;
-        if (room.memory.logging.creepsCost.length > 0) {
-            total = room.memory.logging.creepsCost.reduce((a, b) => a + b);
+        if (room.memory.logging.workersCost.length > 0) {
+            total = room.memory.logging.workersCost.reduce((a, b) => a + b);
         }
 
-        room.memory.logging.creepsPerCycle[Game.time] = total;
+        room.memory.logging.workersPerCycle[Game.time] = total;
         room.memory.logging.creepsCost = [];
     }
 

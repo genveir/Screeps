@@ -31,6 +31,7 @@ export class TaskLogic {
         if (Memory.debug) console.log("starting manageHarvestTasks");
 
         var harvestSlots = this.room.memory.energySlots;
+        if (!harvestSlots) return;
 
         var harvestTasks = taskList.getAll()
             .filter(ht => ht.type === Harvest.type)

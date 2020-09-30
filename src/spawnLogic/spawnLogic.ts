@@ -6,18 +6,13 @@ import { Logging } from "../util/logging";
 export class SpawnLogic
 {
     constructor(private spawn : StructureSpawn) {
-        if (!spawn.memory.settings) 
-        {
-            spawn.memory.settings = new DecisionDials();
-            spawn.memory.settings.creepCeiling = 10;
-            spawn.memory.settings.maxIdleTicks = 20;
-        }
-        if (!spawn.memory.previousSettings) spawn.memory.previousSettings = new DecisionDials();
+        
     }
 
     public runSpawnLogic() {
         var spawnRoom = this.spawn.room;
-        var energySlots = spawnRoom.memory.energySlots.length;
+        var energySlots : number = 0;
+        if (spawnRoom.memory.energySlots) energySlots = spawnRoom.memory.energySlots.length;
 
         var creeps = spawnRoom.find(FIND_MY_CREEPS);
         var creepcount = creeps.length;

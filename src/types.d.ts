@@ -28,7 +28,7 @@ interface GameLogging {
 
 interface RoomMemory { 
     taskList : string[];
-    energySlots : SavedHarvestPosition[];
+    energySlots? : SavedHarvestPosition[];
     roads : SavedPosition[];
     logging : RoomLogging;
     drawHeatMap? : boolean;
@@ -37,8 +37,10 @@ interface RoomMemory {
  interface RoomLogging {
     controllerPerTick: number[];
     controllerPerCycle: EnergySums;
-    creepsCost : number[];
-    creepsPerCycle: EnergySums;
+    creepsCost? : number[];
+    workersCost : number[];
+    creepsPerCycle?: EnergySums;
+    workersPerCycle: EnergySums;
     sourceStates : SourceState[];
     sourcesPerCycle: SourceStats;
     heatMap : {[pos: number]: number}

@@ -12,8 +12,6 @@ export class CreepLogic {
     {
         if(this.creep.spawning) return;
 
-        if (!this.creep.memory.savedTask) {this.creep.memory.savedTask = {active: false, roomName: "", taskId: ""}};
-
         var task : Task;
         
         var savedTask : Task | null;
