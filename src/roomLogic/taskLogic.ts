@@ -216,7 +216,10 @@ export class TaskLogic {
         scoutingTargets.forEach(st => {
             var scoutCount = scoutTasks.filter(sc => sc.roomName == st.roomName).length;
 
-            if (scoutCount === 0) taskList.addTask(new Scout(TaskList.getNewId(), [], st.roomName));
+            if (scoutCount === 0) 
+            {
+                taskList.addTask(new Scout(TaskList.getNewId(), [], st.roomName));                
+            }
         });
     }
 }

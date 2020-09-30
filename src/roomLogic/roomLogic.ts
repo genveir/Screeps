@@ -82,20 +82,26 @@ export class RoomLogic {
     }
 
     private setScoutingTargets() {
-        var neighbours = Game.map.describeExits(this.room.name);
+        Memory.scoutingTargets = Memory.scoutingTargets.filter(st => st.roomName !== this.room.name);
 
-        var rooms : string[] = [];
-        if (neighbours[FIND_EXIT_BOTTOM]) rooms.push(neighbours[FIND_EXIT_BOTTOM]!);
-        if (neighbours[FIND_EXIT_LEFT]) rooms.push(neighbours[FIND_EXIT_LEFT]!);
-        if (neighbours[FIND_EXIT_RIGHT]) rooms.push(neighbours[FIND_EXIT_RIGHT]!);
-        if (neighbours[FIND_EXIT_TOP]) rooms.push(neighbours[FIND_EXIT_TOP]!);
+        var owner = this.room.memory.owner.owner;
+        if (owner === "none" || owner === Memory.me)
+        {
+            var neighbours = Game.map.describeExits(this.room.name);
 
-        rooms.forEach(r => {
-            if (!Memory.rooms[r]) {
-                if (Memory.scoutingTargets.filter(st => st.roomName === r).length === 0) {
-                    Memory.scoutingTargets.push({roomName: r, claimedBy: null})
+            var rooms : string[] = [];
+            if (neighbours[FIND_EXIT_BOTTOM]) rooms.push(neighbours[FIND_EXIT_BOTTOM]!);
+            if (neighbours[FIND_EXIT_LEFT]) rooms.push(neighbours[FIND_EXIT_LEFT]!);
+            if (neighbours[FIND_EXIT_RIGHT]) rooms.push(neighbours[FIND_EXIT_RIGHT]!);
+            if (neighbours[FIND_EXIT_TOP]) rooms.push(neighbours[FIND_EXIT_TOP]!);
+
+            rooms.forEach(r => {
+                if (!Memory.rooms[r]) {
+                    if (Memory.scoutingTargets.filter(st => st.roomName === r).length === 0) {
+                        Memory.scoutingTargets.push({roomName: r, claimedBy: null})
+                    }
                 }
-            }
-        })
+            });
+        }
     }
 }

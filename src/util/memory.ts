@@ -56,17 +56,9 @@ export class MemoryUtil {
 
     public static migrate() {
         for (var r in Memory.rooms) {
-            var roomMem = Memory.rooms[r];
-
-            if (roomMem.logging.creepsCost) {
-                roomMem.logging.workersCost = roomMem.logging.creepsCost;
-                roomMem.logging.creepsCost = undefined;
-            }
-
-            if (roomMem.logging.creepsPerCycle) {
-                roomMem.logging.workersPerCycle = roomMem.logging.creepsPerCycle;
-                roomMem.logging.creepsPerCycle = undefined;
-            }
+            if (r != "W3N4") delete Memory.rooms[r];
+            Memory.scoutingTargets = [];
+            
         }
     }
 }

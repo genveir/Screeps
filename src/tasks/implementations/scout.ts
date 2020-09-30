@@ -19,7 +19,7 @@ export class Scout extends BaseTask implements Task {
     }
 
     protected _getPriority(creep : Creep) {
-        return 100000;
+        return 1000000;
     }
 
     protected _getSuitability(creep: Creep) {

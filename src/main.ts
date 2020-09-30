@@ -41,7 +41,7 @@ if (Memory.debug) console.log("starting creeplogic");
 // run logic per creep
 for (var creepName in Game.creeps) {
     var creep = Game.creeps[creepName];
-    
+
     var creepLogic = new CreepLogic(creep);
     creepLogic.run();
 }

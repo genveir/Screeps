@@ -12,6 +12,7 @@ export class SpawnLogic
 
     public runSpawnLogic() {
         this.manageWorkerTasks();
+        this.manageScoutTasks();
 
         if (!this.spawn.spawning) {
             var task = this.getTask();
@@ -22,9 +23,9 @@ export class SpawnLogic
                     if (Memory.debug || this.spawn.memory.debug) console.log("building creep " + JSON.stringify(body));
                     var result = this.spawn.spawnCreep(
                         body.body, 
-                        'Creep' + Game.time, 
+                        task.getName() + Game.time, 
                         { 
-                            memory: task.memory
+                            memory: this.getEmptyMemory(task.type)
                         }
                     );
                     if (result === 0) {
@@ -36,15 +37,24 @@ export class SpawnLogic
         }
     }
 
+    private manageScoutTasks() : void {
+        for (var c in Game.creeps) {
+            var creep = Game.creeps[c];
+            if (creep.memory.type === 1) return;
+        }
+
+        //this.spawn.room.memory.spawnTasks.push(new SpawnTask(TaskList.getNewId(), 95, 1));
+    }
+
     private manageWorkerTasks() : void {
         var spawnRoom = this.spawn.room;
         var energySlots : number = 0;
         if (spawnRoom.memory.energySlots) energySlots = spawnRoom.memory.energySlots.length;
 
-        var creeps = spawnRoom.find(FIND_MY_CREEPS);
-        var workercount = creeps.length;
+        var workers = spawnRoom.find(FIND_MY_CREEPS).filter(c => c.memory.type === 0);
+        var workercount = workers.length;
 
-        var idlingWorkers = this.getIdlingCreeps(creeps);
+        var idlingWorkers = this.getIdlingCreeps(workers);
         if (idlingWorkers === 0) this.spawn.memory.noIdlerTicks++;
         else this.spawn.memory.noIdlerTicks = 0;
         
@@ -56,16 +66,17 @@ export class SpawnLogic
 
         
         if (this.shouldBuildWorker(spawnRoom, workercount, energySlots)) {
-            spawnRoom.memory.spawnTasks.push(new SpawnTask(TaskList.getNewId(), 100, 0, this.getWorkerMemory()))
+            spawnRoom.memory.spawnTasks.push(new SpawnTask(TaskList.getNewId(), 100, 0))
         }
 
         new SpawnDialer(this.spawn).runSpawnDialer(workercount, idlingWorkers);
     }
 
-    private getWorkerMemory() : CreepMemory {
+    private getEmptyMemory(type: CreepType) : CreepMemory {
         return {
             savedTask: {taskId: "", active: false, roomName: this.spawn.room.name},
-            lastPositions: [null, null]
+            lastPositions: [null, null],
+            type: type
          }
     }
 
@@ -75,7 +86,7 @@ export class SpawnLogic
         if (spawnRoom.memory.spawnTasks.length === 0) return null;
         var task = spawnRoom.memory.spawnTasks[spawnRoom.memory.spawnTasks.length - 1];
 
-        return new SpawnTask(task.id, task.priority, task.type, task.memory);
+        return new SpawnTask(task.id, task.priority, task.type);
     }
 
     private getIdlingCreeps(creeps : Creep[]) : number {
@@ -111,6 +122,7 @@ export class SpawnLogic
     private shouldBuildWorker(spawnRoom: Room, creepcount : number, energySlots : number) : boolean {
         if (spawnRoom.memory.spawnTasks.some(st => st.type === 0)) return false;
         
+
         if (creepcount < energySlots) return true;
         if (creepcount >= this.spawn.memory.settings.creepCeiling) return false;
         if (this.spawn.memory.noIdlerTicks > this.spawn.memory.settings.maxIdleTicks) return true;

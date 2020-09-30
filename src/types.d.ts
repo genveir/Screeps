@@ -47,7 +47,6 @@ interface SavedSpawnTask {
     id : string;
     type : CreepType;
     priority : number;
-    memory : CreepMemory;
 }
 
 interface RoomLogging {
@@ -101,6 +100,7 @@ interface CreepMemory {
     savedTask : SavedTask;
     lastPositions : (SavedPosition | null)[]
     debug? : boolean;
+    type : CreepType;
 }
 
 interface SavedTask {
