@@ -3,7 +3,7 @@ export class PositionUtil {
     {
         var terrain = new Room.Terrain(pos.roomName);
 
-        return this.getSurroundings(pos).filter(p => terrain.get(p.x, p.y) === 1);
+        return this.getSurroundings(pos).filter(p => terrain.get(p.x, p.y) === 0);
     }
 
     public static getSurroundings(pos : RoomPosition) : RoomPosition[] {
