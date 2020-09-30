@@ -46,7 +46,8 @@ export class SpawnLogic
                                 active: false, 
                                 roomName: this.spawn.room.name, 
                                 taskId: ""
-                            }
+                            },
+                            lastPositions: [null, null]
                         }
                     });
                 if (result === 0) Logging.logSpawn(this.spawn, body.cost);

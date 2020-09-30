@@ -72,6 +72,7 @@ interface RoomMemory {
 
 interface CreepMemory {
     savedTask : SavedTask;
+    lastPositions : (SavedPosition | null)[]
     debug? : boolean;
 }
 
