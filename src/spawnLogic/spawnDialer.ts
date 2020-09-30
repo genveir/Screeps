@@ -51,7 +51,7 @@ export class SpawnDialer {
             if (Math.random() < 0.5) this.spawn.memory.settings.creepCeiling += difference;
             else this.spawn.memory.settings.creepCeiling -= difference;
 
-            if (this.spawn.room.memory.energySlots.length < this.spawn.memory.settings.creepCeiling) {
+            if (this.spawn.room.memory.energySlots.length > this.spawn.memory.settings.creepCeiling) {
                 // spawn logic won't do anything with a lower setting.
                 this.spawn.memory.settings.creepCeiling = this.spawn.room.memory.energySlots.length;
             }
