@@ -7,6 +7,7 @@ import { ErrorTask } from './implementations/error';
 import { Idle } from './implementations/idle';
 import { Fill } from './implementations/fill';
 import { Grab } from './implementations/grab';
+import { Scout } from './implementations/scout';
 
 export class TaskFactory {
     public CreateTask(serialized : string) : Task {
@@ -29,7 +30,8 @@ export class TaskFactory {
             case Fill.type : return new Fill(deserialized.id, deserialized.claimedBy, deserialized.numAllowed, deserialized.structure);
             case Idle.type: return new Idle(deserialized.id);
             case Grab.type: return new Grab(deserialized.id, deserialized.claimedBy, deserialized.numAllowed, deserialized.item);
-            default: return new ErrorTask(deserialized.id, deserialized);
+            case Scout.type: return new Scout(deserialized.id, deserialized.claimedBy, deserialized.roomName);
+            default: return new ErrorTask(deserialized.id, serialized);
         }
     }
 

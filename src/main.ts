@@ -8,6 +8,7 @@ import { Logging } from './util/logging';
 MemoryUtil.init();
 MemoryUtil.migrate();
 
+if (!Memory.me) Memory.me = "GBOY";
 
 if (Memory.hm === true) {
     for (var r in Memory.rooms) {

@@ -1,4 +1,3 @@
-import { Logging } from './../util/logging';
 import { TaskLogic } from './taskLogic';
 import { BuildLogic } from './buildLogic';
 import { PositionUtil } from '../util/position';
@@ -14,9 +13,24 @@ export class RoomLogic {
 
     run() {
         if (!this.room.memory.energySlots) this.initializeEnergySlots();
+        if (this.room.controller) {
+            var name : string;
+            if (this.room.controller.owner) {
+                name = this.room.controller.owner.username;
+            }
+            else {
+                name = "none";
+            }
+            this.room.memory.owner = {owner: name, level: this.room.controller.level};
+
+            Memory.scoutingTargets = Memory.scoutingTargets.filter(st => st.roomName != this.room.name);
+        }
 
         if (Memory.debug) console.log("firing towers in " + this.room.name);
         this.fireTowers();
+
+        if (Memory.debug) console.log("setting scouting targets for " + this.room.name);
+        this.setScoutingTargets();
 
         if (Memory.debug) console.log("running build logic for " + this.room.name);
         this.buildLogic.run();
@@ -65,5 +79,23 @@ export class RoomLogic {
                 this.room.memory.energySlots!.push({ id: id, pos: es })
             });
         });
+    }
+
+    private setScoutingTargets() {
+        var neighbours = Game.map.describeExits(this.room.name);
+
+        var rooms : string[] = [];
+        if (neighbours[FIND_EXIT_BOTTOM]) rooms.push(neighbours[FIND_EXIT_BOTTOM]!);
+        if (neighbours[FIND_EXIT_LEFT]) rooms.push(neighbours[FIND_EXIT_LEFT]!);
+        if (neighbours[FIND_EXIT_RIGHT]) rooms.push(neighbours[FIND_EXIT_RIGHT]!);
+        if (neighbours[FIND_EXIT_TOP]) rooms.push(neighbours[FIND_EXIT_TOP]!);
+
+        rooms.forEach(r => {
+            if (!Memory.rooms[r]) {
+                if (Memory.scoutingTargets.filter(st => st.roomName === r).length === 0) {
+                    Memory.scoutingTargets.push({roomName: r, claimedBy: null})
+                }
+            }
+        })
     }
 }

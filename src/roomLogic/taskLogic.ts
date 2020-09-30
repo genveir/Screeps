@@ -5,6 +5,7 @@ import { Repair } from "../tasks/implementations/repair";
 import { TaskList } from "../tasks/tasklist";
 import { Upgrade } from "../tasks/implementations/upgrade";
 import { Grab } from '../tasks/implementations/grab';
+import { Scout } from '../tasks/implementations/scout';
 
 export class TaskLogic {
     constructor(private room : Room) {
@@ -23,6 +24,8 @@ export class TaskLogic {
         this.manageRepairTasks(taskList);
         this.manageFillTasks(taskList);
         this.manageGrabTasks(taskList);
+
+        this.manageScoutingTasks(taskList);
 
         this.room.memory.taskList = taskList.serialize();
     }
@@ -200,6 +203,20 @@ export class TaskLogic {
             if (grabCount === 0) {
                 taskList.addTask(new Grab(TaskList.getNewId(), [], 5, c.id));
             }
+        });
+    }
+
+    private manageScoutingTasks(taskList: TaskList) {
+        if (Memory.debug) console.log("starting manageScoutingTasks");
+
+        var scoutingTargets = Memory.scoutingTargets;
+
+        var scoutTasks = taskList.getAll().filter(t => t.type === Scout.type).map(t => <Scout>t);
+
+        scoutingTargets.forEach(st => {
+            var scoutCount = scoutTasks.filter(sc => sc.roomName == st.roomName).length;
+
+            if (scoutCount === 0) taskList.addTask(new Scout(TaskList.getNewId(), [], st.roomName));
         });
     }
 }

@@ -3,6 +3,7 @@ import { DecisionDials } from "../spawnLogic/decisionData";
 export class MemoryUtil {
     public static init() {
         if (!Memory.logging) Memory.logging = { lastSaved: null }
+        if (!Memory.scoutingTargets) Memory.scoutingTargets = [];
 
         for (var r in Memory.rooms) {
             var roomMem = Memory.rooms[r];
@@ -26,9 +27,11 @@ export class MemoryUtil {
             if (!roomMem.logging.sourceStates) roomMem.logging.sourceStates = [];
             if (!roomMem.logging.sourcesPerCycle) roomMem.logging.sourcesPerCycle = {};
             if (!roomMem.logging.heatMap) roomMem.logging.heatMap = {};
-
+            
+            if (!roomMem.spawnTasks) roomMem.spawnTasks = [];
             if (!roomMem.taskList) roomMem.taskList = [];
             if (!roomMem.roads) roomMem.roads = [];
+            if (!roomMem.owner) roomMem.owner = {owner: "none", level: 0};
         }
 
         for (var s in Memory.spawns) {

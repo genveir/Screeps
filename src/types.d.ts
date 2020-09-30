@@ -18,8 +18,15 @@ interface Memory
 { 
     debug : boolean;
     taskId : number;
-    logging : GameLogging
+    logging : GameLogging;
+    scoutingTargets : ScoutingTask[]
+    me: string
     hm : boolean // toggles heatmap for every room in Memory.rooms
+}
+
+interface ScoutingTask {
+    roomName : string;
+    claimedBy : Id<Creep> | null;
 }
 
 interface GameLogging {
@@ -32,9 +39,18 @@ interface RoomMemory {
     roads : SavedPosition[];
     logging : RoomLogging;
     drawHeatMap? : boolean;
+    spawnTasks : SavedSpawnTask[];
+    owner : {owner : string; level : number;};
  }
 
- interface RoomLogging {
+interface SavedSpawnTask {
+    id : string;
+    type : CreepType;
+    priority : number;
+    memory : CreepMemory;
+}
+
+interface RoomLogging {
     controllerPerTick: number[];
     controllerPerCycle: EnergySums;
     creepsCost? : number[];
@@ -44,34 +60,42 @@ interface RoomMemory {
     sourceStates : SourceState[];
     sourcesPerCycle: SourceStats;
     heatMap : {[pos: number]: number}
- }
+}
 
- interface EnergySums { [finalTick: number]: number}
+type CREEPTYPE_WORKER = 0;
+type CREEPTYPE_SCOUT = 1;
 
- interface SourceState {
+declare const CREEPTYPE_WORKER: CREEPTYPE_WORKER;
+declare const CREEPTYPE_SCOUT: CREEPTYPE_SCOUT;
+
+type CreepType = CREEPTYPE_WORKER | CREEPTYPE_SCOUT
+
+interface EnergySums { [finalTick: number]: number}
+
+interface SourceState {
      id: Id<Source>;
      energy: number;
- }
+}
 
- interface SourceStats { [finalTick: number]: SourceStat[] }
+interface SourceStats { [finalTick: number]: SourceStat[] }
 
- interface SourceStat {
+interface SourceStat {
     id : string;
     energyHarvested : number;
     numEmptyTicks: number;
     numFullTicks : number;
- }
+}
 
- interface SavedHarvestPosition {
+interface SavedHarvestPosition {
      id: Id<Source>,
      pos: SavedPosition
- }
+}
 
- interface SavedPosition {
+interface SavedPosition {
     x: number,
     y: number,
     roomName: string
- }
+}
 
 interface CreepMemory {
     savedTask : SavedTask;
