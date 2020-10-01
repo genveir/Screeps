@@ -55,10 +55,6 @@ export class MemoryUtil {
     }
 
     public static migrate() {
-        for (var r in Memory.rooms) {
-            if (r != "W3N4") delete Memory.rooms[r];
-            Memory.scoutingTargets = [];
-            
-        }
+
     }
 }

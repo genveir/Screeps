@@ -9,26 +9,28 @@ export class GameLogic {
             var room = Game.rooms[roomName];
             new RoomLogic(room).run();
 
+            if (room.memory.owner.owner === Memory.me) {
 
-            if (Memory.debug) console.log("setting room visuals");
-            if (room.memory.drawHeatMap) RoadUtil.drawHeatMap(room);
+                if (Memory.debug) console.log("setting room visuals");
+                if (room.memory.drawHeatMap) RoadUtil.drawHeatMap(room);
 
-            if (Memory.logging.lastSaved && room.controller)
-            {
-                var lastSum = room.memory.logging.controllerPerCycle[Memory.logging.lastSaved];
-                new RoomVisual(room.name).text(lastSum + "⚡ (" + (300 - Game.time % 300) + "...)", room.controller.pos.x, room.controller.pos.y + 1, {font: 0.5});
+                if (Memory.logging.lastSaved && room.controller)
+                {
+                    var lastSum = room.memory.logging.controllerPerCycle[Memory.logging.lastSaved];
+                    new RoomVisual(room.name).text(lastSum + "⚡ (" + (300 - Game.time % 300) + "...)", room.controller.pos.x, room.controller.pos.y + 1, {font: 0.5});
 
-                var lastStates = room.memory.logging.sourcesPerCycle[Memory.logging.lastSaved];
-                if (lastStates) {
-                    room.find(FIND_SOURCES).forEach(source => {
-                        var lastState = lastStates.filter(ls => ls.id === source.id);
-                        if (lastState) new RoomVisual(room.name).text(lastState[0].energyHarvested + "⚡ " + lastState[0].numEmptyTicks + "🚫 " + lastState[0].numFullTicks + "☀", source.pos.x, source.pos.y + 1, {font: 0.5});
-                    });
+                    var lastStates = room.memory.logging.sourcesPerCycle[Memory.logging.lastSaved];
+                    if (lastStates) {
+                        room.find(FIND_SOURCES).forEach(source => {
+                            var lastState = lastStates.filter(ls => ls.id === source.id);
+                            if (lastState) new RoomVisual(room.name).text(lastState[0].energyHarvested + "⚡ " + lastState[0].numEmptyTicks + "🚫 " + lastState[0].numFullTicks + "☀", source.pos.x, source.pos.y + 1, {font: 0.5});
+                        });
+                    }
+
+                    var spawn = "🚧"
+
+                    if (Memory.debug) console.log("done with room visuals");
                 }
-
-                var spawn = "🚧"
-
-                if (Memory.debug) console.log("done with room visuals");
             }
         }
     }

@@ -43,7 +43,9 @@ export class SpawnLogic
             if (creep.memory.type === 1) return;
         }
 
-        //this.spawn.room.memory.spawnTasks.push(new SpawnTask(TaskList.getNewId(), 95, 1));
+        if (this.spawn.room.memory.spawnTasks.some(st => st.type === 1)) return;
+
+        this.spawn.room.memory.spawnTasks.push(new SpawnTask(TaskList.getNewId(), 95, 1));
     }
 
     private manageWorkerTasks() : void {
@@ -92,7 +94,7 @@ export class SpawnLogic
     private getIdlingCreeps(creeps : Creep[]) : number {
         var spawnRoom = this.spawn.room;
 
-        var taskList = TaskList.getInstance(spawnRoom);
+        var taskList = TaskList.getInstance(spawnRoom.memory);
         
         var idlingCreeps = creeps.map(c => c.memory.savedTask.taskId)
             .map(tid => taskList.getById(tid))

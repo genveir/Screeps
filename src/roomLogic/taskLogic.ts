@@ -14,16 +14,18 @@ export class TaskLogic {
 
     run() {
         // persistent task list
-        if (Memory.debug) console.log("loading task list");
-        var taskList = TaskList.getInstance(this.room);
+        if (Memory.debug || this.room.memory.debug) console.log("loading task list");
+        var taskList = TaskList.getInstance(this.room.memory);
 
-        this.manageHarvestTasks(taskList);
-        this.manageUpgradeTasks(taskList);
+        if (this.room.memory.owner.owner === Memory.me) {
+            this.manageHarvestTasks(taskList);
+            this.manageUpgradeTasks(taskList);
 
-        this.manageBuildTasks(taskList);
-        this.manageRepairTasks(taskList);
-        this.manageFillTasks(taskList);
-        this.manageGrabTasks(taskList);
+            this.manageBuildTasks(taskList);
+            this.manageRepairTasks(taskList);
+            this.manageFillTasks(taskList);
+            this.manageGrabTasks(taskList);
+        }
 
         this.manageScoutingTasks(taskList);
 
@@ -31,7 +33,7 @@ export class TaskLogic {
     }
 
     private manageHarvestTasks(taskList : TaskList) {
-        if (Memory.debug) console.log("starting manageHarvestTasks");
+        if (Memory.debug || this.room.memory.debug) console.log("starting manageHarvestTasks");
 
         var harvestSlots = this.room.memory.energySlots;
         if (!harvestSlots) return;
@@ -56,7 +58,7 @@ export class TaskLogic {
     }
 
     private manageUpgradeTasks(taskList : TaskList) {
-        if (Memory.debug) console.log("starting manageUpgradeTasks");
+        if (Memory.debug || this.room.memory.debug) console.log("starting manageUpgradeTasks");
         
         var controller = this.room.controller;
         if (!controller) return;
@@ -73,7 +75,7 @@ export class TaskLogic {
     }
 
     private manageBuildTasks(taskList : TaskList) : void {
-        if (Memory.debug) console.log("starting manageBuildTasks");
+        if (Memory.debug || this.room.memory.debug) console.log("starting manageBuildTasks");
         
         var constructionSites = this.room.find(FIND_CONSTRUCTION_SITES);
         var buildTasks = taskList.getAll().filter(t => t.type === Build.type).map(t => <Build>t);
@@ -88,7 +90,7 @@ export class TaskLogic {
     }
 
     private manageRepairTasks(taskList : TaskList) : void {
-        if (Memory.debug) console.log("starting manageRepairTasks");
+        if (Memory.debug || this.room.memory.debug) console.log("starting manageRepairTasks");
         
         var toRepair : Structure[] = this.room.find(FIND_STRUCTURES).filter(s => s.hits < s.hitsMax * .25);
 
@@ -109,7 +111,7 @@ export class TaskLogic {
     }
 
     private manageFillTasks(taskList : TaskList) : void {
-        if (Memory.debug) console.log("starting manageFillTasks");
+        if (Memory.debug || this.room.memory.debug) console.log("starting manageFillTasks");
         
         var fillAble = this.room.find(FIND_STRUCTURES)
             .filter(s => this.isFillable(s))
@@ -155,7 +157,7 @@ export class TaskLogic {
     }
 
     private manageGrabTasks(taskList : TaskList) {
-        if (Memory.debug) console.log("starting manageGrabTasks");
+        if (Memory.debug || this.room.memory.debug) console.log("starting manageGrabTasks");
 
         var grabTasks = taskList.getAll().filter(t => t.type === Grab.type).map(t => <Grab>t);
 
@@ -165,7 +167,7 @@ export class TaskLogic {
     }
 
     private manageGrabTombstoneTasks(taskList : TaskList, grabTasks : Grab[]) {
-        if (Memory.debug) console.log("starting manageGrabTombstoneTasks");
+        if (Memory.debug || this.room.memory.debug) console.log("starting manageGrabTombstoneTasks");
         
         var tombstones = this.room.find(FIND_TOMBSTONES);
 
@@ -179,7 +181,7 @@ export class TaskLogic {
     }
 
     private manageGrabRuinTasks(taskList : TaskList, grabTasks : Grab[]) {
-        if (Memory.debug) console.log("starting manageGrabRuinTasks");
+        if (Memory.debug || this.room.memory.debug) console.log("starting manageGrabRuinTasks");
         
         var ruins = this.room.find(FIND_RUINS);
 
@@ -193,7 +195,7 @@ export class TaskLogic {
     }
 
     private manageGrabContainerTasks(taskList : TaskList, grabTasks : Grab[]) {
-        if (Memory.debug) console.log("starting manageGrabContainerTasks");
+        if (Memory.debug || this.room.memory.debug) console.log("starting manageGrabContainerTasks");
         
         var containers = this.room.find(FIND_STRUCTURES).filter(s => s.structureType === STRUCTURE_CONTAINER);
 
@@ -207,7 +209,7 @@ export class TaskLogic {
     }
 
     private manageScoutingTasks(taskList: TaskList) {
-        if (Memory.debug) console.log("starting manageScoutingTasks");
+        if (Memory.debug || this.room.memory.debug) console.log("starting manageScoutingTasks");
 
         var scoutingTargets = Memory.scoutingTargets;
 

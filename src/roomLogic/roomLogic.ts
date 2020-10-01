@@ -9,6 +9,8 @@ export class RoomLogic {
     constructor(private room: Room) {
         this.buildLogic = new BuildLogic(this.room);
         this.taskLogic = new TaskLogic(this.room);
+
+        this.room.memory.name = room.name;
     }
 
     run() {
@@ -26,19 +28,21 @@ export class RoomLogic {
             Memory.scoutingTargets = Memory.scoutingTargets.filter(st => st.roomName != this.room.name);
         }
 
-        if (Memory.debug) console.log("firing towers in " + this.room.name);
-        this.fireTowers();
+        if (this.room.memory.owner.owner === Memory.me) {
+            if (Memory.debug || this.room.memory.debug) console.log("firing towers in " + this.room.name);
+            this.fireTowers();
 
-        if (Memory.debug) console.log("setting scouting targets for " + this.room.name);
+            if (Memory.debug || this.room.memory.debug) console.log("running build logic for " + this.room.name);
+            this.buildLogic.run();
+        }
+
+        if (Memory.debug || this.room.memory.debug) console.log("setting scouting targets for " + this.room.name);
         this.setScoutingTargets();
 
-        if (Memory.debug) console.log("running build logic for " + this.room.name);
-        this.buildLogic.run();
-
-        if (Memory.debug) console.log("running task logic for " + this.room.name);
+        if (Memory.debug || this.room.memory.debug) console.log("running task logic for " + this.room.name);
         this.taskLogic.run();
 
-        if (Memory.debug) console.log("finished with room logic");
+        if (Memory.debug || this.room.memory.debug) console.log("finished with room logic");
     }
 
     private fireTowers() {

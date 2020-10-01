@@ -43,7 +43,7 @@ for (var creepName in Game.creeps) {
     var creep = Game.creeps[creepName];
 
     var creepLogic = new CreepLogic(creep);
-    creepLogic.run();
+    creepLogic.runCreepLogic();
 }
 
 Logging.update();

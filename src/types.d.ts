@@ -34,6 +34,7 @@ interface GameLogging {
 }
 
 interface RoomMemory { 
+    name : string
     taskList : string[];
     energySlots? : SavedHarvestPosition[];
     roads : SavedPosition[];
@@ -41,6 +42,7 @@ interface RoomMemory {
     drawHeatMap? : boolean;
     spawnTasks : SavedSpawnTask[];
     owner : {owner : string; level : number;};
+    debug? : boolean;
  }
 
 interface SavedSpawnTask {

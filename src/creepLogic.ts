@@ -8,10 +8,21 @@ export class CreepLogic {
         
     }
 
-    public run()
+    public runCreepLogic()
     {
         if(this.creep.spawning) return;
 
+        var task = this.resolveTask();
+        
+        task.execute(this.creep);
+
+        if (Memory.debug || this.creep.memory.debug)
+        {
+            new RoomVisual(this.creep.room.name).text(task.type + ", ⚡" + this.creep.store.energy + "/" + this.creep.store.getCapacity(), this.creep.pos, {font: 0.3});
+        }
+    }
+
+    private resolveTask() : Task {
         var task : Task;
         
         var savedTask : Task | null;
@@ -29,18 +40,13 @@ export class CreepLogic {
             task.claim(this.creep);
         }
         else task = savedTask;
-        
-        task.execute(this.creep);
 
-        if (Memory.debug || this.creep.memory.debug)
-        {
-            new RoomVisual(this.creep.room.name).text(task.type + ", ⚡" + this.creep.store.energy + "/" + this.creep.store.getCapacity(), this.creep.pos, {font: 0.3});
-        }
+        return task;
     }
 
     private getTask() : Task
     {
-        var tasks = TaskList.getInstance(this.creep.room).getAll();
+        var tasks = TaskList.getInstance(this.creep.room.memory).getAll();
 
         tasks.sort((a, b) => {
             var aPrio = a.getPriority(this.creep);

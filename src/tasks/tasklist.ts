@@ -4,35 +4,34 @@ import { Task } from './task';
 export class TaskList {
     private tasks : Task[]
 
-    private constructor(private room : Room) {
+    private constructor(private roomMem : RoomMemory) {
         var factory = new TaskFactory();
 
-        this.tasks = room.memory.taskList.map(t => factory.CreateTask(t));
+        this.tasks = roomMem.taskList.map(t => factory.CreateTask(t));
     }
 
     private static _instances : Map<string, TaskList>;
     public static getInstanceByName(roomName : string) : TaskList | null
     {
-        var room = Game.rooms[roomName];
-        if (room) return this.getInstance(room);
+        var roomMem = Memory.rooms[roomName];
+        if (roomMem) return this.getInstance(roomMem);
         else return null;
     }
-    public static getInstance(room : Room) : TaskList
-    {
+    public static getInstance(roomMem : RoomMemory) : TaskList {
         if (!this._instances) this._instances = new Map<string, TaskList>();
 
-        if (!TaskList._instances.get(room.name)) {
-            TaskList._instances.set(room.name, new TaskList(room));
+        if (!TaskList._instances.get(roomMem.name)) {
+            TaskList._instances.set(roomMem.name, new TaskList(roomMem));
         }
 
-        return TaskList._instances.get(room.name)!;
+        return TaskList._instances.get(roomMem.name)!;
     }
 
     public static saveAll() {
         for (var roomName in Game.rooms)
         {
             var room = Game.rooms[roomName];
-            room.memory.taskList = this.getInstance(room).serialize();
+            room.memory.taskList = this.getInstance(room.memory).serialize();
         }
     }
 
