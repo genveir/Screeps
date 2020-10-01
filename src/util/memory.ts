@@ -5,8 +5,9 @@ export class MemoryUtil {
         if (!Memory.logging) Memory.logging = { lastSaved: null }
         if (!Memory.scoutingTargets) Memory.scoutingTargets = [];
 
-        for (var r in Memory.rooms) {
+        for (var r in Game.rooms) {
             var roomMem = Memory.rooms[r];
+            if (!roomMem) roomMem = <any>{};
 
             if (!roomMem.logging) 
             {
@@ -34,7 +35,7 @@ export class MemoryUtil {
             if (!roomMem.owner) roomMem.owner = {owner: "none", level: 0};
         }
 
-        for (var s in Memory.spawns) {
+        for (var s in Game.spawns) {
             var spawnMem = Memory.spawns[s];
 
             if (!spawnMem.settingLog) spawnMem.settingLog = [];
@@ -47,7 +48,7 @@ export class MemoryUtil {
             if (!spawnMem.previousSettings) spawnMem.previousSettings = new DecisionDials();
         }
 
-        for (var c in Memory.creeps) {
+        for (var c in Game.creeps) {
             var creepMem = Memory.creeps[c];
             if (!creepMem.savedTask) {creepMem.savedTask = {active: false, roomName: "", taskId: ""}};
         }

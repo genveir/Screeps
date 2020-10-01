@@ -1,3 +1,4 @@
+import { MemoryUtil } from './../util/memory';
 import { Fill } from '../tasks/implementations/fill';
 import { Build } from "../tasks/implementations/build";
 import { Harvest } from "../tasks/implementations/harvest";

@@ -15,17 +15,17 @@ export class RoomLogic {
 
     runRoomLogic() {
         if (!this.room.memory.energySlots) this.initializeEnergySlots();
+        
+        var name : string;
+        var level : number;
         if (this.room.controller) {
-            var name : string;
             if (this.room.controller.owner) {
                 name = this.room.controller.owner.username;
             }
             else {
                 name = "none";
             }
-            this.room.memory.owner = {owner: name, level: this.room.controller.level};
-
-            Memory.scoutingTargets = Memory.scoutingTargets.filter(st => st.roomName != this.room.name);
+            level = this.room.controller.level;
         }
         else {
             var invaderCreeps = this.room.find(FIND_CREEPS)
@@ -34,9 +34,14 @@ export class RoomLogic {
             var sourceKeepers = this.room.find(FIND_STRUCTURES)
                 .filter(s => s.structureType === STRUCTURE_KEEPER_LAIR);
 
-            if (invaderCreeps.length > 0 || sourceKeepers.length > 0)
-                name = "Invader";
+            if (invaderCreeps.length > 0 || sourceKeepers.length > 0) name = "Invader";
+            else name = "none"
+
+            level = 0;
         }
+        this.room.memory.owner = {owner: name, level: level};
+
+        Memory.scoutingTargets = Memory.scoutingTargets.filter(st => st.roomName != this.room.name);
 
         if (this.room.memory.owner.owner === Memory.me) {
             if (Memory.debug || this.room.memory.debug) console.log("firing towers in " + this.room.name);

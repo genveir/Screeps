@@ -30,7 +30,8 @@ export class SpawnLogic
                     );
                     if (result === 0) {
                         task.fulfill(this.spawn);
-                        Logging.logSpawn(this.spawn, body.cost);
+
+                        if (task.type === 0) Logging.logSpawn(this.spawn, body.cost);
                     }
                 }
             }
