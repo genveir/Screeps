@@ -3,15 +3,17 @@ export class Logging {
         for (var roomName in Game.rooms) {
             var room = Game.rooms[roomName];
 
-            this.updateControllerPerTick(room);
-            this.updateSourcesPerTick(room);
+            if (room.controller && room.controller.owner && room.controller.owner.username == Memory.me) {
+                this.updateControllerPerTick(room);
+                this.updateSourcesPerTick(room);
             
-            if (Game.time % 300 === 0) {
-                this.updateControllerPerCycle(room);
-                this.updateSpawnCost(room);
-                this.updateSourceStats(room);
+                if (Game.time % 300 === 0) {
+                    this.updateControllerPerCycle(room);
+                    this.updateSpawnCost(room);
+                    this.updateSourceStats(room);
 
-                Memory.logging.lastSaved = Game.time;
+                    Memory.logging.lastSaved = Game.time;
+                }
             }
         }
     }

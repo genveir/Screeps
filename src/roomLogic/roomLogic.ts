@@ -27,6 +27,16 @@ export class RoomLogic {
 
             Memory.scoutingTargets = Memory.scoutingTargets.filter(st => st.roomName != this.room.name);
         }
+        else {
+            var invaderCreeps = this.room.find(FIND_CREEPS)
+                .filter(c => c.owner.username === "Invader");
+
+            var sourceKeepers = this.room.find(FIND_STRUCTURES)
+                .filter(s => s.structureType === STRUCTURE_KEEPER_LAIR);
+
+            if (invaderCreeps.length > 0 || sourceKeepers.length > 0)
+                name = "Invader";
+        }
 
         if (this.room.memory.owner.owner === Memory.me) {
             if (Memory.debug || this.room.memory.debug) console.log("firing towers in " + this.room.name);

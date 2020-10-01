@@ -23,9 +23,9 @@ export class BuildLogic {
             }
         
             this.buildAllPossibleExtensions();
-        }
 
-        this.buildRoads();
+            this.buildRoads();
+        }
     }
 
     private buildRoads() : void {

@@ -18,6 +18,27 @@ export class Scout extends BaseTask implements Task {
         else return null;
     }
 
+    public claim(creep : Creep) {
+        super.claim(creep);
+
+        var scoutingTask = Memory.scoutingTargets.filter(st => st.roomName === this.roomName[0])[0];
+        scoutingTask.claimedBy = creep.id;
+    }
+
+    public unclaim(cid : Id<Creep>) {
+        super.unclaim(cid);
+
+        var scoutingTask = Memory.scoutingTargets.filter(st => st.roomName === this.roomName[0])[0];
+        scoutingTask.claimedBy = null;
+    }
+
+    public unclaimAll() {
+        super.unclaimAll();
+
+        var scoutingTask = Memory.scoutingTargets.filter(st => st.roomName === this.roomName[0])[0];
+        scoutingTask.claimedBy = null;
+    }
+
     protected _getPriority(creep : Creep) {
         return 1000000;
     }
