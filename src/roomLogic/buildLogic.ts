@@ -6,7 +6,7 @@ export class BuildLogic {
 
     }
 
-    public run() {
+    public runBuildLogic() {
         if (this.room.controller && this.room.controller.owner && this.room.controller.owner.username === Memory.me)
         {
             if (this.room.controller.level > 1) 

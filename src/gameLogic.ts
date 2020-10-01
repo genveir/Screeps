@@ -7,7 +7,7 @@ export class GameLogic {
 
         for (var roomName in Game.rooms) {
             var room = Game.rooms[roomName];
-            new RoomLogic(room).run();
+            new RoomLogic(room).runRoomLogic();
 
             if (room.memory.owner.owner === Memory.me) {
 

@@ -12,7 +12,7 @@ export class TaskLogic {
 
     }
 
-    run() {
+    runTaskLogic() {
         // persistent task list
         if (Memory.debug || this.room.memory.debug) console.log("loading task list");
         var taskList = TaskList.getInstance(this.room.memory);

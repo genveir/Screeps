@@ -13,7 +13,7 @@ export class RoomLogic {
         this.room.memory.name = room.name;
     }
 
-    run() {
+    runRoomLogic() {
         if (!this.room.memory.energySlots) this.initializeEnergySlots();
         if (this.room.controller) {
             var name : string;
@@ -33,14 +33,14 @@ export class RoomLogic {
             this.fireTowers();
 
             if (Memory.debug || this.room.memory.debug) console.log("running build logic for " + this.room.name);
-            this.buildLogic.run();
+            this.buildLogic.runBuildLogic();
         }
 
         if (Memory.debug || this.room.memory.debug) console.log("setting scouting targets for " + this.room.name);
         this.setScoutingTargets();
 
         if (Memory.debug || this.room.memory.debug) console.log("running task logic for " + this.room.name);
-        this.taskLogic.run();
+        this.taskLogic.runTaskLogic();
 
         if (Memory.debug || this.room.memory.debug) console.log("finished with room logic");
     }
