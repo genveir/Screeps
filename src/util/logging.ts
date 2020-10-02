@@ -48,7 +48,7 @@ export class Logging {
         }
 
         room.memory.logging.workersPerCycle[Game.time] = total;
-        room.memory.logging.creepsCost = [];
+        room.memory.logging.workersCost = [];
     }
 
     private static updateSourcesPerTick(room : Room) {

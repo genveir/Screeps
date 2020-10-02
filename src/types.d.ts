@@ -54,9 +54,7 @@ interface SavedSpawnTask {
 interface RoomLogging {
     controllerPerTick: number[];
     controllerPerCycle: EnergySums;
-    creepsCost? : number[];
     workersCost : number[];
-    creepsPerCycle?: EnergySums;
     workersPerCycle: EnergySums;
     sourceStates : SourceState[];
     sourcesPerCycle: SourceStats;
