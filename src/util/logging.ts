@@ -1,5 +1,8 @@
 export class Logging {
     public static update() {
+        Memory.logging.cpuLogging = Memory.logging.cpuLogging
+            .filter(log => log.tick + 300 > Game.time || log.tick % 1000 === 0);
+
         for (var roomName in Game.rooms) {
             var room = Game.rooms[roomName];
 

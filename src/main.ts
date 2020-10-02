@@ -6,8 +6,8 @@ import { CreepLogic } from "./creepLogic";
 import { Logging } from './util/logging';
 
 if (Memory.debug) console.log("initiating memory");
-MemoryUtil.init();
 MemoryUtil.migrate();
+MemoryUtil.init();
 
 var cpuLogEntry : CpuLogEntry = {tick: Game.time};
 Memory.logging.cpuLogging.push(cpuLogEntry);

@@ -6,6 +6,7 @@ interface SpawnMemory
     previousSettings: SpawnSettings;
     debug? : boolean;
     settingLog : SpawnSettings[];
+    version : number;
 }
 
 interface SpawnSettings {
@@ -22,6 +23,7 @@ interface Memory
     scoutingTargets : ScoutingTask[]
     me: string
     hm : boolean // toggles heatmap for every room in Memory.rooms
+    version : number;
 }
 
 interface ScoutingTask {
@@ -47,7 +49,12 @@ interface CpuLogEntry {
 
 interface CpuLogRoomEntry {
     roomName : string;
-    cpu : number;
+    energySlotEnd? : number;
+    ownershipEnd? : number;
+    buildEnd? : number;
+    scoutingTargetsEnd? : number;
+    taskEnd? : number;
+    totalEnd? : number;
 }
 
 interface CpuLogSpawnEntry {
@@ -70,7 +77,8 @@ interface RoomMemory {
     spawnTasks : SavedSpawnTask[];
     owner : {owner : string; level : number;};
     debug? : boolean;
- }
+    version : number;
+}
 
 interface SavedSpawnTask {
     id : string;
@@ -128,6 +136,7 @@ interface CreepMemory {
     lastPositions : (SavedPosition | null)[]
     debug? : boolean;
     type : CreepType;
+    version : number;
 }
 
 interface SavedTask {

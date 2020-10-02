@@ -3,6 +3,7 @@ import { DecisionDials } from './decisionData';
 import { SpawnDialer } from './spawnDialer';
 import { TaskList } from "../tasks/tasklist";
 import { Logging } from "../util/logging";
+import { MemoryVersion } from '../util/memory';
 
 export class SpawnLogic
 {
@@ -79,7 +80,8 @@ export class SpawnLogic
         return {
             savedTask: {taskId: "", active: false, roomName: this.spawn.room.name},
             lastPositions: [null, null],
-            type: type
+            type: type,
+            version: MemoryVersion
          }
     }
 

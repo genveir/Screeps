@@ -8,7 +8,9 @@ export class GameLogic {
         cpuLogEntry.roomLogicEnds = [];
         for (var roomName in Game.rooms) {
             var room = Game.rooms[roomName];
-            new RoomLogic(room).runRoomLogic();
+
+            var logEntry : CpuLogRoomEntry = {roomName : roomName}
+            new RoomLogic(room).runRoomLogic(logEntry);
 
             if (room.memory.owner.owner === Memory.me) {
 
@@ -33,7 +35,7 @@ export class GameLogic {
                     if (Memory.debug) console.log("done with room visuals");
                 }
             }
-            cpuLogEntry.roomLogicEnds.push({roomName: roomName, cpu: Game.cpu.getUsed()});
+            cpuLogEntry.roomLogicEnds.push(logEntry);
         }
     }
 }

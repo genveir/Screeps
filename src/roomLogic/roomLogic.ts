@@ -13,9 +13,10 @@ export class RoomLogic {
         this.room.memory.name = room.name;
     }
 
-    runRoomLogic() {
+    runRoomLogic(cpuEntry : CpuLogRoomEntry) {
         if (!this.room.memory.energySlots) this.initializeEnergySlots();
-        
+        cpuEntry.energySlotEnd = Game.cpu.getUsed();
+
         var name : string;
         var level : number;
         if (this.room.controller) {
@@ -42,6 +43,7 @@ export class RoomLogic {
         this.room.memory.owner = {owner: name, level: level};
 
         Memory.scoutingTargets = Memory.scoutingTargets.filter(st => st.roomName != this.room.name);
+        cpuEntry.ownershipEnd = Game.cpu.getUsed();
 
         if (this.room.memory.owner.owner === Memory.me) {
             if (Memory.debug || this.room.memory.debug) console.log("firing towers in " + this.room.name);
@@ -49,13 +51,16 @@ export class RoomLogic {
 
             if (Memory.debug || this.room.memory.debug) console.log("running build logic for " + this.room.name);
             this.buildLogic.runBuildLogic();
+            cpuEntry.buildEnd = Game.cpu.getUsed();
         }
 
         if (Memory.debug || this.room.memory.debug) console.log("setting scouting targets for " + this.room.name);
         this.setScoutingTargets();
+        cpuEntry.scoutingTargetsEnd = Game.cpu.getUsed();
 
         if (Memory.debug || this.room.memory.debug) console.log("running task logic for " + this.room.name);
         this.taskLogic.runTaskLogic();
+        cpuEntry.taskEnd = Game.cpu.getUsed();
 
         if (Memory.debug || this.room.memory.debug) console.log("finished with room logic");
     }
