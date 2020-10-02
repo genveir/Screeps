@@ -216,6 +216,9 @@ export class TaskLogic {
 
         var scoutTasks = taskList.getAll().filter(t => t.type === Scout.type).map(t => <Scout>t);
 
+        var oldTasks = scoutTasks.filter(sc => scoutingTargets.some(st => st.roomName !== sc.roomName));
+        oldTasks.forEach(ot => ot.clearOnNextTick = true);
+
         scoutingTargets.forEach(st => {
             var scoutCount = scoutTasks.filter(sc => sc.roomName == st.roomName).length;
 
