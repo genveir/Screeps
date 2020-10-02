@@ -31,6 +31,33 @@ interface ScoutingTask {
 
 interface GameLogging {
     lastSaved : number | null;
+    cpuLogging : CpuLogEntry[]
+}
+
+interface CpuLogEntry {
+    tick : number;
+    setupEnd? : number;
+    roomLogicEnds? : CpuLogRoomEntry[];
+    gameLogicEnd? : number;
+    spawnLogicEnds? : CpuLogSpawnEntry[];
+    spawnLogicEnd?: number;
+    creepLogicEnds? : CpuLogCreepEntry[];
+    creepLogicEnd?: number;
+}
+
+interface CpuLogRoomEntry {
+    roomName : string;
+    cpu : number;
+}
+
+interface CpuLogSpawnEntry {
+    spawnName : string;
+    cpu : number;
+}
+
+interface CpuLogCreepEntry {
+    creepName : string;
+    cpu : number;
 }
 
 interface RoomMemory { 

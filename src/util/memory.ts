@@ -2,7 +2,7 @@ import { DecisionDials } from "../spawnLogic/decisionData";
 
 export class MemoryUtil {
     public static init() {
-        if (!Memory.logging) Memory.logging = { lastSaved: null }
+        if (!Memory.logging) Memory.logging = { lastSaved: null, cpuLogging: [] }
         if (!Memory.scoutingTargets) Memory.scoutingTargets = [];
 
         for (var r in Game.rooms) {
@@ -56,6 +56,6 @@ export class MemoryUtil {
     }
 
     public static migrate() {
-
+        
     }
 }

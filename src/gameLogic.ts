@@ -2,9 +2,10 @@ import { RoadUtil } from './util/road';
 import {RoomLogic} from "./roomLogic/roomLogic"
 
 export class GameLogic {
-    runGameLogic() : void {
+    runGameLogic(cpuLogEntry : CpuLogEntry) : void {
         // I don't have a global strategy yet, so there's nothing here but room logic
 
+        cpuLogEntry.roomLogicEnds = [];
         for (var roomName in Game.rooms) {
             var room = Game.rooms[roomName];
             new RoomLogic(room).runRoomLogic();
@@ -32,6 +33,7 @@ export class GameLogic {
                     if (Memory.debug) console.log("done with room visuals");
                 }
             }
+            cpuLogEntry.roomLogicEnds.push({roomName: roomName, cpu: Game.cpu.getUsed()});
         }
     }
 }
