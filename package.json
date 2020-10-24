@@ -2,7 +2,7 @@
   "name": "screeps",
   "private": true,
   "scripts": {
-    "clean": "del-cli --force ./out && del-cli --force ./dist",
+    "clean": "del-cli --force ./out",
     "build": "npm run clean && tsc && webpack"
   },
   "devDependencies": {

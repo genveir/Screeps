@@ -14,10 +14,6 @@ export class CreepLogic {
 
         var roles : Role[] = [];
 
-        switch(role) {
-            case 'harvester': 
-        }
-
         if (role === 'harvester')
         {
             roles.push(new Harvester(this.creep));

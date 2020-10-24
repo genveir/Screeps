@@ -1,5 +1,13 @@
-import { SpawnLogic }  from "./spawnLogic";
-import { CreepLogic } from "./creepLogic";
+import { SpawnLogic }  from "./spawns/spawnLogic";
+import { CreepLogic } from "./creeps/creepLogic";
+import { RoomLogic } from "./rooms/roomLogic";
+
+for (var roomName in Game.rooms) {
+    var room = Game.rooms[roomName];
+
+    var roomLogic = new RoomLogic(room);
+    roomLogic.run();
+}
 
 for (var spawnName in Game.spawns) {
     var spawn = Game.spawns[spawnName];

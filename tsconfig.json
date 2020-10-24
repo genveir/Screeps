@@ -9,6 +9,7 @@
     },
     "include": [
         "src/*.ts", 
-        "src/roles/*.ts"
+        "src/creeps/*.ts",
+        "src/rooms/*.ts"
     ]
 }
