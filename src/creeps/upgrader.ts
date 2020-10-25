@@ -1,6 +1,4 @@
-import { Role } from "./roles";
-
-export class Upgrader implements Role {
+export class Upgrader {
     constructor(private creep : Creep)
     {
 
@@ -21,7 +19,7 @@ export class Upgrader implements Role {
             }
             else if (result === ERR_NOT_ENOUGH_RESOURCES)
             {
-                (<any>this.creep.memory).role = 'harvester';
+                this.creep.memory.role = 'harvester';
             }
         }
     }

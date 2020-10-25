@@ -1,6 +1,5 @@
 import { Harvester } from "./harvester";
 import { Upgrader } from "./upgrader";
-import { Role } from "./roles";
 
 export class CreepLogic {
     constructor(private creep : Creep)
@@ -12,20 +11,13 @@ export class CreepLogic {
     {
         var role : string = (<any>this.creep.memory).role;
 
-        var roles : Role[] = [];
-
         if (role === 'harvester')
         {
-            roles.push(new Harvester(this.creep));
+            new Harvester(this.creep).run();
         }
         else if (role === 'upgrader')
         {
-            roles.push(new Upgrader(this.creep));
-        }
-
-        for (var r in roles)
-        {
-            roles[r].run();
+            new Upgrader(this.creep).run();
         }
     }
 }
