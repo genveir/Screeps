@@ -14,16 +14,18 @@ export class RoomLogic {
         var energySlots = this.room.memory.energySlots;
 
         if (!energySlots) {
-            var sourcePositions = this.room.find(FIND_SOURCES).map(r => r.pos);
+            var sources = this.room.find(FIND_SOURCES);
 
-            var adjacentPositions : RoomPosition[] = [];
+            var harvestPositions : HarvestPosition[] = [];
+            sources.forEach(source => {
+                var adjacentPositions = RoomUtil.getAdjacentPositions(source.pos).map(p => new RoomPosition(p.x, p.y, p.roomName));
 
-            sourcePositions
-                .map(p => RoomUtil.getAdjacentPositions(p))
-                .forEach(pArray => pArray.forEach(p => adjacentPositions.push(new RoomPosition(p.x, p.y, p.roomName))));
+                adjacentPositions = adjacentPositions.filter(p => p.lookFor(LOOK_TERRAIN)[0] == "plain");
 
-            var harvestPositions = adjacentPositions
-                .filter(p => p.lookFor(LOOK_TERRAIN).some(t => t == "plain"));
+                adjacentPositions.forEach(ap => {
+                    harvestPositions.push({pos: ap, source: source.id});
+                })
+            });
 
             this.room.memory.energySlots = harvestPositions;
         }

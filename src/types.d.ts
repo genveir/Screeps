@@ -9,8 +9,13 @@ interface SavedPosition {
     roomName : string;
 }
 
+interface HarvestPosition {
+    pos : SavedPosition;
+    source : Id<Source>;
+}
+
 interface RoomMemory {
-    energySlots : SavedPosition[];
+    energySlots : HarvestPosition[];
 
     debug? : boolean;
 }
