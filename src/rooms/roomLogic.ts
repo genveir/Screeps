@@ -1,10 +1,16 @@
-import { RoomUtil } from './../utils/RoomUtil';
+import { RoomUtil } from '../utils/roomUtil';
 export class RoomLogic {
     public constructor(private room : Room) {
 
     }
 
     public run() {
+        if (this.room.memory.debug) { RoomUtil.drawEnergySlots(this.room) }
+
+        this.initializeEnergySlots();
+    }
+
+    private initializeEnergySlots() {
         var energySlots = this.room.memory.energySlots;
 
         if (!energySlots) {

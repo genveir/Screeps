@@ -18,4 +18,10 @@ export class RoomUtil {
 
         return result;
     }
+
+    public static drawEnergySlots(room : Room) {
+        var energySlots = room.memory.energySlots;
+
+        energySlots.forEach(es => room.visual.circle(es.x, es.y, {fill: "yellow"}));
+    }
 }

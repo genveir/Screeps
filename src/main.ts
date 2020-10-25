@@ -1,6 +1,9 @@
+import { MemoryUtil } from './utils/memoryUtil';
 import { SpawnLogic }  from "./spawns/spawnLogic";
 import { CreepLogic } from "./creeps/creepLogic";
 import { RoomLogic } from "./rooms/roomLogic";
+
+MemoryUtil.init();
 
 for (var roomName in Game.rooms) {
     var room = Game.rooms[roomName];

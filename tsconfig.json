@@ -10,6 +10,8 @@
     "include": [
         "src/*.ts", 
         "src/creeps/*.ts",
-        "src/rooms/*.ts", "src/spawns/spawnLogic.ts"
+        "src/rooms/*.ts",
+        "src/spawns/*.ts",
+        "src/utils/*.ts"
     ]
 }

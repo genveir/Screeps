@@ -11,4 +11,6 @@ interface SavedPosition {
 
 interface RoomMemory {
     energySlots : SavedPosition[];
+
+    debug? : boolean;
 }
