@@ -10,7 +10,7 @@ export class SpawnLogic
         var creepcount = spawnRoom.find(FIND_MY_CREEPS).length;
         
         if (!this.spawn.spawning) {
-            if (creepcount < 10) {
+            if (creepcount < 14) {
                 this.spawn.spawnCreep([WORK,CARRY,CARRY,MOVE,MOVE], 'Harvester' + Game.time, { memory: {role : "harvester", slot: null} });
             }
         }

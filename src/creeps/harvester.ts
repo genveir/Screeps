@@ -58,9 +58,10 @@ export class Harvester {
             if (slot) {
                 var source = Game.getObjectById(slot.source);
                 if (source) {
-                    var result = this.creep.harvest(source);
-                    if (result == ERR_NOT_IN_RANGE)
-                    {
+                    if (this.creep.pos.isEqualTo(slot.pos.x, slot.pos.y)) {
+                        this.creep.harvest(source);
+                    }
+                    else {
                         MovementUtil.moveTo(this.creep, slot.pos);
                     }
                 } 
