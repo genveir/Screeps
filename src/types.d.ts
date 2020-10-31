@@ -1,6 +1,5 @@
 interface FlagMemory { [name: string]: any }
 interface SpawnMemory { [name: string]: any }
-interface CreepMemory { [name: string]: any }
 interface Memory { [name: string]: any }
 
 interface SavedPosition {
@@ -19,3 +18,8 @@ interface RoomMemory {
 
     debug? : boolean;
 }
+
+interface CreepMemory {
+    role: string;
+    slot: HarvestPosition | null;
+ }

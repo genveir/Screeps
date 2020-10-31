@@ -9,7 +9,9 @@ export class CreepLogic {
 
     public run()
     {
-        var role : string = (<any>this.creep.memory).role;
+        if (!this.creep.memory.role) this.creep.memory.role = "harvester";
+
+        var role : string = this.creep.memory.role;
 
         if (role === 'harvester')
         {
