@@ -1,3 +1,4 @@
+import { CreepLogic } from './creepLogic';
 export class Upgrader {
     constructor(private creep : Creep)
     {
@@ -20,6 +21,7 @@ export class Upgrader {
             else if (result === ERR_NOT_ENOUGH_RESOURCES)
             {
                 this.creep.memory.role = 'harvester';
+                new CreepLogic(this.creep).run();
             }
         }
     }

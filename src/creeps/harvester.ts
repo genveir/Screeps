@@ -1,3 +1,4 @@
+import { CreepLogic } from './creepLogic';
 import { MovementUtil } from './../utils/movementUtil';
 export class Harvester {
     
@@ -14,60 +15,72 @@ export class Harvester {
         {
             this.creep.memory.slot = null;
 
-            var spawn = this.creep.room.find(FIND_MY_SPAWNS)[0];
-            var transferResult = this.creep.transfer(spawn, RESOURCE_ENERGY);
-            if (transferResult == ERR_NOT_IN_RANGE) {
-                MovementUtil.moveTo(this.creep, spawn.pos);
-            }
-            else if (transferResult == ERR_FULL) {
-                this.creep.memory.role = "upgrader";
-            }
+            this.updateRole();
+            new CreepLogic(this.creep).run();
+        }
+    }
+
+    private updateRole() {
+        var spawn = this.creep.room.find(FIND_MY_SPAWNS)[0];
+        if (spawn.store.getFreeCapacity(RESOURCE_ENERGY) > 0)
+        {
+            this.creep.memory.role = "filler";
+        }
+        else {
+            this.creep.memory.role = "upgrader";
         }
     }
 
     private runNotFullLogic() {
         var slot = this.creep.memory.slot;
 
-            if (!slot) {
-                var openSlots : HarvestPosition[] = JSON.parse(JSON.stringify(this.creep.room.memory.energySlots));
+        if (!slot) {
+            slot =this.findSlot();
+        }   
 
-                for (var creepName in Memory.creeps) {
-                    var c = Memory.creeps[creepName];
-                    var usedSlot = c.slot;
-                    
-                    if (usedSlot)
-                    {
-                        for (var n = 0; n < openSlots.length; n++) {
-                            if (usedSlot.pos.x === openSlots[n].pos.x &&
-                                usedSlot.pos.y === openSlots[n].pos.y &&
-                                usedSlot.pos.roomName === openSlots[n].pos.roomName) {
-                                    openSlots.splice(n, 1);
-                                    break;
-                                }
-                        }
-                        
-                    }
+        if (slot) {
+            var source = Game.getObjectById(slot.source);
+            if (source) {
+                if (this.creep.pos.isEqualTo(slot.pos.x, slot.pos.y)) {
+                    this.creep.harvest(source);
                 }
-
-                if (openSlots.length > 0) {
-                    slot = openSlots[0];
-                    this.creep.memory.slot = slot;
-                }
-            }
-
-            if (slot) {
-                var source = Game.getObjectById(slot.source);
-                if (source) {
-                    if (this.creep.pos.isEqualTo(slot.pos.x, slot.pos.y)) {
-                        this.creep.harvest(source);
-                    }
-                    else {
-                        MovementUtil.moveTo(this.creep, slot.pos);
-                    }
-                } 
                 else {
-                    console.log("source with Id " + slot.source + " does not exist");
+                    MovementUtil.moveTo(this.creep, slot.pos);
                 }
+            } 
+            else {
+                console.log("source with Id " + slot.source + " does not exist");
             }
+        }
+    }
+
+    private findSlot() : HarvestPosition | null {
+        var openSlots : HarvestPosition[] = JSON.parse(JSON.stringify(this.creep.room.memory.energySlots));
+
+        for (var creepName in Memory.creeps) {
+            var c = Memory.creeps[creepName];
+            var usedSlot = c.slot;
+            
+            if (usedSlot)
+            {
+                for (var n = 0; n < openSlots.length; n++) {
+                    if (usedSlot.pos.x === openSlots[n].pos.x &&
+                        usedSlot.pos.y === openSlots[n].pos.y &&
+                        usedSlot.pos.roomName === openSlots[n].pos.roomName) {
+                            openSlots.splice(n, 1);
+                            break;
+                        }
+                }
+                
+            }
+        }
+
+        if (openSlots.length > 0) {
+            var slot = openSlots[0];
+            this.creep.memory.slot = slot;
+
+            return slot;
+        }
+        else return null;
     }
 }
