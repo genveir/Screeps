@@ -11,8 +11,7 @@ export class Harvester {
         if (this.creep.store.getFreeCapacity() != 0) {
             this.runNotFullLogic();
         }
-        else
-        {
+        else {
             this.creep.memory.slot = null;
 
             this.updateRole();
@@ -22,8 +21,7 @@ export class Harvester {
 
     private updateRole() {
         var spawn = this.creep.room.find(FIND_MY_SPAWNS)[0];
-        if (spawn.store.getFreeCapacity(RESOURCE_ENERGY) > 0)
-        {
+        if (spawn.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
             this.creep.memory.role = "filler";
         }
         else {
@@ -61,8 +59,7 @@ export class Harvester {
             var c = Memory.creeps[creepName];
             var usedSlot = c.slot;
             
-            if (usedSlot)
-            {
+            if (usedSlot) {
                 for (var n = 0; n < openSlots.length; n++) {
                     if (usedSlot.pos.x === openSlots[n].pos.x &&
                         usedSlot.pos.y === openSlots[n].pos.y &&
@@ -71,7 +68,6 @@ export class Harvester {
                             break;
                         }
                 }
-                
             }
         }
 

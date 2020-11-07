@@ -8,18 +8,15 @@ export class Upgrader {
     public run() {
         var controller = this.creep.room.controller;
 
-        if (!controller)
-        {
+        if (!controller) {
             console.log("somehow there is no controller for the room of creep " + this.creep.name);
         }
         else {
             var result = this.creep.upgradeController(controller);
-            if (result === ERR_NOT_IN_RANGE)
-            {
+            if (result === ERR_NOT_IN_RANGE) {
                 this.creep.moveTo(controller);
             }
-            else if (result === ERR_NOT_ENOUGH_RESOURCES)
-            {
+            else if (result === ERR_NOT_ENOUGH_RESOURCES) {
                 this.creep.memory.role = 'harvester';
                 new CreepLogic(this.creep).run();
             }
