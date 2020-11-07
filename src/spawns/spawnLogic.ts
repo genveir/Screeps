@@ -4,6 +4,8 @@ export class SpawnLogic
 
     }
 
+    private bodyParts = [WORK,CARRY,CARRY,MOVE,MOVE];
+
     public run() {
         var spawnRoom = this.spawn.room;
 
@@ -11,7 +13,7 @@ export class SpawnLogic
         
         if (!this.spawn.spawning) {
             if (creepcount < 14) {
-                this.spawn.spawnCreep([WORK,CARRY,CARRY,MOVE,MOVE], 'Harvester' + Game.time, { memory: {role : "harvester", slot: null} });
+                this.spawn.spawnCreep(this.bodyParts, 'Harvester' + Game.time, { memory: {role : "harvester", slot: null} });
             }
         }
     }
