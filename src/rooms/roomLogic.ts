@@ -1,3 +1,4 @@
+import { BuildingPlacement } from './buildingPlacement';
 import { CreepLogic } from '../creeps/creepLogic';
 import { SpawnLogic } from '../spawns/spawnLogic';
 import { RoomUtil } from '../utils/roomUtil';
@@ -11,6 +12,7 @@ export class RoomLogic {
         if (this.room.memory.debug) { RoomUtil.drawEnergySlots(this.room) }
 
         this.initializeEnergySlots();
+        new BuildingPlacement(this.room).runBuildingPlacement();
 
         var spawns = this.room.find(FIND_MY_SPAWNS);
         spawns.forEach(spawn => {
