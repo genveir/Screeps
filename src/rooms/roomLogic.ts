@@ -1,13 +1,28 @@
+import { CreepLogic } from '../creeps/creepLogic';
+import { SpawnLogic } from '../spawns/spawnLogic';
 import { RoomUtil } from '../utils/roomUtil';
+
 export class RoomLogic {
     public constructor(private room : Room) {
 
     }
 
-    public run() {
+    public runRoomLogic() {
         if (this.room.memory.debug) { RoomUtil.drawEnergySlots(this.room) }
 
         this.initializeEnergySlots();
+
+        var spawns = this.room.find(FIND_MY_SPAWNS);
+        spawns.forEach(spawn => {
+            var spawnLogic = new SpawnLogic(spawn);
+            spawnLogic.run();
+        });
+
+        var creeps = this.room.find(FIND_MY_CREEPS);
+        creeps.forEach(creep => { 
+            var creepLogic = new CreepLogic(creep);
+            creepLogic.run();
+        });
     }
 
     private initializeEnergySlots() {
