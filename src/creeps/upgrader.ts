@@ -5,7 +5,7 @@ export class Upgrader {
 
     }
 
-    public run() {
+    public runUpgrader() {
         var controller = this.creep.room.controller;
 
         if (!controller) {
@@ -17,8 +17,7 @@ export class Upgrader {
                 this.creep.moveTo(controller);
             }
             else if (result === ERR_NOT_ENOUGH_RESOURCES) {
-                this.creep.memory.role = 'harvester';
-                new CreepLogic(this.creep).run();
+                new CreepLogic(this.creep).retask();
             }
         }
     }

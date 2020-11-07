@@ -7,25 +7,14 @@ export class Harvester {
         
     }
 
-    public run() {
+    public runHarvester() {
         if (this.creep.store.getFreeCapacity() != 0) {
             this.runNotFullLogic();
         }
         else {
             this.creep.memory.slot = null;
 
-            this.updateRole();
-            new CreepLogic(this.creep).run();
-        }
-    }
-
-    private updateRole() {
-        var spawn = this.creep.room.find(FIND_MY_SPAWNS)[0];
-        if (spawn.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
-            this.creep.memory.role = "filler";
-        }
-        else {
-            this.creep.memory.role = "upgrader";
+            new CreepLogic(this.creep).retask();
         }
     }
 

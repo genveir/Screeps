@@ -23,7 +23,7 @@ export class RoomLogic {
         var creeps = this.room.find(FIND_MY_CREEPS);
         creeps.forEach(creep => { 
             var creepLogic = new CreepLogic(creep);
-            creepLogic.run();
+            creepLogic.runCreepLogic();
         });
     }
 
