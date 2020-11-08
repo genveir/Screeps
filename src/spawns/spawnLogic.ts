@@ -10,9 +10,19 @@ export class SpawnLogic
         var spawnRoom = this.spawn.room;
 
         var creepcount = spawnRoom.find(FIND_MY_CREEPS).length;
-        
+
+        var lastIdle = spawnRoom.memory.lastIdle;
+        if (!lastIdle) lastIdle = 0;
+        var ticksSinceLastIdle = Game.time - lastIdle;
+
+        var lastSpawn = spawnRoom.memory.lastSpawn
+        if (!lastSpawn) lastSpawn = 0;
+        var ticksSinceLastSpawn = Game.time - lastSpawn;
+
+        spawnRoom.visual.text("tsls: " + ticksSinceLastSpawn + ", " + ticksSinceLastIdle, this.spawn.pos.x, this.spawn.pos.y + 1);
+
         if (!this.spawn.spawning) {
-            if (creepcount < 14) {
+            if (ticksSinceLastSpawn > 60 && ticksSinceLastIdle > 1) {
                 var spawnEnergy = this.spawn.store.getUsedCapacity(RESOURCE_ENERGY);
                 var extensionEnergy = this.spawn.room.find(FIND_STRUCTURES)
                     .filter(s => s.structureType === STRUCTURE_EXTENSION)
@@ -28,6 +38,7 @@ export class SpawnLogic
                     var body = this.buildBody(availableEnergy, this.workerParts);
 
                     this.spawn.spawnCreep(body, 'Harvester' + Game.time, { memory: {role : "harvester", slot: null} });
+                    spawnRoom.memory.lastSpawn = Game.time;
                 }
             }
         }
