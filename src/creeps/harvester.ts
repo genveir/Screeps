@@ -39,6 +39,9 @@ export class Harvester {
                 console.log("source with Id " + slot.source + " does not exist");
             }
         }
+        else {
+            this.creep.room.memory.lastIdle = Game.time;
+        }
     }
 
     private findSlot() : HarvestPosition | null {

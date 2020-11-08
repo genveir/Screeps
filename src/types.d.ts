@@ -15,6 +15,7 @@ interface HarvestPosition {
 
 interface RoomMemory {
     energySlots : HarvestPosition[];
+    lastIdle : number;
 
     debug? : boolean;
 }
