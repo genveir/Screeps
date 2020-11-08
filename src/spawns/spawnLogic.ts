@@ -23,7 +23,9 @@ export class SpawnLogic
                 var totalAvailableEnergy = spawnEnergy + extensionEnergy;
 
                 if (totalAvailableEnergy >= 300) {
-                    var body = this.buildBody(totalAvailableEnergy, this.workerParts);
+                    var availableEnergy = 900;
+                    if (totalAvailableEnergy < 900) availableEnergy = 900;
+                    var body = this.buildBody(availableEnergy, this.workerParts);
 
                     this.spawn.spawnCreep(body, 'Harvester' + Game.time, { memory: {role : "harvester", slot: null} });
                 }
